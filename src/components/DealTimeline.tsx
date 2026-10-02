@@ -10,7 +10,6 @@ import {
   Users, 
   ArrowRight,
   ExternalLink,
-  ShieldAlert,
   Sparkles
 } from 'lucide-react';
 import { Deal } from '@/lib/types';
@@ -45,27 +44,27 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
   return (
     <div className="space-y-4">
       {/* Deal Overview Card */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
+      <div className="bg-white border border-brand-100 rounded-2xl p-5 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-4">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-xs uppercase tracking-wider font-semibold text-sky-400">
+              <span className="text-xs uppercase tracking-wider font-bold text-brand-700">
                 Active Sponsorship Deal
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-bold">
                 {deal.currency}
               </span>
             </div>
-            <h1 className="text-xl font-bold text-white mt-0.5">{deal.brandName}</h1>
-            <p className="text-xs text-slate-400 font-mono">{deal.brandEmail}</p>
+            <h1 className="text-xl font-extrabold text-slate-900 mt-0.5">{deal.brandName}</h1>
+            <p className="text-xs text-slate-500 font-mono">{deal.brandEmail}</p>
           </div>
 
           <div className="text-right">
-            <p className="text-xs text-slate-400">Contract Total</p>
-            <p className="text-2xl font-black text-white tracking-tight">
+            <p className="text-xs text-slate-400 font-medium">Contract Total</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">
               \${deal.totalAmount.toLocaleString()}
             </p>
-            <p className="text-xs text-emerald-400 font-medium">
+            <p className="text-xs text-brand-700 font-bold">
               Net to Creator: \${deal.creatorNetPayout.toLocaleString()}
             </p>
           </div>
@@ -74,43 +73,45 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
         {/* 5-Phase Interactive Pipeline */}
         <div className="space-y-3">
           {/* Phase 1: Deal Analyzed */}
-          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-white">Phase 1: Deal Analyzed by AI</p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-xs font-bold text-slate-900">Phase 1: Deal Analyzed by AI</p>
+                <p className="text-[11px] text-slate-500">
                   {m1.percentage}% Advance (\${m1.amount}) + {m2.percentage}% Delivery (\${m2.amount})
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-medium text-emerald-400">Terms Locked</span>
+            <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              Terms Locked
+            </span>
           </div>
 
           {/* Phase 2: Milestone 1 Invoice */}
           <div className={`p-3.5 rounded-xl border transition-all ${
             isM1Invoiced 
-              ? 'bg-slate-950/60 border-slate-800' 
-              : 'bg-blue-950/20 border-blue-500/30'
+              ? 'bg-slate-50 border-slate-200' 
+              : 'bg-brand-50/50 border-brand-200'
           }`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                   isM1Invoiced 
-                    ? 'bg-emerald-500/10 text-emerald-400' 
-                    : 'bg-blue-500/20 text-sky-400 animate-pulse'
+                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' 
+                    : 'bg-brand-100 text-brand-700 animate-pulse'
                 }`}>
                   <CreditCard className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-white">
+                  <p className="text-xs font-bold text-slate-900">
                     Phase 2: Milestone 1 PayPal Invoice ({m1.percentage}% - \${m1.amount})
                   </p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-slate-500">
                     {isM1Invoiced ? (
-                      <span className="font-mono text-sky-400">
+                      <span className="font-mono text-brand-700 font-semibold">
                         Invoice #{m1.invoiceNumber} • {m1.status.toUpperCase()}
                       </span>
                     ) : (
@@ -124,7 +125,7 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
                 <button
                   onClick={() => onGenerateInvoice(0)}
                   disabled={actionLoading}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-sm disabled:opacity-50"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-sm shadow-brand-600/20 disabled:opacity-50 cursor-pointer"
                 >
                   <Send className="w-3 h-3" />
                   <span>Send PayPal Invoice</span>
@@ -136,14 +137,16 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
                       href={m1.invoiceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] text-sky-400 hover:underline flex items-center space-x-1"
+                      className="text-xs text-brand-600 hover:text-brand-800 font-semibold flex items-center space-x-1"
                     >
                       <span>PayPal Link</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
-                    isM1Paid ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                    isM1Paid 
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                      : 'bg-amber-50 text-amber-700 border border-amber-200'
                   }`}>
                     {m1.status}
                   </span>
@@ -152,24 +155,26 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
             </div>
           </div>
 
-          {/* Phase 3: Webhook Payment Clearance (Advance) */}
+          {/* Phase 3: Webhook Payment Clearance */}
           <div className={`p-3.5 rounded-xl border transition-all ${
             isM1Paid 
-              ? 'bg-slate-950/60 border-slate-800' 
+              ? 'bg-slate-50 border-slate-200' 
               : isM1Invoiced 
-                ? 'bg-amber-950/20 border-amber-500/30' 
-                : 'bg-slate-950/30 border-slate-900 opacity-60'
+                ? 'bg-amber-50/60 border-amber-300' 
+                : 'bg-slate-50/50 border-slate-100 opacity-60'
           }`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  isM1Paid ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-400'
+                  isM1Paid 
+                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' 
+                    : 'bg-slate-100 text-slate-500'
                 }`}>
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-white">Phase 3: PayPal Webhook Payment Trigger</p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-xs font-bold text-slate-900">Phase 3: PayPal Webhook Payment Trigger</p>
+                  <p className="text-[11px] text-slate-500">
                     {isM1Paid 
                       ? `Cleared \$${m1.amount} via INVOICING.INVOICE.PAID` 
                       : 'Awaiting brand payment clearance event'}
@@ -181,7 +186,7 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
                 <button
                   onClick={() => onSimulateWebhook(0)}
                   disabled={actionLoading}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold border border-amber-500/40"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-sm shadow-amber-500/20 cursor-pointer"
                 >
                   <Sparkles className="w-3 h-3" />
                   <span>Simulate Brand Pay (\${m1.amount})</span>
@@ -189,7 +194,7 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
               )}
 
               {isM1Paid && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                   PAID & SETTLED
                 </span>
               )}
@@ -199,21 +204,23 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
           {/* Phase 4: AI Deliverable Verification */}
           <div className={`p-3.5 rounded-xl border transition-all ${
             isDeliverableVerified 
-              ? 'bg-slate-950/60 border-slate-800' 
+              ? 'bg-slate-50 border-slate-200' 
               : isM1Paid 
-                ? 'bg-purple-950/20 border-purple-500/30' 
-                : 'bg-slate-950/30 border-slate-900 opacity-60'
+                ? 'bg-brand-50/60 border-brand-300' 
+                : 'bg-slate-50/50 border-slate-100 opacity-60'
           }`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  isDeliverableVerified ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-slate-400'
+                  isDeliverableVerified 
+                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' 
+                    : 'bg-slate-100 text-slate-500'
                 }`}>
                   <FileCheck2 className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-white">Phase 4: AI Deliverable Verification</p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-xs font-bold text-slate-900">Phase 4: AI Deliverable Verification</p>
+                  <p className="text-[11px] text-slate-500">
                     {isDeliverableVerified 
                       ? 'Verified: Sponsor hashtag and deal link confirmed in video metadata' 
                       : 'Inspect video sponsor segment & trackable links'}
@@ -225,7 +232,7 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
                 <button
                   onClick={onOpenDeliverableModal}
                   disabled={actionLoading}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold shadow-sm"
+                  className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-sm shadow-brand-600/20 cursor-pointer"
                 >
                   <Sparkles className="w-3 h-3" />
                   <span>Verify Deliverable</span>
@@ -233,33 +240,35 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
               )}
 
               {isDeliverableVerified && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200">
                   VERIFIED 98%
                 </span>
               )}
             </div>
           </div>
 
-          {/* Phase 5: Final Payment & Multi-Party Split Payout */}
+          {/* Phase 5: Final Settlement & Multi-Party Split Payout */}
           <div className={`p-4 rounded-xl border transition-all ${
             isPayoutSettled 
-              ? 'bg-emerald-950/20 border-emerald-500/30' 
+              ? 'bg-emerald-50/70 border-emerald-200' 
               : isDeliverableVerified 
-                ? 'bg-rose-950/20 border-rose-500/30' 
-                : 'bg-slate-950/30 border-slate-900 opacity-60'
+                ? 'bg-brand-50/60 border-brand-300' 
+                : 'bg-slate-50/50 border-slate-100 opacity-60'
           }`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center space-x-3">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  isPayoutSettled ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'
+                  isPayoutSettled 
+                    ? 'bg-emerald-100 text-emerald-700' 
+                    : 'bg-slate-100 text-slate-500'
                 }`}>
                   <Users className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-white">
+                  <p className="text-xs font-bold text-slate-900">
                     Phase 5: Final Settlement & Multi-Party PayPal Split Payout
                   </p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-slate-500">
                     {isPayoutSettled 
                       ? 'Batch Payout Executed! Funds sent to Editor Aman, Designer Rohan, and Creator'
                       : `Release final \${m2.amount} and execute batch payouts to team via PayPal Payouts API`}
@@ -271,7 +280,7 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
                 <button
                   onClick={() => onSimulateWebhook(1)}
                   disabled={actionLoading}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold border border-amber-500/40"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shadow-sm shadow-amber-500/20 cursor-pointer"
                 >
                   <Sparkles className="w-3 h-3" />
                   <span>Simulate Final Payment (\${m2.amount})</span>
@@ -282,7 +291,7 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
                 <button
                   onClick={onExecutePayout}
                   disabled={actionLoading}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-rose-600 via-pink-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-rose-500/20 cursor-pointer animate-bounce"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-extrabold shadow-lg shadow-brand-600/30 cursor-pointer animate-bounce"
                 >
                   <Users className="w-3.5 h-3.5" />
                   <span>Execute Multi-Party PayPal Payout</span>
@@ -291,8 +300,8 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
               )}
 
               {isPayoutSettled && (
-                <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center space-x-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                   <span>ALL FUNDS DISBURSED</span>
                 </span>
               )}

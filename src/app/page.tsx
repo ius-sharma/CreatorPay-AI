@@ -9,7 +9,7 @@ import { PayoutLedger } from '@/components/PayoutLedger';
 import { DeliverableModal } from '@/components/DeliverableModal';
 import { WebhookSimulatorBar } from '@/components/WebhookSimulatorBar';
 import { Deal, TeamSplit } from '@/lib/types';
-import { Bot, Sparkles, Layers, ShieldCheck, Zap } from 'lucide-react';
+import { Bot } from 'lucide-react';
 
 export default function Home() {
   const [deal, setDeal] = useState<Deal | null>(null);
@@ -159,17 +159,17 @@ export default function Home() {
 
   if (loading || !deal) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-300">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-sky-400 animate-pulse flex items-center justify-center mb-4 shadow-xl shadow-sky-500/20">
+      <div className="min-h-screen bg-[#fbfbfe] flex flex-col items-center justify-center text-slate-700">
+        <div className="w-12 h-12 rounded-2xl bg-brand-600 animate-pulse flex items-center justify-center mb-4 shadow-xl shadow-brand-600/25">
           <Bot className="w-6 h-6 text-white" />
         </div>
-        <p className="font-semibold text-sm">Connecting to PayPal Sandbox & CreatorPay Agent...</p>
+        <p className="font-bold text-sm text-slate-900">Connecting to PayPal Sandbox & CreatorPay Agent...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-[#fbfbfe] text-slate-900 flex flex-col">
       {/* Top Navigation */}
       <Navbar
         sandboxAccount={sandboxAccount}
@@ -231,7 +231,7 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950/60 py-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-brand-100 bg-white py-4 text-center text-xs text-slate-500">
         <p>
           CreatorPay AI • Powered by PayPal Invoicing API v2, Payouts API v1 & Webhooks • Built for PayPal AI Hackathon 2026
         </p>
