@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getActiveDeal, updateActiveDeal, appendDealLog } from '@/lib/store';
+import { getActiveDeal, updateActiveDeal, appendDealLog, addInvoiceToRegistry } from '@/lib/store';
 import { createAndSendMilestoneInvoice } from '@/lib/paypal';
 
 export async function POST(req: Request) {
@@ -26,6 +26,23 @@ export async function POST(req: Request) {
       note: `CreatorPay AI Milestone Invoice: ${milestone.name} for ${deal.dealTitle}`,
     });
 
+    // Register into enterprise invoices repository
+    addInvoiceToRegistry({
+      id: invoiceResult.invoiceId,
+      invoiceNumber: invoiceResult.invoiceNumber,
+      dealTitle: deal.dealTitle,
+      brandName: deal.brandName,
+      brandEmail: deal.brandEmail,
+      milestoneTitle: milestone.name,
+      amount: milestone.amount,
+      currency: deal.currency,
+      status: invoiceResult.status === 'SENT' ? 'SENT' : 'DRAFT',
+      issueDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+      paymentUrl: invoiceResult.paymentUrl,
+      terms: 'DUE_ON_RECEIPT',
+    });
+
     // Update store state
     const updatedDeal = updateActiveDeal((prev) => {
       const newMilestones = [...prev.milestones];
@@ -49,7 +66,7 @@ export async function POST(req: Request) {
     // Append Agent Execution Log
     appendDealLog({
       type: 'action',
-      title: `PayPal Milestone Invoice Generated & Sent`,
+      title: `PayPal Milestone Invoice #${invoiceResult.invoiceNumber} Dispatched`,
       description: `Dispatched PayPal Sandbox Invoice #${invoiceResult.invoiceNumber} (${deal.currency} \$${milestone.amount}) to ${deal.brandEmail}. Direct payment link activated.`,
       toolCall: {
         name: 'paypal.invoicing.create_and_send',

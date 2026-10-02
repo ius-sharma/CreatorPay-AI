@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getActiveDeal, updateActiveDeal, appendDealLog } from '@/lib/store';
+import { getActiveDeal, updateActiveDeal, appendDealLog, addAuditEntry } from '@/lib/store';
 import { createBatchPayout, PayoutRecipient } from '@/lib/paypal';
 
 export async function POST(req: Request) {
@@ -26,6 +26,43 @@ export async function POST(req: Request) {
     const payoutResult = await createBatchPayout(payoutRecipients, deal.currency);
 
     const now = new Date().toISOString();
+    const timeFormatted = new Date().toLocaleString();
+
+    // Log into immutable audit ledger for each collaborator
+    deal.teamSplits.forEach((split, idx) => {
+      addAuditEntry({
+        id: `AUDIT-${Date.now()}-${idx}`,
+        timestamp: timeFormatted,
+        batchId: payoutResult.batchId,
+        dealTitle: deal.dealTitle,
+        recipientName: split.name,
+        recipientRole: split.role,
+        recipientEmail: split.email,
+        type: 'contractor_payout',
+        amount: split.calculatedAmount || 0,
+        currency: deal.currency,
+        status: 'COMPLETED',
+        taxDeductible: true,
+        category: '1099 Contractor Rev-Share',
+      });
+    });
+
+    // Record creator net retention
+    addAuditEntry({
+      id: `AUDIT-${Date.now()}-creator`,
+      timestamp: timeFormatted,
+      batchId: payoutResult.batchId,
+      dealTitle: deal.dealTitle,
+      recipientName: 'Apex Media (Creator)',
+      recipientRole: 'Studio Owner',
+      recipientEmail: process.env.PAYPAL_BUSINESS_EMAIL || 'sb-9l0ms53173777@business.example.com',
+      type: 'creator_retention',
+      amount: deal.creatorNetPayout,
+      currency: deal.currency,
+      status: 'COMPLETED',
+      taxDeductible: false,
+      category: 'Net Studio Operating Income',
+    });
 
     const updatedDeal = updateActiveDeal((prev) => {
       const settledSplits = prev.teamSplits.map((s, idx) => {

@@ -1,3 +1,5 @@
+export type TabType = 'workspace' | 'invoicing' | 'splits' | 'audit' | 'diagnostics';
+
 export type MilestoneStatus = 'pending' | 'invoiced' | 'paid';
 export type DealStatus = 
   | 'draft' 
@@ -36,6 +38,7 @@ export interface TeamSplit {
   payoutBatchId?: string;
   payoutItemId?: string;
   settledAt?: string;
+  w9Status?: 'verified' | 'pending';
 }
 
 export interface Deliverable {
@@ -79,4 +82,36 @@ export interface Deal {
   createdAt: string;
   updatedAt: string;
   logs: AgentLog[];
+}
+
+export interface PayPalInvoiceSummary {
+  id: string;
+  invoiceNumber: string;
+  dealTitle: string;
+  brandName: string;
+  brandEmail: string;
+  milestoneTitle: string;
+  amount: number;
+  currency: string;
+  status: 'DRAFT' | 'SENT' | 'PAID' | 'CANCELLED';
+  issueDate: string;
+  dueDate: string;
+  paymentUrl: string;
+  terms: string;
+}
+
+export interface AuditLedgerEntry {
+  id: string;
+  timestamp: string;
+  batchId: string;
+  dealTitle: string;
+  recipientName: string;
+  recipientRole: string;
+  recipientEmail: string;
+  type: 'contractor_payout' | 'creator_retention';
+  amount: number;
+  currency: string;
+  status: 'COMPLETED' | 'PENDING';
+  taxDeductible: boolean;
+  category: string;
 }
