@@ -26,9 +26,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#ffffff] text-slate-900 font-sans selection:bg-brand-100 selection:text-brand-900 overflow-x-hidden relative">
       
-      {/* 1. TOP FLOATING PILL NAVBAR */}
-      <div className="pt-6 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto sticky top-0 z-50">
-        <header className="rounded-full bg-white/85 backdrop-blur-md border border-slate-200/80 shadow-xs px-5 sm:px-7 py-3 flex items-center justify-between transition-all">
+      {/* 1. TOP FLOATING PILL NAVBAR (FIXED ON SCROLL) */}
+      <div className="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
+        <header className="max-w-6xl mx-auto rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-md px-5 sm:px-7 py-3 flex items-center justify-between transition-all pointer-events-auto">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <span className="font-extrabold text-xl tracking-tight text-slate-950">
@@ -64,7 +64,7 @@ export default function LandingPage() {
       </div>
 
       {/* 2. HERO SECTION WITH CONCENTRIC ORBIT RINGS */}
-      <section className="relative pt-16 sm:pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center overflow-hidden">
+      <section className="relative pt-28 sm:pt-36 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center overflow-hidden">
         
         {/* Background Concentric Orbital Rings */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
