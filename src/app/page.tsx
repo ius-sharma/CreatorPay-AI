@@ -30,16 +30,8 @@ export default function LandingPage() {
       <div className="pt-6 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto sticky top-0 z-50">
         <header className="rounded-full bg-white/85 backdrop-blur-md border border-slate-200/80 shadow-xs px-5 sm:px-7 py-3 flex items-center justify-between transition-all">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2.5">
-            <div className="flex items-center -space-x-1.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#001C3E] via-[#003087] to-[#0079C1] flex items-center justify-center text-white font-black italic text-sm shadow-xs z-10">
-                P
-              </div>
-              <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white shadow-xs">
-                <Bot className="w-4 h-4 text-white" />
-              </div>
-            </div>
-            <span className="font-extrabold text-lg tracking-tight text-slate-950">
+          <Link href="/" className="flex items-center">
+            <span className="font-extrabold text-xl tracking-tight text-slate-950">
               CreatorPay<span className="text-brand-600">.AI</span>
             </span>
           </Link>

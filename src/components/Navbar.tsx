@@ -34,19 +34,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="h-16 flex items-center justify-between">
           {/* Logo & Studio Info */}
           <div className="flex items-center space-x-3">
-            {/* Dual Monogram: PayPal Blue + CreatorPay Brand */}
-            <div className="flex items-center -space-x-1.5">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#001C3E] via-[#003087] to-[#0079C1] flex items-center justify-center shadow-md shadow-blue-900/20 text-white font-black italic text-lg z-10">
-                P
-              </div>
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-700 via-brand-600 to-brand-400 flex items-center justify-center shadow-md shadow-brand-600/20 text-white">
-                <Bot className="w-5 h-5 text-white" />
-              </div>
-            </div>
-
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-black text-xl tracking-tight text-slate-900">
+                <span className="font-extrabold text-xl tracking-tight text-slate-900">
                   CreatorPay<span className="text-brand-600">.AI</span>
                 </span>
                 <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200">
