@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -33,14 +34,9 @@ const config: Config = {
           surface: "#F5F7FA",
           border: "#EAECF0",
         },
-        accent: {
-          indigo: "#635bff",
-          cyan: "#00b8d9",
-          coral: "#ff7a59",
-        },
       },
       fontFamily: {
-        sans: ["var(--font-instrument-sans)", "Instrument Sans", "system-ui", "sans-serif"],
+        sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
         mono: ["JetBrains Mono", "Courier New", "monospace"],
       },
     },
