@@ -33,9 +33,14 @@ const config: Config = {
           surface: "#F5F7FA",
           border: "#EAECF0",
         },
+        accent: {
+          indigo: "#635bff",
+          cyan: "#00b8d9",
+          coral: "#ff7a59",
+        },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        sans: ["var(--font-instrument-sans)", "Instrument Sans", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "Courier New", "monospace"],
       },
     },
