@@ -109,94 +109,79 @@ export default function LandingPage() {
             <span className="text-brand-700 font-bold">Track 2: Merchant Solutions</span>
           </div>
 
-          {/* Master Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-950 tracking-tight leading-[1.08] mb-6">
-            AI-powered tools to <br className="hidden sm:inline" />
+          {/* Master Headline (Option 1) */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-950 tracking-tight leading-[1.08] mb-5">
+            AI dealmaker for <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-slate-950 via-brand-700 to-slate-900 bg-clip-text text-transparent">
-              stay organized & settled
+              creator payouts
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
-            From raw sponsorship contracts to automated milestone PayPal invoices, webhook payment tracking, and instant multi-party team splits — manage everything autonomously in one place.
+          <p className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto mb-8 font-normal leading-relaxed">
+            Turn brand sponsorships into PayPal milestone invoices and instant team splits.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-3.5 mb-14">
+          <div className="flex flex-wrap items-center justify-center gap-3.5 mb-12">
             <Link
               href="/dashboard"
-              className="px-7 py-3 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center space-x-2 cursor-pointer"
+              className="px-8 py-3 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center space-x-2 cursor-pointer"
             >
-              <span>Launch Studio App Free</span>
+              <span>Get started free</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
               href="#how-it-works"
               className="px-7 py-3 rounded-full bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold border border-slate-200 hover:border-slate-300 transition-all shadow-2xs"
             >
-              Explore 5-Phase Architecture
+              See how it works
             </a>
           </div>
 
-          {/* 3. FLOATING GLASSMORPHISM ACTIVITY STACK OVER RADIANT AURA */}
-          <div className="relative max-w-md mx-auto pt-2">
-            {/* Dreamy Soft Radial Glow Aura */}
-            <div className="absolute -inset-8 bg-gradient-to-tr from-sky-200/50 via-brand-200/40 to-indigo-100/40 rounded-full blur-2xl -z-10" />
+          {/* 3. COMPACT FLOATING MICRO-PILLS OVER RADIANT AURA */}
+          <div className="relative max-w-sm mx-auto pt-2">
+            {/* Soft Radial Glow Aura */}
+            <div className="absolute -inset-6 bg-gradient-to-tr from-sky-200/50 via-brand-200/40 to-indigo-100/40 rounded-full blur-2xl -z-10" />
 
-            {/* Stacked Interactive Activity Pills */}
-            <div className="space-y-2.5">
-              {/* Card 1: Payout Disbursed */}
-              <div className="p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-lg text-left flex items-center justify-between hover:scale-[1.02] transition-transform">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs border border-emerald-200">
-                    ✓
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900">
-                      Aman Verma <span className="font-normal text-slate-500">(Lead Editor) received $300.00</span>
-                    </p>
-                    <p className="text-[10px] text-slate-400 font-mono">2 min ago • via PayPal Payouts API (15% Cut)</p>
-                  </div>
+            {/* Stacked Compact Micro-Pills */}
+            <div className="space-y-2">
+              {/* Pill 1 */}
+              <div className="px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md text-left flex items-center justify-between hover:scale-[1.02] transition-transform">
+                <div className="flex items-center space-x-2.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <p className="text-xs font-bold text-slate-900">
+                    Aman (Editor) <span className="font-normal text-slate-500">· Received $300 cut</span>
+                  </p>
                 </div>
                 <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  Settled
+                  PayPal Payouts
                 </span>
               </div>
 
-              {/* Card 2: Webhook Clearance */}
-              <div className="p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-lg text-left flex items-center justify-between hover:scale-[1.02] transition-transform">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-50 text-[#003087] flex items-center justify-center font-bold text-xs border border-blue-200">
-                    P
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900">
-                      CloudHost Inc. <span className="font-normal text-slate-500">cleared Milestone 1 ($600)</span>
-                    </p>
-                    <p className="text-[10px] text-slate-400 font-mono">Real-time Webhook: INVOICING.INVOICE.PAID</p>
-                  </div>
+              {/* Pill 2 */}
+              <div className="px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md text-left flex items-center justify-between hover:scale-[1.02] transition-transform">
+                <div className="flex items-center space-x-2.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-500" />
+                  <p className="text-xs font-bold text-slate-900">
+                    CloudHost <span className="font-normal text-slate-500">· Milestone 1 Paid ($600)</span>
+                  </p>
                 </div>
                 <span className="text-[10px] font-bold text-[#003087] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                  Verified
+                  Webhook ✓
                 </span>
               </div>
 
-              {/* Card 3: AI Deliverable Verified */}
-              <div className="p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-lg text-left flex items-center justify-between hover:scale-[1.02] transition-transform">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xs border border-brand-200">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900">
-                      AI Agent <span className="font-normal text-slate-500">verified YouTube Sponsor Tag</span>
-                    </p>
-                    <p className="text-[10px] text-slate-400 font-mono">Tag #cloudhost & UTM discount confirmed at 02:15</p>
-                  </div>
+              {/* Pill 3 */}
+              <div className="px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md text-left flex items-center justify-between hover:scale-[1.02] transition-transform">
+                <div className="flex items-center space-x-2.5">
+                  <span className="w-2 h-2 rounded-full bg-brand-500" />
+                  <p className="text-xs font-bold text-slate-900">
+                    Deal Approved <span className="font-normal text-slate-500">· $2,000 Sponsorship</span>
+                  </p>
                 </div>
                 <span className="text-[10px] font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">
-                  98% Match
+                  Invoice Sent
                 </span>
               </div>
             </div>
