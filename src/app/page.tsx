@@ -302,57 +302,135 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* SEPARATE FLOATING NODE 1: AGREEMENT INGESTION */}
-            <div className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative ${
+            {/* UPGRADED SEPARATE FLOATING NODE 1: AGREEMENT INGESTION */}
+            <div className={`p-6 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group hover:border-brand-400/80 ${
               simStep >= 1 ? 'border-brand-500 dark:border-brand-500 ring-2 ring-brand-500/20 shadow-brand-500/10' : 'border-slate-200 dark:border-slate-800'
             }`}>
-              {/* Bottom Connector Socket Pin */}
-              <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500 flex items-center justify-center shadow-xs z-20">
-                <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
+              {/* Bottom Out-Port Socket Pin */}
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-ping" />
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              {/* Node Header */}
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-slate-100 dark:border-slate-800 pb-3.5">
                 <div className="flex items-center space-x-3">
-                  <div className="w-9 h-9 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
-                    <FileText className="w-4 h-4" />
+                  <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800 shadow-2xs">
+                    <FileText className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono">
-                      Trigger · Agreement Ingestion
-                    </span>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                      Sponsorship_Agreement_{selectedDeal.brand.split(' ')[0]}.pdf
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono">
+                        Trigger · Agreement Ingestion
+                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="text-[10px] text-slate-400 font-mono">Port #IN-01</span>
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                      <span>Sponsorship_Agreement_{selectedDeal.brand.split(' ')[0]}_2026.pdf</span>
                     </h4>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
-                  Terms Extracted in 0.8s ✓
-                </span>
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 flex items-center space-x-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                    <span>AI Parsed in 0.8s (99.8% Match)</span>
+                  </span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
-                <div>
-                  <span className="text-slate-400 text-[10px]">TOTAL VALUE:</span>
-                  <p className="font-bold text-slate-900 dark:text-white">${selectedDeal.amount.toLocaleString()} USD</p>
+              {/* Main Body: 2-Column Document Preview + Structured Extraction */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                
+                {/* Left (7 cols): Document Snippet with Highlighted Clauses */}
+                <div className="md:col-span-7 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/70 text-xs font-sans space-y-2.5">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 border-b border-slate-200/60 dark:border-slate-700/60 pb-1.5">
+                    <span>DOCUMENT CLAUSE VIEWER</span>
+                    <span>SECTION 2: COMPENSATION</span>
+                  </div>
+                  
+                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong className="text-slate-900 dark:text-white">Clause 1.2:</strong> Sponsor agrees to compensate Creator total sum of{' '}
+                    <mark className="bg-purple-100 dark:bg-purple-900/60 text-purple-900 dark:text-purple-200 px-1.5 py-0.5 rounded font-mono font-bold">
+                      ${selectedDeal.amount.toLocaleString()} USD
+                    </mark>{' '}
+                    payable in milestone tranches.
+                  </p>
+
+                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong className="text-slate-900 dark:text-white">Clause 2.1:</strong> Mandatory{' '}
+                    <mark className="bg-blue-100 dark:bg-blue-900/60 text-blue-900 dark:text-blue-200 px-1.5 py-0.5 rounded font-mono font-bold">
+                      50% Advance Milestone (${selectedDeal.advanceMilestone.toLocaleString()} USD)
+                    </mark>{' '}
+                    clears via official PayPal invoice prior to production commencement.
+                  </p>
+
+                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong className="text-slate-900 dark:text-white">Clause 3.4:</strong> Deliverable scope confirmed as{' '}
+                    <mark className="bg-emerald-100 dark:bg-emerald-900/60 text-emerald-900 dark:text-emerald-200 px-1.5 py-0.5 rounded font-semibold">
+                      {selectedDeal.dealType}
+                    </mark>.
+                  </p>
                 </div>
-                <div>
-                  <span className="text-slate-400 text-[10px]">MILESTONE 1 ADVANCE:</span>
-                  <p className="font-bold text-blue-600 dark:text-sky-400">50% (${selectedDeal.advanceMilestone.toLocaleString()})</p>
+
+                {/* Right (5 cols): AI Extraction Output Matrix */}
+                <div className="md:col-span-5 flex flex-col justify-between space-y-2.5">
+                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700/80 space-y-2">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-[11px] font-mono text-slate-400">Total Deal:</span>
+                      <span className="font-mono font-bold text-slate-950 dark:text-white">
+                        ${selectedDeal.amount.toLocaleString()} USD
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-[11px] font-mono text-slate-400">Advance Escrow:</span>
+                      <span className="font-mono font-bold text-blue-600 dark:text-sky-400">
+                        ${selectedDeal.advanceMilestone.toLocaleString()} (50%)
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-[11px] font-mono text-slate-400">Settlement Rail:</span>
+                      <span className="font-mono font-bold text-[#003087] dark:text-sky-300">
+                        PayPal Invoicing
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-brand-50/70 dark:bg-brand-950/40 border border-brand-200/60 dark:border-brand-800/60 flex items-center justify-between text-[11px]">
+                    <span className="font-bold text-brand-900 dark:text-brand-200 flex items-center space-x-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+                      <span>Legal Rules Locked</span>
+                    </span>
+                    <span className="text-brand-700 dark:text-brand-400 font-mono font-bold">Auto-Dispatched →</span>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-slate-400 text-[10px]">DELIVERABLE:</span>
-                  <p className="font-bold text-slate-900 dark:text-white truncate">{selectedDeal.dealType}</p>
-                </div>
+
               </div>
             </div>
 
-            {/* DOTTED THREAD CONNECTOR 1 (VERTICAL DASHED LINE) */}
-            <div className="flex flex-col items-center justify-center my-0 py-1">
-              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
-              <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 shadow-sm transition-all duration-300 ${
-                simStep >= 2 ? 'bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-950/80 animate-pulse' : 'bg-slate-300 dark:bg-slate-700'
-              }`} />
-              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+            {/* OPTION 1: ANIMATED MOVING DATA-STREAM MARQUEE CONNECTOR THREAD 1 */}
+            <div className="flex flex-col items-center justify-center my-0 py-1.5 relative">
+              <svg className="w-8 h-12 overflow-visible" viewBox="0 0 32 48" fill="none">
+                {/* Static Background Guideline */}
+                <line x1="16" y1="0" x2="16" y2="48" stroke="currentColor" strokeWidth="2" className="text-slate-200 dark:text-slate-800" />
+                {/* Moving Marquee Flowing Dashes */}
+                <line 
+                  x1="16" 
+                  y1="0" 
+                  x2="16" 
+                  y2="48" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5" 
+                  className={`animate-flow-thread ${simStep >= 2 ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400 dark:text-slate-600'}`} 
+                />
+                {/* Traveling Glowing Data Packet */}
+                <circle 
+                  cx="16" 
+                  cy="24" 
+                  r="4.5" 
+                  className={`${simStep >= 2 ? 'fill-brand-500' : 'fill-slate-400 dark:fill-slate-600'} transition-colors duration-300 shadow-sm`} 
+                />
+              </svg>
             </div>
 
             {/* SEPARATE FLOATING NODE 2: PAYPAL MILESTONE ESCROW */}
@@ -360,12 +438,12 @@ export default function LandingPage() {
               simStep >= 2 ? 'border-blue-500 dark:border-blue-500 ring-2 ring-blue-500/20 shadow-blue-500/10' : 'border-slate-200 dark:border-slate-800'
             }`}>
               {/* Top Socket */}
-              <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs z-20">
-                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping" />
               </div>
               {/* Bottom Socket */}
-              <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs z-20">
-                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping" />
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -400,13 +478,29 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* DOTTED THREAD CONNECTOR 2 (VERTICAL DASHED LINE) */}
-            <div className="flex flex-col items-center justify-center my-0 py-1">
-              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
-              <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 shadow-sm transition-all duration-300 ${
-                simStep >= 3 ? 'bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950/80 animate-pulse' : 'bg-slate-300 dark:bg-slate-700'
-              }`} />
-              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+            {/* OPTION 1: ANIMATED MOVING DATA-STREAM MARQUEE CONNECTOR THREAD 2 */}
+            <div className="flex flex-col items-center justify-center my-0 py-1.5 relative">
+              <svg className="w-8 h-12 overflow-visible" viewBox="0 0 32 48" fill="none">
+                {/* Static Background Guideline */}
+                <line x1="16" y1="0" x2="16" y2="48" stroke="currentColor" strokeWidth="2" className="text-slate-200 dark:text-slate-800" />
+                {/* Moving Marquee Flowing Dashes */}
+                <line 
+                  x1="16" 
+                  y1="0" 
+                  x2="16" 
+                  y2="48" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5" 
+                  className={`animate-flow-thread ${simStep >= 3 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-400 dark:text-slate-600'}`} 
+                />
+                {/* Traveling Glowing Data Packet */}
+                <circle 
+                  cx="16" 
+                  cy="24" 
+                  r="4.5" 
+                  className={`${simStep >= 3 ? 'fill-blue-500' : 'fill-slate-400 dark:fill-slate-600'} transition-colors duration-300 shadow-sm`} 
+                />
+              </svg>
             </div>
 
             {/* SEPARATE FLOATING NODE 3: MULTIMODAL DELIVERABLE VERIFIER */}
@@ -463,28 +557,29 @@ export default function LandingPage() {
 
             {/* BRANCHING DOTTED THREAD TREE (SVG CONNECTOR WIRES SPREADING TO COLLABORATORS) */}
             <div className="relative py-2 my-1">
-              {/* Desktop SVG Branching Lines */}
+              {/* Desktop SVG Branching Lines with Option 1 Moving Flow Dashes */}
               <div className="hidden sm:block">
                 <svg className="w-full h-12 overflow-visible" viewBox="0 0 800 48" fill="none">
                   {/* Center stem coming down from Node 3 */}
-                  <line x1="400" y1="0" x2="400" y2="20" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  <line x1="400" y1="0" x2="400" y2="20" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-600'}`} />
                   {/* Central Node Pin */}
-                  <circle cx="400" cy="20" r="4" className={`fill-brand-500 transition-colors ${simStep >= 4 ? 'animate-pulse' : ''}`} />
-                  {/* Horizontal Crossbar Bus */}
-                  <line x1="100" y1="20" x2="700" y2="20" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  <circle cx="400" cy="20" r="4.5" className={`fill-emerald-500 shadow-sm ${simStep >= 4 ? 'animate-pulse' : ''}`} />
+                  {/* Horizontal Crossbar Bus with Moving Flow */}
+                  <line x1="100" y1="20" x2="700" y2="20" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-600'}`} />
                   {/* Drop lines to 4 separate cards */}
-                  <line x1="100" y1="20" x2="100" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
-                  <line x1="300" y1="20" x2="300" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
-                  <line x1="500" y1="20" x2="500" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
-                  <line x1="700" y1="20" x2="700" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  <line x1="100" y1="20" x2="100" y2="48" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-600'}`} />
+                  <line x1="300" y1="20" x2="300" y2="48" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-400 dark:text-slate-600'}`} />
+                  <line x1="500" y1="20" x2="500" y2="48" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-400 dark:text-slate-600'}`} />
+                  <line x1="700" y1="20" x2="700" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="3 3" className="text-slate-300 dark:text-slate-700" />
                 </svg>
               </div>
 
               {/* Mobile Single Dotted Drop */}
               <div className="sm:hidden flex flex-col items-center justify-center">
-                <div className="w-0.5 h-6 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
-                <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
-                <div className="w-0.5 h-6 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+                <svg className="w-6 h-12 overflow-visible" viewBox="0 0 24 48" fill="none">
+                  <line x1="12" y1="0" x2="12" y2="48" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500' : 'text-slate-400'}`} />
+                  <circle cx="12" cy="24" r="4" className={`${simStep >= 4 ? 'fill-emerald-500' : 'fill-slate-400'} animate-pulse`} />
+                </svg>
               </div>
             </div>
 
