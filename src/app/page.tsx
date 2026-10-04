@@ -247,360 +247,379 @@ export default function LandingPage() {
             </a>
           </div>
 
-          {/* 3. HERO CENTERPIECE: N8N-STYLE VISUAL NODE GRAPH WORKFLOW */}
-          <div id="interactive-demo" className="relative max-w-4xl mx-auto text-left pt-2">
+          {/* 3. HERO CENTERPIECE: OPEN VISUAL NODE WORKFLOW (SEPARATE FLOATING NODES CONNECTED BY DOTTED THREADS) */}
+          <div id="interactive-demo" className="relative max-w-4xl mx-auto text-left pt-6 pb-2">
             
-            {/* Ambient Gradient Glow */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-brand-200/50 via-sky-200/30 to-purple-200/40 dark:from-brand-900/40 dark:via-sky-950/30 dark:to-purple-950/40 rounded-3xl blur-2xl -z-10 transition-colors duration-500" />
-
-            {/* Main Interactive Workflow Canvas */}
-            <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/90 rounded-3xl shadow-2xl dark:shadow-brand-950/20 p-5 sm:p-8 overflow-hidden transition-all duration-500 relative">
-              
-              {/* N8N Subtle Dot Matrix Canvas Background */}
-              <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
-
-              {/* Canvas Header & Toolbar */}
-              <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5 mb-8 transition-colors duration-500">
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                      Autonomous Workflow Canvas
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-black text-slate-950 dark:text-white mt-0.5">
-                    {selectedDeal.brand} • ${selectedDeal.amount.toLocaleString()} USD
-                  </h3>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3">
-                  {/* Deal Switchers */}
-                  <div className="flex items-center space-x-1 bg-slate-100/80 dark:bg-slate-800/80 p-1 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
-                    {SAMPLE_DEALS.map((deal) => (
-                      <button
-                        key={deal.id}
-                        onClick={() => setSelectedDeal(deal)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          selectedDeal.id === deal.id
-                            ? 'bg-white dark:bg-slate-700 text-slate-950 dark:text-white shadow-xs'
-                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
-                        }`}
-                      >
-                        {deal.brand.split(' ')[0]} (${(deal.amount / 1000).toFixed(1)}k)
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* "Run Flow" Simulation Trigger */}
-                  <button
-                    onClick={runWorkflowSimulation}
-                    disabled={isSimulating}
-                    className="flex items-center space-x-1.5 px-4 py-2 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-sm hover:shadow-md cursor-pointer disabled:opacity-75"
-                  >
-                    {isSimulating ? (
-                      <>
-                        <Sparkles className="w-3.5 h-3.5 animate-spin" />
-                        <span>Executing Flow...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Play className="w-3.5 h-3.5 fill-white" />
-                        <span>Test Run Workflow</span>
-                      </>
-                    )}
-                  </button>
-                </div>
+            {/* Top Toolbar: Deal Switcher & Simulation Controller */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-8 px-2">
+              <div className="flex items-center space-x-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 font-mono">
+                  Autonomous Agent Workflow Flow
+                </span>
+                <span className="text-slate-300 dark:text-slate-700">•</span>
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  {selectedDeal.brand} (${(selectedDeal.amount / 1000).toFixed(1)}k)
+                </span>
               </div>
 
-              {/* CONNECTED WORKFLOW NODES CONTAINER */}
-              <div className="relative z-10 space-y-6">
-                
-                {/* 1. TRIGGER NODE: AGREEMENT INGESTION */}
-                <div className={`p-5 rounded-2xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-sm relative ${
-                  simStep >= 1 ? 'border-brand-500 dark:border-brand-500 ring-2 ring-brand-500/20' : 'border-slate-200 dark:border-slate-800'
-                }`}>
-                  {/* Out Port Connector Dot */}
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-brand-600 border-2 border-white dark:border-slate-900 shadow-sm z-10" />
-
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
-                        <FileText className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono">
-                          Trigger · Agreement Ingestion
-                        </span>
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                          Sponsorship_Agreement_{selectedDeal.brand.split(' ')[0]}.pdf
-                        </h4>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
-                      Terms Extracted in 0.8s ✓
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-mono bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
-                    <div>
-                      <span className="text-slate-400 text-[10px]">TOTAL VALUE:</span>
-                      <p className="font-bold text-slate-900 dark:text-white">${selectedDeal.amount.toLocaleString()} USD</p>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 text-[10px]">MILESTONE 1 RULE:</span>
-                      <p className="font-bold text-blue-600 dark:text-sky-400">50% Advance (${selectedDeal.advanceMilestone.toLocaleString()})</p>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 text-[10px]">DELIVERABLE:</span>
-                      <p className="font-bold text-slate-900 dark:text-white truncate">{selectedDeal.dealType}</p>
-                    </div>
-                  </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Deal Switchers */}
+                <div className="flex items-center space-x-1 bg-white/90 dark:bg-slate-900/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                  {SAMPLE_DEALS.map((deal) => (
+                    <button
+                      key={deal.id}
+                      onClick={() => setSelectedDeal(deal)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        selectedDeal.id === deal.id
+                          ? 'bg-slate-950 dark:bg-brand-600 text-white shadow-xs'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
+                      }`}
+                    >
+                      {deal.brand.split(' ')[0]} (${(deal.amount / 1000).toFixed(1)}k)
+                    </button>
+                  ))}
                 </div>
 
-                {/* SVG CONNECTOR WIRE 1 */}
-                <div className="h-6 flex items-center justify-center relative">
-                  <div className={`w-0.5 h-full transition-colors duration-500 ${
-                    simStep >= 2 ? 'bg-brand-500 shadow-sm shadow-brand-500/50' : 'bg-slate-200 dark:bg-slate-700'
-                  }`} />
-                  {simStep === 1 && (
-                    <div className="absolute w-2 h-2 rounded-full bg-brand-500 animate-ping" />
+                {/* Simulation Trigger */}
+                <button
+                  onClick={runWorkflowSimulation}
+                  disabled={isSimulating}
+                  className="flex items-center space-x-1.5 px-4 py-2 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-sm hover:shadow-md cursor-pointer disabled:opacity-75"
+                >
+                  {isSimulating ? (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5 animate-spin" />
+                      <span>Executing Flow...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-3.5 h-3.5 fill-white" />
+                      <span>Test Run Workflow</span>
+                    </>
                   )}
-                </div>
-
-                {/* 2. PAYPAL ACTION NODE: MILESTONE INVOICING */}
-                <div className={`p-5 rounded-2xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-sm relative ${
-                  simStep >= 2 ? 'border-blue-500 dark:border-blue-500 ring-2 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
-                }`}>
-                  {/* In Port */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white dark:border-slate-900 shadow-sm z-10" />
-                  {/* Out Port */}
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white dark:border-slate-900 shadow-sm z-10" />
-
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-[#003087] dark:text-sky-400 flex items-center justify-center font-bold text-xs border border-blue-200 dark:border-blue-800">
-                        P
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#003087] dark:text-sky-300 font-mono">
-                          Action · PayPal Milestone Invoicing v2
-                        </span>
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                          Milestone 1 Advance Dispatched • Invoice #INV-883901
-                        </h4>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
-                      Webhook: INVOICING.INVOICE.PAID ✓
-                    </span>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/60 flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <div>
-                      <span className="text-slate-500 dark:text-slate-400 text-[11px]">Advance Escrow Cleared:</span>
-                      <p className="font-bold text-[#003087] dark:text-sky-300 font-mono text-base">
-                        ${selectedDeal.advanceMilestone.toLocaleString()}.00 USD
-                      </p>
-                    </div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">✓ Production Unlocked:</span> Funds secured in Creator balance before recording.
-                    </div>
-                  </div>
-                </div>
-
-                {/* SVG CONNECTOR WIRE 2 */}
-                <div className="h-6 flex items-center justify-center relative">
-                  <div className={`w-0.5 h-full transition-colors duration-500 ${
-                    simStep >= 3 ? 'bg-blue-500 shadow-sm shadow-blue-500/50' : 'bg-slate-200 dark:bg-slate-700'
-                  }`} />
-                  {simStep === 2 && (
-                    <div className="absolute w-2 h-2 rounded-full bg-blue-500 animate-ping" />
-                  )}
-                </div>
-
-                {/* 3. VERIFICATION NODE: DELIVERABLE PROOF SCANNER */}
-                <div className={`p-5 rounded-2xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-sm relative ${
-                  simStep >= 3 ? 'border-emerald-500 dark:border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
-                }`}>
-                  {/* In Port */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-emerald-600 border-2 border-white dark:border-slate-900 shadow-sm z-10" />
-                  {/* Out Port */}
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-emerald-600 border-2 border-white dark:border-slate-900 shadow-sm z-10" />
-
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
-                        <Video className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 font-mono">
-                          Condition · Multimodal Deliverable Verifier
-                        </span>
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                          Automated Video Proof & FTC Compliance Scan
-                        </h4>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
-                      99.4% Match Confirmed ✓
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-slate-600 dark:text-slate-300 font-sans mb-3">
-                    {selectedDeal.deliverable}
-                  </p>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] font-mono bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
-                    <div>
-                      <span className="text-slate-400 text-[10px]">TIMESTAMP:</span>
-                      <p className="text-emerald-600 dark:text-emerald-400 font-bold">02:45 Verified ✓</p>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 text-[10px]">PROMO LINK:</span>
-                      <p className="text-emerald-600 dark:text-emerald-400 font-bold">Active in Bio ✓</p>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 text-[10px]">TRIGGER:</span>
-                      <p className="text-brand-600 dark:text-brand-400 font-bold">Release Splits →</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* SVG CONNECTOR WIRE 3 (BRANCHING HUB) */}
-                <div className="h-6 flex items-center justify-center relative">
-                  <div className={`w-0.5 h-full transition-colors duration-500 ${
-                    simStep >= 4 ? 'bg-emerald-500 shadow-sm shadow-emerald-500/50' : 'bg-slate-200 dark:bg-slate-700'
-                  }`} />
-                  {simStep === 3 && (
-                    <div className="absolute w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  )}
-                </div>
-
-                {/* 4. SETTLEMENT ENGINE: CONNECTED COLLABORATOR ROSTER (BRANCHING) */}
-                <div className={`p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-sm relative ${
-                  simStep >= 4 ? 'border-brand-500 dark:border-brand-500 ring-2 ring-brand-500/20' : 'border-slate-200 dark:border-slate-800'
-                }`}>
-                  {/* In Port */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-brand-600 border-2 border-white dark:border-slate-900 shadow-sm z-10" />
-
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 dark:text-brand-300 flex items-center justify-center border border-purple-200 dark:border-purple-800">
-                        <Users className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono">
-                          Disbursement Hub · Connected Collaborator Roster
-                        </span>
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                          Automated Multi-Party Splits via PayPal Payouts Batch API
-                        </h4>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-bold text-slate-950 dark:text-white bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
-                      Settled in Parallel (4.2s)
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-5 leading-relaxed">
-                    Connect any collaborator working on your project (Editors, Designers, Scriptwriters, Managers), set custom split percentages, and CreatorPay disburses their exact cuts directly to their PayPal:
-                  </p>
-
-                  {/* CONNECTED COLLABORATOR CARDS (BRANCHES) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-                    
-                    {/* Branch 1: Video Editor */}
-                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 relative group hover:border-emerald-300 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                          Video Editor
-                        </span>
-                        <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
-                          15% Cut
-                        </span>
-                      </div>
-                      <p className="text-base font-black text-slate-900 dark:text-white font-mono">
-                        +${selectedDeal.editorCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
-                      </p>
-                      <div className="flex items-center space-x-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <CheckCircle2 className="w-3 h-3" />
-                        <span>PayPal Payout ✓</span>
-                      </div>
-                    </div>
-
-                    {/* Branch 2: Thumbnail Designer */}
-                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 relative group hover:border-blue-300 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                          Thumbnail Designer
-                        </span>
-                        <span className="text-[10px] font-mono font-bold text-blue-700 dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded">
-                          5% Cut
-                        </span>
-                      </div>
-                      <p className="text-base font-black text-slate-900 dark:text-white font-mono">
-                        +${selectedDeal.designerCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
-                      </p>
-                      <div className="flex items-center space-x-1 text-[10px] text-blue-600 dark:text-sky-400 font-medium pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <CheckCircle2 className="w-3 h-3" />
-                        <span>PayPal Payout ✓</span>
-                      </div>
-                    </div>
-
-                    {/* Branch 3: Creator / Studio Treasury */}
-                    <div className="p-3.5 rounded-xl bg-slate-950 dark:bg-black text-white space-y-1.5 border border-slate-800 relative shadow-sm">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                          Creator Net
-                        </span>
-                        <span className="text-[10px] font-mono font-bold text-brand-300 bg-slate-800 px-1.5 py-0.5 rounded">
-                          80% Retained
-                        </span>
-                      </div>
-                      <p className="text-base font-black text-white font-mono">
-                        +${selectedDeal.creatorCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
-                      </p>
-                      <div className="flex items-center space-x-1 text-[10px] text-emerald-400 font-medium pt-1 border-t border-slate-800">
-                        <CheckCircle2 className="w-3 h-3" />
-                        <span>Direct Merchant Balance ✓</span>
-                      </div>
-                    </div>
-
-                    {/* Branch 4: Add Any Collaborator (Dashed Connection) */}
-                    <div className="p-3.5 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col justify-between hover:border-brand-400 transition-colors bg-slate-50/40 dark:bg-slate-900/40">
-                      <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
-                            + Connect Role
-                          </span>
-                          <span className="text-[9px] font-mono text-slate-400">Any %</span>
-                        </div>
-                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                          Scriptwriter / Manager
-                        </p>
-                      </div>
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
-                        Auto-split via PayPal email
-                      </span>
-                    </div>
-
-                  </div>
-
-                  {/* Summary Bar */}
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-                    <span className="flex items-center space-x-1.5 font-medium">
-                      <Zap className="w-3.5 h-3.5 text-amber-500" />
-                      <span>Single PayPal Batch API call • Zero manual calculations</span>
-                    </span>
-                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
-                      Settled at {selectedDeal.verifiedTimestamp}
-                    </span>
-                  </div>
-                </div>
-
+                </button>
               </div>
-
             </div>
+
+            {/* SEPARATE FLOATING NODE 1: AGREEMENT INGESTION */}
+            <div className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative ${
+              simStep >= 1 ? 'border-brand-500 dark:border-brand-500 ring-2 ring-brand-500/20 shadow-brand-500/10' : 'border-slate-200 dark:border-slate-800'
+            }`}>
+              {/* Bottom Connector Socket Pin */}
+              <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500 flex items-center justify-center shadow-xs z-20">
+                <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono">
+                      Trigger · Agreement Ingestion
+                    </span>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                      Sponsorship_Agreement_{selectedDeal.brand.split(' ')[0]}.pdf
+                    </h4>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  Terms Extracted in 0.8s ✓
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
+                <div>
+                  <span className="text-slate-400 text-[10px]">TOTAL VALUE:</span>
+                  <p className="font-bold text-slate-900 dark:text-white">${selectedDeal.amount.toLocaleString()} USD</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px]">MILESTONE 1 ADVANCE:</span>
+                  <p className="font-bold text-blue-600 dark:text-sky-400">50% (${selectedDeal.advanceMilestone.toLocaleString()})</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px]">DELIVERABLE:</span>
+                  <p className="font-bold text-slate-900 dark:text-white truncate">{selectedDeal.dealType}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* DOTTED THREAD CONNECTOR 1 (VERTICAL DASHED LINE) */}
+            <div className="flex flex-col items-center justify-center my-0 py-1">
+              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+              <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 shadow-sm transition-all duration-300 ${
+                simStep >= 2 ? 'bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-950/80 animate-pulse' : 'bg-slate-300 dark:bg-slate-700'
+              }`} />
+              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+            </div>
+
+            {/* SEPARATE FLOATING NODE 2: PAYPAL MILESTONE ESCROW */}
+            <div className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative ${
+              simStep >= 2 ? 'border-blue-500 dark:border-blue-500 ring-2 ring-blue-500/20 shadow-blue-500/10' : 'border-slate-200 dark:border-slate-800'
+            }`}>
+              {/* Top Socket */}
+              <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs z-20">
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              </div>
+              {/* Bottom Socket */}
+              <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs z-20">
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-[#003087] dark:text-sky-400 flex items-center justify-center font-black text-sm border border-blue-200 dark:border-blue-800">
+                    P
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#003087] dark:text-sky-300 font-mono">
+                      Action · PayPal Milestone Invoicing v2
+                    </span>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                      Invoice #INV-883901 Generated & Dispatched
+                    </h4>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  Webhook: INVOICING.INVOICE.PAID ✓
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/60 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div>
+                  <span className="text-slate-500 dark:text-slate-400 text-[11px]">Milestone 1 Advance Cleared:</span>
+                  <p className="font-bold text-[#003087] dark:text-sky-300 font-mono text-base">
+                    ${selectedDeal.advanceMilestone.toLocaleString()}.00 USD
+                  </p>
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">✓ Production Unlocked:</span> Advance secured in Creator PayPal balance before recording.
+                </div>
+              </div>
+            </div>
+
+            {/* DOTTED THREAD CONNECTOR 2 (VERTICAL DASHED LINE) */}
+            <div className="flex flex-col items-center justify-center my-0 py-1">
+              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+              <div className={`w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 shadow-sm transition-all duration-300 ${
+                simStep >= 3 ? 'bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950/80 animate-pulse' : 'bg-slate-300 dark:bg-slate-700'
+              }`} />
+              <div className="w-0.5 h-5 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+            </div>
+
+            {/* SEPARATE FLOATING NODE 3: MULTIMODAL DELIVERABLE VERIFIER */}
+            <div className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative ${
+              simStep >= 3 ? 'border-emerald-500 dark:border-emerald-500 ring-2 ring-emerald-500/20 shadow-emerald-500/10' : 'border-slate-200 dark:border-slate-800'
+            }`}>
+              {/* Top Socket */}
+              <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-xs z-20">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              {/* Bottom Socket */}
+              <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-xs z-20">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
+                    <Video className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 font-mono">
+                      Condition · Multimodal Deliverable Verifier
+                    </span>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                      Automated Video Proof & FTC Compliance Scan
+                    </h4>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  99.4% Match Confirmed ✓
+                </span>
+              </div>
+
+              <p className="text-xs text-slate-600 dark:text-slate-300 font-sans mb-3">
+                {selectedDeal.deliverable}
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-[11px] font-mono bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
+                <div>
+                  <span className="text-slate-400 text-[10px]">TIMESTAMP:</span>
+                  <p className="text-emerald-600 dark:text-emerald-400 font-bold">02:45 Verified ✓</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px]">PROMO LINK:</span>
+                  <p className="text-emerald-600 dark:text-emerald-400 font-bold">Active in Bio ✓</p>
+                </div>
+                <div>
+                  <span className="text-slate-400 text-[10px]">TRIGGER:</span>
+                  <p className="text-brand-600 dark:text-brand-400 font-bold">Release Splits →</p>
+                </div>
+              </div>
+            </div>
+
+            {/* BRANCHING DOTTED THREAD TREE (SVG CONNECTOR WIRES SPREADING TO COLLABORATORS) */}
+            <div className="relative py-2 my-1">
+              {/* Desktop SVG Branching Lines */}
+              <div className="hidden sm:block">
+                <svg className="w-full h-12 overflow-visible" viewBox="0 0 800 48" fill="none">
+                  {/* Center stem coming down from Node 3 */}
+                  <line x1="400" y1="0" x2="400" y2="20" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  {/* Central Node Pin */}
+                  <circle cx="400" cy="20" r="4" className={`fill-brand-500 transition-colors ${simStep >= 4 ? 'animate-pulse' : ''}`} />
+                  {/* Horizontal Crossbar Bus */}
+                  <line x1="100" y1="20" x2="700" y2="20" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  {/* Drop lines to 4 separate cards */}
+                  <line x1="100" y1="20" x2="100" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  <line x1="300" y1="20" x2="300" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  <line x1="500" y1="20" x2="500" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                  <line x1="700" y1="20" x2="700" y2="48" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-slate-400 dark:text-slate-600" />
+                </svg>
+              </div>
+
+              {/* Mobile Single Dotted Drop */}
+              <div className="sm:hidden flex flex-col items-center justify-center">
+                <div className="w-0.5 h-6 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+                <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
+                <div className="w-0.5 h-6 border-l-2 border-dashed border-slate-400 dark:border-slate-600" />
+              </div>
+            </div>
+
+            {/* SEPARATE FLOATING COLLABORATOR BRANCH NODES (THE ROSTER HUB) */}
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+                <div className="flex items-center space-x-2">
+                  <Users className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                    Connected Collaborator Splits · Auto-Settled via PayPal Payouts
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                  Connect any role & set custom %
+                </span>
+              </div>
+
+              {/* 4 INDEPENDENT COLLABORATOR CARDS */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                
+                {/* Collaborator Card 1: Video Editor */}
+                <div className={`p-4 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group hover:border-emerald-300 ${
+                  simStep >= 4 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-1 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
+                }`}>
+                  {/* Top Connector Pin */}
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  </div>
+
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Video Editor
+                    </span>
+                    <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
+                      15% Cut
+                    </span>
+                  </div>
+                  <p className="text-lg font-black text-slate-900 dark:text-white font-mono">
+                    +${selectedDeal.editorCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
+                  </p>
+                  <div className="flex items-center space-x-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>PayPal Payout ✓</span>
+                  </div>
+                </div>
+
+                {/* Collaborator Card 2: Thumbnail Designer */}
+                <div className={`p-4 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group hover:border-blue-300 ${
+                  simStep >= 4 ? 'border-blue-500/80 dark:border-blue-500/80 ring-1 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
+                }`}>
+                  {/* Top Connector Pin */}
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  </div>
+
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Thumbnail Designer
+                    </span>
+                    <span className="text-[10px] font-mono font-bold text-blue-700 dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded">
+                      5% Cut
+                    </span>
+                  </div>
+                  <p className="text-lg font-black text-slate-900 dark:text-white font-mono">
+                    +${selectedDeal.designerCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
+                  </p>
+                  <div className="flex items-center space-x-1 text-[10px] text-blue-600 dark:text-sky-400 font-medium pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>PayPal Payout ✓</span>
+                  </div>
+                </div>
+
+                {/* Collaborator Card 3: Creator / Studio Treasury */}
+                <div className={`p-4 rounded-3xl bg-slate-950 dark:bg-black text-white border transition-all duration-300 shadow-lg relative ${
+                  simStep >= 4 ? 'border-brand-500/80 ring-1 ring-brand-500/30' : 'border-slate-800'
+                }`}>
+                  {/* Top Connector Pin */}
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-slate-950 border-2 border-brand-500 flex items-center justify-center shadow-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
+                  </div>
+
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Creator Net
+                    </span>
+                    <span className="text-[10px] font-mono font-bold text-brand-300 bg-slate-800 px-1.5 py-0.5 rounded">
+                      80% Retained
+                    </span>
+                  </div>
+                  <p className="text-lg font-black text-white font-mono">
+                    +${selectedDeal.creatorCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
+                  </p>
+                  <div className="flex items-center space-x-1 text-[10px] text-emerald-400 font-medium pt-2 mt-2 border-t border-slate-800">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Direct Balance ✓</span>
+                  </div>
+                </div>
+
+                {/* Collaborator Card 4: Add Any Collaborator (Dashed Floating Card) */}
+                <div className="p-4 rounded-3xl bg-white/70 dark:bg-slate-900/60 border border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-400 flex flex-col justify-between transition-colors shadow-xs relative">
+                  {/* Top Connector Pin */}
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white dark:bg-slate-900 border-2 border-dashed border-slate-400 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+                        + Connect Role
+                      </span>
+                      <span className="text-[9px] font-mono text-slate-400">Custom %</span>
+                    </div>
+                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Scriptwriter / Manager
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono pt-2 border-t border-slate-100 dark:border-slate-800">
+                    Auto-split via PayPal email
+                  </span>
+                </div>
+
+              </div>
+
+              {/* Bottom Assurance Strip */}
+              <div className="mt-4 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400 shadow-xs">
+                <span className="flex items-center space-x-1.5 font-medium">
+                  <Zap className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Single PayPal Batch API call • 3 parallel transactions settled in 4.2s</span>
+                </span>
+                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                  IRS 1099 Expense Logged ✓
+                </span>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
