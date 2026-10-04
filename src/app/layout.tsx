@@ -1,13 +1,5 @@
 import type { Metadata } from 'next';
-import { Instrument_Sans } from 'next/font/google';
 import './globals.css';
-
-const instrumentSans = Instrument_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-instrument-sans',
-  weight: ['400', '500', '600', '700'],
-});
 
 export const metadata: Metadata = {
   title: 'CreatorPay AI — Autonomous Dealmaker & PayPal Payout Agent',
@@ -21,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={instrumentSans.variable}>
-      <body className={`${instrumentSans.className} bg-[#fbfbfe] text-slate-900 min-h-screen selection:bg-indigo-100 selection:text-indigo-900 antialiased`}>
+    <html lang="en">
+      <body className="bg-[#fbfbfe] text-slate-900 min-h-screen selection:bg-brand-100 selection:text-brand-900 antialiased">
         {children}
       </body>
     </html>
