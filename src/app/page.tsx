@@ -274,68 +274,218 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* 4-Step Interactive Autonomous Workflow Pipeline */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              {/* APPLE-STYLE DYNAMIC BENTO COMMAND CENTER (2x2 Asymmetric Grid) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
                 
-                {/* Stage 1: Contract Parsing */}
-                <div className="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/70 space-y-2 transition-colors duration-500">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-mono">01. INGEST</span>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                {/* WIDGET 1: SMART AI CONTRACT HIGHLIGHTER (7 COLS) */}
+                <div className="lg:col-span-7 p-5 sm:p-6 rounded-3xl bg-slate-50/90 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 flex flex-col justify-between transition-all duration-500 hover:border-brand-300 dark:hover:border-brand-700 shadow-xs">
+                  <div>
+                    <div className="flex items-center justify-between mb-4 border-b border-slate-200/60 dark:border-slate-700/60 pb-3">
+                      <div className="flex items-center space-x-2">
+                        <FileText className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                        <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
+                          Sponsorship_Agreement_{selectedDeal.brand.split(' ')[0]}.pdf
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold text-brand-700 dark:text-brand-300 bg-brand-100/70 dark:bg-brand-950/80 px-2 py-0.5 rounded-full border border-brand-200 dark:border-brand-800">
+                        AI Parsed in 0.8s ✓
+                      </span>
+                    </div>
+
+                    <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans bg-white dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs">
+                      <p>
+                        <span className="text-slate-400 font-mono">CLIENT:</span>{' '}
+                        <strong className="text-slate-900 dark:text-white">{selectedDeal.brand}</strong>
+                      </p>
+                      <p>
+                        <span className="text-slate-400 font-mono">FEE:</span>{' '}
+                        <mark className="bg-purple-100 dark:bg-purple-900/60 text-purple-900 dark:text-purple-200 px-2 py-0.5 rounded font-mono font-bold">
+                          ${selectedDeal.amount.toLocaleString()} USD Total
+                        </mark>
+                      </p>
+                      <p>
+                        <span className="text-slate-400 font-mono">TERMS:</span>{' '}
+                        <mark className="bg-blue-100 dark:bg-blue-900/60 text-blue-900 dark:text-blue-200 px-2 py-0.5 rounded font-mono font-bold">
+                          50% Advance (${selectedDeal.advanceMilestone.toLocaleString()}) upon agreement
+                        </mark>
+                        {' '}prior to production.
+                      </p>
+                      <p>
+                        <span className="text-slate-400 font-mono">SCOPE:</span>{' '}
+                        <mark className="bg-emerald-100 dark:bg-emerald-900/60 text-emerald-900 dark:text-emerald-200 px-2 py-0.5 rounded font-semibold">
+                          {selectedDeal.dealType}
+                        </mark>
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Contract Ingested</p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                    AI extracted payment terms: 50% upfront milestone, 50% on publish.
-                  </p>
-                  <span className="inline-block text-[10px] font-bold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/60 px-2 py-0.5 rounded-md border border-brand-200 dark:border-brand-800">
-                    Terms Locked
-                  </span>
+
+                  <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                    <span className="flex items-center space-x-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+                      <span>Zero manual reading • Milestone rules extracted</span>
+                    </span>
+                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">Terms Locked</span>
+                  </div>
                 </div>
 
-                {/* Stage 2: Milestone Invoicing */}
-                <div className="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/70 space-y-2 transition-colors duration-500">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-mono">02. ADVANCE</span>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                {/* WIDGET 2: PAYPAL DIGITAL ESCROW CARD (5 COLS) */}
+                <div className="lg:col-span-5 p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#003087] via-[#00266b] to-[#00173e] text-white flex flex-col justify-between shadow-xl relative overflow-hidden border border-blue-900">
+                  {/* Subtle Background Glow */}
+                  <div className="absolute -top-12 -right-12 w-32 h-32 bg-sky-400/20 rounded-full blur-2xl pointer-events-none" />
+
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="w-7 h-7 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center font-black text-sm text-white">
+                          P
+                        </span>
+                        <span className="text-xs font-bold text-sky-200">
+                          PayPal Invoicing v2
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono text-sky-300/80 bg-white/10 px-2 py-0.5 rounded-full border border-white/10">
+                        #INV-883901
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] uppercase tracking-wider text-sky-200 font-mono mb-1">
+                      Milestone 1 Advance Escrow
+                    </p>
+                    <p className="text-3xl font-black text-white font-mono tracking-tight mb-2">
+                      ${selectedDeal.advanceMilestone.toLocaleString()}.00 <span className="text-sm font-normal text-sky-300">USD</span>
+                    </p>
+                    <p className="text-xs text-sky-100/80 leading-snug">
+                      Disbursed directly by {selectedDeal.brand} accounts payable.
+                    </p>
                   </div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Milestone 1 Paid</p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                    ${selectedDeal.advanceMilestone.toLocaleString()} cleared via PayPal Invoicing before filming.
-                  </p>
-                  <span className="inline-block text-[10px] font-bold text-[#003087] dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-800">
-                    PayPal Webhook ✓
-                  </span>
+
+                  <div className="mt-5 pt-4 border-t border-white/10 space-y-2">
+                    <div className="inline-flex items-center space-x-2 bg-emerald-500/20 border border-emerald-400/40 px-3 py-1.5 rounded-xl text-emerald-300 text-xs font-bold">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                      <span>PAID VIA PAYPAL WEBHOOK ✓</span>
+                    </div>
+                    <p className="text-[10px] text-sky-200/70 font-mono">
+                      Advance cleared in Creator balance. Safe to film.
+                    </p>
+                  </div>
                 </div>
 
-                {/* Stage 3: AI Deliverable Check */}
-                <div className="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/70 space-y-2 transition-colors duration-500">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-mono">03. VERIFY</span>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                {/* WIDGET 3: VIDEO RADAR & DELIVERABLE PROOF SCANNER (6 COLS) */}
+                <div className="lg:col-span-6 p-5 sm:p-6 rounded-3xl bg-slate-950 dark:bg-black text-white border border-slate-800 flex flex-col justify-between shadow-xl relative overflow-hidden">
+                  {/* Radar Scanning Beam Overlay */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent animate-pulse" />
+
+                  <div>
+                    <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                      <div className="flex items-center space-x-2">
+                        <Video className="w-4 h-4 text-emerald-400" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">
+                          AI Deliverable Proof Scanner
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800 flex items-center space-x-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                        <span>REC ● 02:45</span>
+                      </span>
+                    </div>
+
+                    <p className="text-xs font-bold text-slate-200 mb-1">
+                      {selectedDeal.deliverable}
+                    </p>
+                    <p className="text-[11px] text-slate-400 mb-4 leading-relaxed">
+                      AI computer vision and audio transcript verified exact sponsor placement, link parameters, and FTC compliance tags.
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                      <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+                        <span className="text-slate-400">Timestamp:</span>
+                        <span className="text-emerald-400 font-bold">02:45 Live ✓</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+                        <span className="text-slate-400">AI Match:</span>
+                        <span className="text-emerald-400 font-bold">99.4% Verified</span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Deliverable Verified</p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">
-                    {selectedDeal.deliverable}
-                  </p>
-                  <span className="inline-block text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
-                    99.4% Match Verified
-                  </span>
+
+                  <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                    <span className="text-emerald-400 font-medium">Auto-verification cleared</span>
+                    <span className="text-slate-500 font-mono">Unlocking Final Splits →</span>
+                  </div>
                 </div>
 
-                {/* Stage 4: Instant Multi-Party Splits */}
-                <div className="p-4 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-200/80 dark:border-brand-800/60 space-y-2 transition-colors duration-500">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono">04. SETTLE</span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                {/* WIDGET 4: LIVE MULTI-PARTY SPLIT METER (6 COLS) */}
+                <div className="lg:col-span-6 p-5 sm:p-6 rounded-3xl bg-slate-50/90 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 flex flex-col justify-between transition-all duration-500 shadow-xs">
+                  <div>
+                    <div className="flex items-center justify-between mb-4 border-b border-slate-200/60 dark:border-slate-700/60 pb-3">
+                      <div className="flex items-center space-x-2">
+                        <Users className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 font-mono">
+                          Autonomous Team Splits
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-950 dark:text-white bg-white dark:bg-slate-900 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
+                        PayPal Payouts Batch
+                      </span>
+                    </div>
+
+                    <div className="space-y-3">
+                      {/* Editor Cut */}
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="font-semibold text-slate-700 dark:text-slate-300">
+                            Aman (Lead Editor • 15%)
+                          </span>
+                          <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                            +${selectedDeal.editorCut}.00 USD ✓
+                          </span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                          <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: '15%' }} />
+                        </div>
+                      </div>
+
+                      {/* Designer Cut */}
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="font-semibold text-slate-700 dark:text-slate-300">
+                            Rohan (Thumbnail Artist • 5%)
+                          </span>
+                          <span className="font-mono font-bold text-blue-600 dark:text-sky-400">
+                            +${selectedDeal.designerCut}.00 USD ✓
+                          </span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                          <div className="h-full bg-blue-500 rounded-full transition-all duration-500" style={{ width: '5%' }} />
+                        </div>
+                      </div>
+
+                      {/* Creator Net */}
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="font-semibold text-slate-900 dark:text-white">
+                            Creator Net Retained (80%)
+                          </span>
+                          <span className="font-mono font-bold text-brand-700 dark:text-brand-300">
+                            +${selectedDeal.creatorCut}.00 USD ✓
+                          </span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                          <div className="h-full bg-brand-600 dark:bg-brand-400 rounded-full transition-all duration-500" style={{ width: '80%' }} />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xs font-bold text-brand-950 dark:text-brand-100">Instant Team Splits</p>
-                  <p className="text-[11px] text-brand-900/80 dark:text-brand-200/80 leading-snug">
-                    Zero math. Editor, designer & creator paid in parallel batches.
-                  </p>
-                  <span className="inline-block text-[10px] font-bold text-white bg-slate-950 dark:bg-brand-600 px-2 py-0.5 rounded-md">
-                    PayPal Payouts Disbursed
-                  </span>
+
+                  <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+                    <span className="flex items-center space-x-1.5 font-medium">
+                      <Zap className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Single PayPal Batch API call</span>
+                    </span>
+                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">Executed in 4.2s</span>
+                  </div>
                 </div>
+
               </div>
 
               {/* Bottom Real Payout Breakdown Strip */}
