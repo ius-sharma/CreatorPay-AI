@@ -300,7 +300,7 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('ingest')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 hover:scale-[1.02] ${
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
                         simStep >= 1 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-slate-200 dark:border-slate-800'
                       }`}
                     >
@@ -373,8 +373,6 @@ export default function LandingPage() {
                         strokeWidth="3" 
                         className={`animate-flow-thread ${simStep >= 2 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-300 dark:text-slate-700'}`} 
                       />
-                      <circle cx="205" cy="0" r="5" className="fill-brand-500" />
-                      <circle cx="615" cy="144" r="5" className="fill-blue-500" />
                     </svg>
                   </div>
 
@@ -404,7 +402,7 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('invoice')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-blue-500 hover:scale-[1.02] ${
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-blue-500 ${
                         simStep >= 2 ? 'border-blue-500/80 dark:border-blue-500/80 ring-2 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
                       }`}
                     >
@@ -471,8 +469,6 @@ export default function LandingPage() {
                         strokeWidth="3" 
                         className={`animate-flow-thread ${simStep >= 3 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} 
                       />
-                      <circle cx="615" cy="0" r="5" className="fill-blue-500" />
-                      <circle cx="205" cy="144" r="5" className="fill-emerald-500" />
                     </svg>
                   </div>
 
@@ -489,7 +485,7 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('verify')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-emerald-500 hover:scale-[1.02] ${
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-emerald-500 ${
                         simStep >= 3 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-2 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
                       }`}
                     >
@@ -566,10 +562,6 @@ export default function LandingPage() {
                       <path d="M 205 0 C 205 76, 137 56, 137 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-700'}`} />
                       <path d="M 205 0 C 205 76, 410 56, 410 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} />
                       <path d="M 205 0 C 205 76, 683 56, 683 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-300 dark:text-slate-700'}`} />
-                      <circle cx="205" cy="0" r="5" className="fill-emerald-500 animate-pulse" />
-                      <circle cx="137" cy="144" r="4.5" className="fill-emerald-500" />
-                      <circle cx="410" cy="144" r="4.5" className="fill-blue-500" />
-                      <circle cx="683" cy="144" r="4.5" className="fill-brand-500" />
                     </svg>
                   </div>
 
@@ -601,7 +593,7 @@ export default function LandingPage() {
                     {/* Branch 1: Video Editor */}
                     <div 
                       onClick={() => openInspector('editor')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02] ${
+                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-emerald-400 hover:shadow-xl ${
                         simStep >= 4 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-1 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
                       }`}
                     >
@@ -633,7 +625,7 @@ export default function LandingPage() {
                     {/* Branch 2: Thumbnail Designer */}
                     <div 
                       onClick={() => openInspector('designer')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-blue-400 hover:shadow-xl hover:scale-[1.02] ${
+                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-blue-400 hover:shadow-xl ${
                         simStep >= 4 ? 'border-blue-500/80 dark:border-blue-500/80 ring-1 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
                       }`}
                     >
@@ -665,7 +657,7 @@ export default function LandingPage() {
                     {/* Branch 3: Creator / Studio Treasury */}
                     <div 
                       onClick={() => openInspector('creator')}
-                      className={`p-5 rounded-3xl bg-slate-950 dark:bg-black text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-2xl hover:scale-[1.02] ${
+                      className={`p-5 rounded-3xl bg-slate-950 dark:bg-black text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-2xl ${
                         simStep >= 4 ? 'border-brand-500/80 ring-1 ring-brand-500/30' : 'border-slate-800'
                       }`}
                     >
