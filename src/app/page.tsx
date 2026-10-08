@@ -258,29 +258,29 @@ export default function LandingPage() {
           </div>
 
           {/* 3. HERO CENTERPIECE: COMPACT SQUARE NODES WITH BORDER SOCKET CIRCLES & CURVED S-LINES */}
-          <div id="interactive-demo" className="relative max-w-3xl mx-auto text-left pt-6 pb-2">
+          <div id="interactive-demo" className="relative max-w-5xl mx-auto text-left pt-6 pb-6">
             
-            {/* Top Toolbar: Clean Live Canvas Indicator & Replay Trigger (No Deal Tabs) */}
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-10 px-2">
-              <div className="flex items-center space-x-2.5">
+            {/* Top Toolbar: Clean Live Canvas Indicator & Replay Trigger */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-10 px-2 sm:px-4">
+              <div className="flex items-center space-x-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
+                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 font-mono">
                   Autonomous Agent Workflow Canvas
                 </span>
                 <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-mono hidden sm:inline">
-                  Click any square node to inspect agent logic
+                  Interactive Node Graph · Click any node to inspect agent logic
                 </span>
               </div>
 
               <button
                 onClick={runWorkflowSimulation}
                 disabled={isSimulating}
-                className="flex items-center space-x-2 px-4 py-2 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-sm hover:shadow-md cursor-pointer disabled:opacity-75"
+                className="flex items-center space-x-2 px-5 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-75 hover:scale-[1.02]"
               >
                 {isSimulating ? (
                   <>
-                    <Sparkles className="w-3.5 h-3.5 animate-spin" />
+                    <Sparkles className="w-4 h-4 animate-spin" />
                     <span>Executing Flow...</span>
                   </>
                 ) : (
@@ -292,396 +292,427 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* ZIG-ZAG CANVAS: 2-COLUMN BALANCED GRID FOR EXACT S-CURVE ALIGNMENT */}
-            <div className="max-w-[600px] mx-auto">
+            {/* CANVAS WORKSPACE CARD WITH DOT GRID ACCENT */}
+            <div className="relative rounded-[36px] sm:rounded-[44px] bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 p-5 sm:p-12 shadow-xl backdrop-blur-xs overflow-hidden">
               
-              {/* ROW 1: NODE 1 (SQUARE CARD ON LEFT) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                <div className="flex justify-center">
-                  <div 
-                    onClick={() => openInspector('ingest')}
-                    className={`w-56 h-56 sm:w-60 sm:h-60 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer flex flex-col justify-between p-4.5 hover:border-brand-500 hover:shadow-xl hover:scale-[1.02] ${
-                      simStep >= 1 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-slate-200 dark:border-slate-800'
-                    }`}
-                  >
-                    {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Direct origin for S-line) */}
-                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
-                      <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
-                    </div>
+              {/* High-tech Canvas Dot Matrix Background */}
+              <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(#cbd5e1_1.2px,transparent_1.2px)] dark:bg-[radial-gradient(#1e293b_1.2px,transparent_1.2px)] [background-size:24px_24px] opacity-60" />
 
-                    {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
-                    <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
-                    </div>
-
-                    {/* Card Top: Stage Tag & Live Dot */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono bg-brand-50 dark:bg-brand-950/70 px-2 py-0.5 rounded-md border border-brand-200/60 dark:border-brand-800/60">
-                        Stage 01 · Trigger
-                      </span>
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    </div>
-
-                    {/* Card Center: Icon & Title */}
-                    <div className="text-center my-auto">
-                      <div className="w-11 h-11 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-2 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform">
-                        <FileText className="w-5 h-5" />
+              <div className="relative max-w-[820px] mx-auto z-10">
+                
+                {/* ROW 1: NODE 1 (SQUARE CARD ON LEFT + EXPLANATION ON RIGHT) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
+                  <div className="flex justify-center">
+                    <div 
+                      onClick={() => openInspector('ingest')}
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 hover:scale-[1.02] ${
+                        simStep >= 1 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Direct origin for S-line 1) */}
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
-                      <h4 className="text-xs font-black text-slate-900 dark:text-white leading-tight">
-                        Contract Ingestion
-                      </h4>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                        AI OCR & Terms Extractor
-                      </p>
-                    </div>
 
-                    {/* Card Bottom: Metric & Click Prompt */}
-                    <div className="text-center space-y-1">
-                      <div className="px-2 py-1 rounded-xl bg-slate-50 dark:bg-slate-800/80 text-[10px] font-mono text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
-                        50% Advance Lock Rule
+                      {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
+                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
-                      <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
-                        <span>Click to inspect</span>
-                        <span>↗</span>
-                      </span>
+
+                      {/* Card Top: Stage Tag & Live Dot */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
+                          Stage 01 · Trigger
+                        </span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      </div>
+
+                      {/* Card Center: Icon & Title */}
+                      <div className="text-center my-auto">
+                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <h4 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                          Contract Ingestion
+                        </h4>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                          AI OCR & Milestone Parser
+                        </p>
+                      </div>
+
+                      {/* Card Bottom: Metric & Click Prompt */}
+                      <div className="text-center space-y-1.5">
+                        <div className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-slate-800/80 text-[10px] font-mono text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
+                          50% Advance Lock Rule
+                        </div>
+                        <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
+                          <span>Inspect Stage Logic</span>
+                          <span>↗</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Step Description Side-Panel */}
+                  <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2">
+                    <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit">
+                      <span>Step 01 · Ingestion Trigger</span>
+                    </div>
+                    <h5 className="text-base font-extrabold text-slate-900 dark:text-white">
+                      Autonomous PDF Contract Ingestion
+                    </h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+                      Agent continuously listens for sponsorship PDF agreements, extracts fee amounts and deliverable deadlines, and locks mandatory 50% upfront milestone rules into code.
+                    </p>
+                  </div>
+                </div>
+
+                {/* CURVED S-LINE 1: CONNECTS NODE 1 BOTTOM CIRCLE (x: 205) TO NODE 2 TOP CIRCLE (x: 615) */}
+                <div className="h-28 sm:h-36 relative flex items-center justify-center my-2">
+                  {/* Desktop S-Curve */}
+                  <div className="w-full h-full hidden sm:block">
+                    <svg className="w-full h-full overflow-visible" viewBox="0 0 820 144" fill="none">
+                      <path 
+                        d="M 205 0 C 205 92, 615 52, 615 144" 
+                        stroke="currentColor" 
+                        strokeWidth="3" 
+                        className={`animate-flow-thread ${simStep >= 2 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-300 dark:text-slate-700'}`} 
+                      />
+                      <circle cx="205" cy="0" r="5" className="fill-brand-500" />
+                      <circle cx="615" cy="144" r="5" className="fill-blue-500" />
+                    </svg>
+                  </div>
+
+                  {/* Mobile Fallback Vertical Line */}
+                  <div className="sm:hidden flex flex-col items-center">
+                    <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64" fill="none">
+                      <line x1="12" y1="0" x2="12" y2="64" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-brand-500" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* ROW 2: NODE 2 (EXPLANATION ON LEFT + SQUARE CARD ON RIGHT) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
+                  {/* Left Column: Step Description Side-Panel */}
+                  <div className="hidden sm:flex flex-col justify-center pr-6 text-right space-y-2">
+                    <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-[#003087] dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-xl border border-blue-200/60 dark:border-blue-800/60 w-fit ml-auto">
+                      <span>Step 02 · Escrow Lock Action</span>
+                    </div>
+                    <h5 className="text-base font-extrabold text-slate-900 dark:text-white">
+                      PayPal Milestone Invoicing v2
+                    </h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm ml-auto leading-relaxed">
+                      Automatically constructs and dispatches official PayPal Invoice v2. Production is authorized the exact millisecond funds clear into your business balance.
+                    </p>
+                  </div>
+
+                  <div className="flex justify-center">
+                    <div 
+                      onClick={() => openInspector('invoice')}
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-blue-500 hover:scale-[1.02] ${
+                        simStep >= 2 ? 'border-blue-500/80 dark:border-blue-500/80 ring-2 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 1) */}
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+                      </div>
+
+                      {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for S-line 2) */}
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+                      </div>
+
+                      {/* BORDER SOCKET CIRCLE: LEFT BORDER PIN */}
+                      <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500/70 items-center justify-center shadow-xs z-10">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      </div>
+
+                      {/* Card Top: Stage Tag & Paid Status */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#003087] dark:text-sky-300 font-mono bg-blue-50 dark:bg-blue-950/70 px-2.5 py-1 rounded-md border border-blue-200/60 dark:border-blue-800/60">
+                          Stage 02 · Action
+                        </span>
+                        <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
+                          PAID ✓
+                        </span>
+                      </div>
+
+                      {/* Card Center: Icon & Title */}
+                      <div className="text-center my-auto">
+                        <div className="w-13 h-13 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-[#003087] dark:text-sky-400 flex items-center justify-center mx-auto mb-2.5 border border-blue-200 dark:border-blue-800 shadow-2xs group-hover:scale-110 transition-transform font-black text-lg">
+                          P
+                        </div>
+                        <h4 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                          Milestone Escrow
+                        </h4>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                          PayPal Invoicing API v2
+                        </p>
+                      </div>
+
+                      {/* Card Bottom: Metric & Click Prompt */}
+                      <div className="text-center space-y-1.5">
+                        <div className="px-3 py-1 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 text-[10px] font-mono text-[#003087] dark:text-sky-300 border border-blue-100 dark:border-blue-900/60 font-bold">
+                          ${selectedDeal.advanceMilestone.toLocaleString()}.00 USD Locked
+                        </div>
+                        <span className="text-[10px] font-bold text-blue-600 dark:text-sky-400 inline-flex items-center space-x-1 group-hover:underline">
+                          <span>Inspect Stage Logic</span>
+                          <span>↗</span>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Right Placeholder label */}
-                <div className="hidden sm:flex items-center pl-6 text-xs text-slate-400 font-mono">
-                  <span>← 1. Ingest deal agreement</span>
-                </div>
-              </div>
-
-              {/* CURVED S-LINE 1: CONNECTS NODE 1 BOTTOM CIRCLE (x: 150) TO NODE 2 TOP CIRCLE (x: 450) */}
-              <div className="h-20 sm:h-24 relative flex items-center justify-center">
-                {/* Desktop S-Curve */}
-                <div className="w-full h-full hidden sm:block">
-                  <svg className="w-full h-full overflow-visible" viewBox="0 0 600 96" fill="none">
-                    <path 
-                      d="M 150 0 C 150 64, 450 32, 450 96" 
-                      stroke="currentColor" 
-                      strokeWidth="2.5" 
-                      className={`animate-flow-thread ${simStep >= 2 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-300 dark:text-slate-700'}`} 
-                    />
-                    <circle cx="150" cy="0" r="4.5" className="fill-brand-500" />
-                    <circle cx="450" cy="96" r="4.5" className="fill-blue-500" />
-                  </svg>
-                </div>
-
-                {/* Mobile Fallback Vertical Line */}
-                <div className="sm:hidden flex flex-col items-center">
-                  <svg className="w-6 h-14 overflow-visible" viewBox="0 0 24 56" fill="none">
-                    <line x1="12" y1="0" x2="12" y2="56" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-brand-500" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* ROW 2: NODE 2 (SQUARE CARD ON RIGHT) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                {/* Left Placeholder label */}
-                <div className="hidden sm:flex items-center justify-end pr-6 text-xs text-slate-400 font-mono text-right">
-                  <span>2. Lock PayPal escrow →</span>
-                </div>
-
-                <div className="flex justify-center">
-                  <div 
-                    onClick={() => openInspector('invoice')}
-                    className={`w-56 h-56 sm:w-60 sm:h-60 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer flex flex-col justify-between p-4.5 hover:border-blue-500 hover:shadow-xl hover:scale-[1.02] ${
-                      simStep >= 2 ? 'border-blue-500/80 dark:border-blue-500/80 ring-2 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
-                    }`}
-                  >
-                    {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 1) */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
-                      <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
-                    </div>
-
-                    {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for S-line 2) */}
-                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
-                      <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
-                    </div>
-
-                    {/* BORDER SOCKET CIRCLE: LEFT BORDER PIN */}
-                    <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500/70 items-center justify-center shadow-xs z-10">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                    </div>
-
-                    {/* Card Top: Stage Tag & Paid Status */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-[#003087] dark:text-sky-300 font-mono bg-blue-50 dark:bg-blue-950/70 px-2 py-0.5 rounded-md border border-blue-200/60 dark:border-blue-800/60">
-                        Stage 02 · Action
-                      </span>
-                      <span className="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
-                        PAID ✓
-                      </span>
-                    </div>
-
-                    {/* Card Center: Icon & Title */}
-                    <div className="text-center my-auto">
-                      <div className="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-[#003087] dark:text-sky-400 flex items-center justify-center mx-auto mb-2 border border-blue-200 dark:border-blue-800 shadow-2xs group-hover:scale-110 transition-transform font-black text-base">
-                        P
-                      </div>
-                      <h4 className="text-xs font-black text-slate-900 dark:text-white leading-tight">
-                        Milestone Escrow
-                      </h4>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                        PayPal Invoicing v2
-                      </p>
-                    </div>
-
-                    {/* Card Bottom: Metric & Click Prompt */}
-                    <div className="text-center space-y-1">
-                      <div className="px-2 py-1 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 text-[10px] font-mono text-[#003087] dark:text-sky-300 border border-blue-100 dark:border-blue-900/60 font-bold">
-                        ${selectedDeal.advanceMilestone.toLocaleString()}.00 USD Locked
-                      </div>
-                      <span className="text-[10px] font-bold text-blue-600 dark:text-sky-400 inline-flex items-center space-x-1 group-hover:underline">
-                        <span>Click to inspect</span>
-                        <span>↗</span>
-                      </span>
-                    </div>
+                {/* CURVED S-LINE 2: CONNECTS NODE 2 BOTTOM CIRCLE (x: 615) BACK TO NODE 3 TOP CIRCLE (x: 205) */}
+                <div className="h-28 sm:h-36 relative flex items-center justify-center my-2">
+                  {/* Desktop S-Curve */}
+                  <div className="w-full h-full hidden sm:block">
+                    <svg className="w-full h-full overflow-visible" viewBox="0 0 820 144" fill="none">
+                      <path 
+                        d="M 615 0 C 615 92, 205 52, 205 144" 
+                        stroke="currentColor" 
+                        strokeWidth="3" 
+                        className={`animate-flow-thread ${simStep >= 3 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} 
+                      />
+                      <circle cx="615" cy="0" r="5" className="fill-blue-500" />
+                      <circle cx="205" cy="144" r="5" className="fill-emerald-500" />
+                    </svg>
                   </div>
-                </div>
-              </div>
 
-              {/* CURVED S-LINE 2: CONNECTS NODE 2 BOTTOM CIRCLE (x: 450) BACK TO NODE 3 TOP CIRCLE (x: 150) */}
-              <div className="h-20 sm:h-24 relative flex items-center justify-center">
-                {/* Desktop S-Curve */}
-                <div className="w-full h-full hidden sm:block">
-                  <svg className="w-full h-full overflow-visible" viewBox="0 0 600 96" fill="none">
-                    <path 
-                      d="M 450 0 C 450 64, 150 32, 150 96" 
-                      stroke="currentColor" 
-                      strokeWidth="2.5" 
-                      className={`animate-flow-thread ${simStep >= 3 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} 
-                    />
-                    <circle cx="450" cy="0" r="4.5" className="fill-blue-500" />
-                    <circle cx="150" cy="96" r="4.5" className="fill-emerald-500" />
-                  </svg>
-                </div>
-
-                {/* Mobile Fallback Vertical Line */}
-                <div className="sm:hidden flex flex-col items-center">
-                  <svg className="w-6 h-14 overflow-visible" viewBox="0 0 24 56" fill="none">
-                    <line x1="12" y1="0" x2="12" y2="56" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-blue-500" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* ROW 3: NODE 3 (SQUARE CARD ON LEFT) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                <div className="flex justify-center">
-                  <div 
-                    onClick={() => openInspector('verify')}
-                    className={`w-56 h-56 sm:w-60 sm:h-60 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer flex flex-col justify-between p-4.5 hover:border-emerald-500 hover:shadow-xl hover:scale-[1.02] ${
-                      simStep >= 3 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-2 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
-                    }`}
-                  >
-                    {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 2) */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    </div>
-
-                    {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for Branching Lines) */}
-                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    </div>
-
-                    {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
-                    <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500/70 items-center justify-center shadow-xs z-10">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    </div>
-
-                    {/* Card Top: Stage Tag & Verified Status */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 font-mono bg-emerald-50 dark:bg-emerald-950/70 px-2 py-0.5 rounded-md border border-emerald-200/60 dark:border-emerald-800/60">
-                        Stage 03 · Condition
-                      </span>
-                      <span className="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
-                        VERIFIED ✓
-                      </span>
-                    </div>
-
-                    {/* Card Center: Icon & Title */}
-                    <div className="text-center my-auto">
-                      <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-2 border border-emerald-200 dark:border-emerald-800 shadow-2xs group-hover:scale-110 transition-transform">
-                        <Video className="w-5 h-5" />
-                      </div>
-                      <h4 className="text-xs font-black text-slate-900 dark:text-white leading-tight">
-                        Deliverable Audit
-                      </h4>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                        Multimodal Vision OCR
-                      </p>
-                    </div>
-
-                    {/* Card Bottom: Metric & Click Prompt */}
-                    <div className="text-center space-y-1">
-                      <div className="px-2 py-1 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 text-[10px] font-mono text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/60 font-bold">
-                        02:45 Match Confirmed
-                      </div>
-                      <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center space-x-1 group-hover:underline">
-                        <span>Click to inspect</span>
-                        <span>↗</span>
-                      </span>
-                    </div>
+                  {/* Mobile Fallback Vertical Line */}
+                  <div className="sm:hidden flex flex-col items-center">
+                    <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64" fill="none">
+                      <line x1="12" y1="0" x2="12" y2="64" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-blue-500" />
+                    </svg>
                   </div>
                 </div>
 
-                {/* Right Placeholder label */}
-                <div className="hidden sm:flex items-center pl-6 text-xs text-slate-400 font-mono">
-                  <span>← 3. Auto-verify live video</span>
-                </div>
-              </div>
+                {/* ROW 3: NODE 3 (SQUARE CARD ON LEFT + EXPLANATION ON RIGHT) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
+                  <div className="flex justify-center">
+                    <div 
+                      onClick={() => openInspector('verify')}
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-emerald-500 hover:scale-[1.02] ${
+                        simStep >= 3 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-2 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 2) */}
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      </div>
 
-              {/* CURVED BRANCHING S-CABLES: ORIGINATES AT NODE 3 BOTTOM CIRCLE (x: 150) AND SPREADS TO 3 BRANCH CARDS (x: 100, 300, 500) */}
-              <div className="h-20 sm:h-24 relative flex items-center justify-center">
-                {/* Desktop SVG Branching Lines */}
-                <div className="w-full h-full hidden sm:block">
-                  <svg className="w-full h-full overflow-visible" viewBox="0 0 600 96" fill="none">
-                    <path d="M 150 0 C 150 48, 100 36, 100 96" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-700'}`} />
-                    <path d="M 150 0 C 150 48, 300 36, 300 96" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} />
-                    <path d="M 150 0 C 150 48, 500 36, 500 96" stroke="currentColor" strokeWidth="2.5" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-300 dark:text-slate-700'}`} />
-                    <circle cx="150" cy="0" r="4.5" className="fill-emerald-500 animate-pulse" />
-                    <circle cx="100" cy="96" r="3.5" className="fill-emerald-500" />
-                    <circle cx="300" cy="96" r="3.5" className="fill-blue-500" />
-                    <circle cx="500" cy="96" r="3.5" className="fill-brand-500" />
-                  </svg>
+                      {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for Branching Lines) */}
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      </div>
+
+                      {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
+                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500/70 items-center justify-center shadow-xs z-10">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      </div>
+
+                      {/* Card Top: Stage Tag & Verified Status */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 font-mono bg-emerald-50 dark:bg-emerald-950/70 px-2.5 py-1 rounded-md border border-emerald-200/60 dark:border-emerald-800/60">
+                          Stage 03 · Condition
+                        </span>
+                        <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
+                          VERIFIED ✓
+                        </span>
+                      </div>
+
+                      {/* Card Center: Icon & Title */}
+                      <div className="text-center my-auto">
+                        <div className="w-13 h-13 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-2.5 border border-emerald-200 dark:border-emerald-800 shadow-2xs group-hover:scale-110 transition-transform">
+                          <Video className="w-6 h-6" />
+                        </div>
+                        <h4 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                          Deliverable Audit
+                        </h4>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                          Multimodal Vision OCR
+                        </p>
+                      </div>
+
+                      {/* Card Bottom: Metric & Click Prompt */}
+                      <div className="text-center space-y-1.5">
+                        <div className="px-3 py-1 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 text-[10px] font-mono text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/60 font-bold">
+                          02:45 Match Confirmed
+                        </div>
+                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center space-x-1 group-hover:underline">
+                          <span>Inspect Stage Logic</span>
+                          <span>↗</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Step Description Side-Panel */}
+                  <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2">
+                    <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-xl border border-emerald-200/60 dark:border-emerald-800/60 w-fit">
+                      <span>Step 03 · Deliverable Condition</span>
+                    </div>
+                    <h5 className="text-base font-extrabold text-slate-900 dark:text-white">
+                      Multimodal Video & Timestamp Verification
+                    </h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+                      AI audits YouTube video feed at timestamp 02:45, verifies live UTM sponsor link and FTC disclosure, authorizing the parallel team settlement.
+                    </p>
+                  </div>
                 </div>
 
-                {/* Mobile Fallback Drop */}
-                <div className="sm:hidden flex flex-col items-center">
-                  <svg className="w-6 h-12 overflow-visible" viewBox="0 0 24 48" fill="none">
-                    <line x1="12" y1="0" x2="12" y2="48" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-emerald-500" />
-                  </svg>
-                </div>
-              </div>
+                {/* CURVED BRANCHING S-CABLES: ORIGINATES AT NODE 3 BOTTOM CIRCLE (x: 205) AND SPREADS TO 3 BRANCH CARDS (x: 137, 410, 683) */}
+                <div className="h-28 sm:h-36 relative flex items-center justify-center my-2">
+                  {/* Desktop SVG Branching Lines */}
+                  <div className="w-full h-full hidden sm:block">
+                    <svg className="w-full h-full overflow-visible" viewBox="0 0 820 144" fill="none">
+                      <path d="M 205 0 C 205 76, 137 56, 137 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-700'}`} />
+                      <path d="M 205 0 C 205 76, 410 56, 410 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} />
+                      <path d="M 205 0 C 205 76, 683 56, 683 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-300 dark:text-slate-700'}`} />
+                      <circle cx="205" cy="0" r="5" className="fill-emerald-500 animate-pulse" />
+                      <circle cx="137" cy="144" r="4.5" className="fill-emerald-500" />
+                      <circle cx="410" cy="144" r="4.5" className="fill-blue-500" />
+                      <circle cx="683" cy="144" r="4.5" className="fill-brand-500" />
+                    </svg>
+                  </div>
 
-              {/* ROW 4: 3 COLLABORATOR BRANCH CARDS (COMPACT SQUARE/ROUNDED-3XL NODES) */}
-              <div className="space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                      Disbursement Hub · Connected Collaborator Roster
+                  {/* Mobile Fallback Drop */}
+                  <div className="sm:hidden flex flex-col items-center">
+                    <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64" fill="none">
+                      <line x1="12" y1="0" x2="12" y2="64" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-emerald-500" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* ROW 4: 3 COLLABORATOR BRANCH CARDS (SPACIOUS 3-COLUMN ROSTER) */}
+                <div className="space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+                    <div className="flex items-center space-x-2.5">
+                      <Users className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                      <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+                        Disbursement Hub · Connected Collaborator Roster
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                      Connect any team role & set custom %
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                    Connect any role & set custom %
-                  </span>
-                </div>
 
-                {/* 3 INDEPENDENT COLLABORATOR BRANCH CARDS */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                  
-                  {/* Branch 1: Video Editor */}
-                  <div 
-                    onClick={() => openInspector('editor')}
-                    className={`p-4 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-emerald-400 hover:shadow-lg ${
-                      simStep >= 4 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-1 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
-                    }`}
-                  >
-                    {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-xs z-10">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  {/* 3 INDEPENDENT COLLABORATOR BRANCH CARDS */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    
+                    {/* Branch 1: Video Editor */}
+                    <div 
+                      onClick={() => openInspector('editor')}
+                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02] ${
+                        simStep >= 4 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-1 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-xs z-10">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      </div>
+
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                          Video Editor
+                        </span>
+                        <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
+                          15% Cut
+                        </span>
+                      </div>
+                      <p className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                        +${selectedDeal.editorCut}.00 <span className="text-[11px] font-normal text-slate-400">USD</span>
+                      </p>
+                      <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 font-medium pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                        <span className="flex items-center space-x-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Disbursed ✓</span>
+                        </span>
+                        <span className="text-slate-400 hover:underline">Inspect ↗</span>
+                      </div>
                     </div>
 
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                        Video Editor
-                      </span>
-                      <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
-                        15% Cut
-                      </span>
+                    {/* Branch 2: Thumbnail Designer */}
+                    <div 
+                      onClick={() => openInspector('designer')}
+                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-blue-400 hover:shadow-xl hover:scale-[1.02] ${
+                        simStep >= 4 ? 'border-blue-500/80 dark:border-blue-500/80 ring-1 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs z-10">
+                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                      </div>
+
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                          Thumbnail Designer
+                        </span>
+                        <span className="text-[10px] font-mono font-bold text-blue-700 dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md">
+                          5% Cut
+                        </span>
+                      </div>
+                      <p className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                        +${selectedDeal.designerCut}.00 <span className="text-[11px] font-normal text-slate-400">USD</span>
+                      </p>
+                      <div className="flex items-center justify-between text-[11px] text-blue-600 dark:text-sky-400 font-medium pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                        <span className="flex items-center space-x-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Disbursed ✓</span>
+                        </span>
+                        <span className="text-slate-400 hover:underline">Inspect ↗</span>
+                      </div>
                     </div>
-                    <p className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                      +${selectedDeal.editorCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
-                    </p>
-                    <div className="flex items-center justify-between text-[10px] text-emerald-600 dark:text-emerald-400 font-medium pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
-                      <span className="flex items-center space-x-1">
-                        <CheckCircle2 className="w-3 h-3" />
-                        <span>Disbursed ✓</span>
-                      </span>
-                      <span className="text-slate-400 hover:underline">Inspect ↗</span>
+
+                    {/* Branch 3: Creator / Studio Treasury */}
+                    <div 
+                      onClick={() => openInspector('creator')}
+                      className={`p-5 rounded-3xl bg-slate-950 dark:bg-black text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-2xl hover:scale-[1.02] ${
+                        simStep >= 4 ? 'border-brand-500/80 ring-1 ring-brand-500/30' : 'border-slate-800'
+                      }`}
+                    >
+                      {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-slate-950 border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
+                        <div className="w-2 h-2 rounded-full bg-brand-500" />
+                      </div>
+
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                          Creator Net Retained
+                        </span>
+                        <span className="text-[10px] font-mono font-bold text-brand-300 bg-slate-800 px-2 py-0.5 rounded-md">
+                          80% Retained
+                        </span>
+                      </div>
+                      <p className="text-xl font-black text-white font-mono">
+                        +${selectedDeal.creatorCut}.00 <span className="text-[11px] font-normal text-slate-400">USD</span>
+                      </p>
+                      <div className="flex items-center justify-between text-[11px] text-emerald-400 font-medium pt-3 mt-3 border-t border-slate-800">
+                        <span className="flex items-center space-x-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Merchant Balance ✓</span>
+                        </span>
+                        <span className="text-slate-400 hover:underline">Inspect ↗</span>
+                      </div>
                     </div>
+
                   </div>
 
-                  {/* Branch 2: Thumbnail Designer */}
-                  <div 
-                    onClick={() => openInspector('designer')}
-                    className={`p-4 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-blue-400 hover:shadow-lg ${
-                      simStep >= 4 ? 'border-blue-500/80 dark:border-blue-500/80 ring-1 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
-                    }`}
-                  >
-                    {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs z-10">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                    </div>
-
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                        Thumbnail Designer
-                      </span>
-                      <span className="text-[10px] font-mono font-bold text-blue-700 dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded">
-                        5% Cut
-                      </span>
-                    </div>
-                    <p className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                      +${selectedDeal.designerCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
-                    </p>
-                    <div className="flex items-center justify-between text-[10px] text-blue-600 dark:text-sky-400 font-medium pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
-                      <span className="flex items-center space-x-1">
-                        <CheckCircle2 className="w-3 h-3" />
-                        <span>Disbursed ✓</span>
-                      </span>
-                      <span className="text-slate-400 hover:underline">Inspect ↗</span>
-                    </div>
+                  {/* Bottom Assurance Strip */}
+                  <div className="mt-6 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400 shadow-xs">
+                    <span className="flex items-center space-x-2 font-medium">
+                      <Zap className="w-4 h-4 text-amber-500" />
+                      <span>Single PayPal Batch API call • 3 parallel transactions settled in 4.2s</span>
+                    </span>
+                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                      IRS 1099 Expense Logged ✓
+                    </span>
                   </div>
-
-                  {/* Branch 3: Creator / Studio Treasury */}
-                  <div 
-                    onClick={() => openInspector('creator')}
-                    className={`p-4 rounded-3xl bg-slate-950 dark:bg-black text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-xl ${
-                      simStep >= 4 ? 'border-brand-500/80 ring-1 ring-brand-500/30' : 'border-slate-800'
-                    }`}
-                  >
-                    {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-slate-950 border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
-                    </div>
-
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                        Creator Net Retained
-                      </span>
-                      <span className="text-[10px] font-mono font-bold text-brand-300 bg-slate-800 px-1.5 py-0.5 rounded">
-                        80% Retained
-                      </span>
-                    </div>
-                    <p className="text-lg font-black text-white font-mono">
-                      +${selectedDeal.creatorCut}.00 <span className="text-[10px] font-normal text-slate-400">USD</span>
-                    </p>
-                    <div className="flex items-center justify-between text-[10px] text-emerald-400 font-medium pt-2 mt-2 border-t border-slate-800">
-                      <span className="flex items-center space-x-1">
-                        <CheckCircle2 className="w-3 h-3" />
-                        <span>Merchant Balance ✓</span>
-                      </span>
-                      <span className="text-slate-400 hover:underline">Inspect ↗</span>
-                    </div>
-                  </div>
-
                 </div>
 
-                {/* Bottom Assurance Strip */}
-                <div className="mt-4 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400 shadow-xs">
-                  <span className="flex items-center space-x-1.5 font-medium">
-                    <Zap className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Single PayPal Batch API call • 3 parallel transactions settled in 4.2s</span>
-                  </span>
-                  <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
-                    IRS 1099 Expense Logged ✓
-                  </span>
-                </div>
               </div>
 
             </div>
