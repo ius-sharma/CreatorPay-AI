@@ -292,13 +292,8 @@ export default function LandingPage() {
               </button>
             </div>
 
-            {/* CANVAS WORKSPACE CARD WITH DOT GRID ACCENT */}
-            <div className="relative rounded-[36px] sm:rounded-[44px] bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 p-5 sm:p-12 shadow-xl backdrop-blur-xs overflow-hidden">
-              
-              {/* High-tech Canvas Dot Matrix Background */}
-              <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(#cbd5e1_1.2px,transparent_1.2px)] dark:bg-[radial-gradient(#1e293b_1.2px,transparent_1.2px)] [background-size:24px_24px] opacity-60" />
-
-              <div className="relative max-w-[820px] mx-auto z-10">
+            {/* OPEN CANVAS: INDEPENDENT FLOATING NODES CONNECTED BY S-CURVE THREADS (NO OUTER BOX) */}
+            <div className="relative max-w-[820px] mx-auto">
                 
                 {/* ROW 1: NODE 1 (SQUARE CARD ON LEFT + EXPLANATION ON RIGHT) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
@@ -714,8 +709,6 @@ export default function LandingPage() {
                 </div>
 
               </div>
-
-            </div>
 
             {/* DEDICATED AGENT STAGE INSPECTOR MODAL ("ALAG SE DESCRIPTION OPEN HOGA") */}
             {inspectorNode && (
