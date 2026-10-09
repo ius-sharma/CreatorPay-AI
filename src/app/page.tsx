@@ -84,9 +84,10 @@ const SAMPLE_DEALS: SampleDeal[] = [
 ];
 
 /**
- * Smooth Split-Flap Text Component
- * Renders characters with a mechanical Solari-inspired rolling flip transition.
- * On hover, characters roll up with a staggered wave delay and snap into place with a subtle spring bounce.
+ * Ultra-Smooth Split-Flap Text Component
+ * Renders characters with a liquid Solari-inspired rolling flip transition.
+ * Uses synchronized in-flow and absolute faces with exponential ease-out
+ * for a silky, zero-jitter cascading wave on hover.
  */
 function SplitFlapText({ 
   text, 
@@ -111,25 +112,27 @@ function SplitFlapText({
           <span key={wordIdx} className="inline-flex whitespace-nowrap mr-[0.28em] last:mr-0">
             {chars.map((char, charIdx) => {
               const idx = charCounter++;
-              const delay = idx * 20; // 20ms staggered mechanical wave delay
+              const delay = idx * 14; // 14ms silky smooth wave delay per character
               return (
                 <span
                   key={charIdx}
                   aria-hidden="true"
-                  className="relative inline-block overflow-hidden h-[1.35em] leading-[1.35em] align-top"
+                  className="relative inline-block overflow-hidden"
                 >
+                  {/* Face 1: In-flow resting face with fade-out */}
                   <span
-                    className="inline-flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.34,1.35,0.64,1)] group-hover/flap:-translate-y-1/2 will-change-transform"
+                    className="inline-block transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-100 group-hover/flap:opacity-0 group-hover/flap:-translate-y-full will-change-[transform,opacity]"
                     style={{ transitionDelay: `${delay}ms` }}
                   >
-                    {/* Face 1: Default Text Face */}
-                    <span className="block h-[1.35em] leading-[1.35em]">
-                      {char}
-                    </span>
-                    {/* Face 2: Mechanical Split-Flap Target Face in Brand Terracotta */}
-                    <span className={`block h-[1.35em] leading-[1.35em] font-extrabold ${flippedColor}`}>
-                      {char}
-                    </span>
+                    {char}
+                  </span>
+
+                  {/* Face 2: Synchronized flipped face with fade-in */}
+                  <span
+                    className={`absolute inset-0 inline-block transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-full group-hover/flap:translate-y-0 opacity-0 group-hover/flap:opacity-100 will-change-[transform,opacity] font-extrabold ${flippedColor}`}
+                    style={{ transitionDelay: `${delay}ms` }}
+                  >
+                    {char}
                   </span>
                 </span>
               );
