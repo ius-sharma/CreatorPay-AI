@@ -13,17 +13,30 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         brand: {
-          50: "#f8f5ff",
-          100: "#efe9ff",
-          200: "#ddceff",
-          300: "#c4a8ff",
-          400: "#a57aff",
-          500: "#8954ff",
-          600: "#7033ff", // Core User Brand Violet
-          700: "#5b22dc",
-          800: "#481bb2",
-          900: "#39168f",
-          950: "#220963",
+          50: "#fdf7f5",
+          100: "#fceee9",
+          200: "#f9d8ce",
+          300: "#f4b7a4",
+          400: "#ee8b6d",
+          500: "#ea5834", // Core Terracotta Coral
+          600: "#d84723",
+          700: "#b53517",
+          800: "#8f2a14",
+          900: "#6f2212",
+          950: "#3e0f07",
+        },
+        espresso: {
+          50: "#faf6f4",
+          100: "#f4ebe6",
+          200: "#e8d8d0",
+          300: "#d6bdb2",
+          400: "#bda093",
+          500: "#9e8174",
+          600: "#7d6357",
+          700: "#5e483e",
+          800: "#43322a",
+          900: "#2b1d19", // Primary Deep Warm Neutral
+          950: "#17100e", // Deep Dark Surface
         },
         paypal: {
           blue: "#003087",      // Official Primary PayPal Blue
@@ -36,7 +49,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        sans: ["var(--font-jakarta)", "Plus Jakarta Sans", "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
         mono: ["JetBrains Mono", "Courier New", "monospace"],
       },
     },
