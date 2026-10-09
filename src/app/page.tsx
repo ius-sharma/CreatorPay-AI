@@ -83,6 +83,64 @@ const SAMPLE_DEALS: SampleDeal[] = [
   },
 ];
 
+/**
+ * Smooth Split-Flap Text Component
+ * Renders characters with a mechanical Solari-inspired rolling flip transition.
+ * On hover, characters roll up with a staggered wave delay and snap into place with a subtle spring bounce.
+ */
+function SplitFlapText({ 
+  text, 
+  className = '',
+  flippedColor = 'text-brand-500 dark:text-brand-400'
+}: { 
+  text: string; 
+  className?: string;
+  flippedColor?: string;
+}) {
+  const words = text.split(' ');
+  let charCounter = 0;
+
+  return (
+    <span 
+      className={`group/flap inline-flex flex-wrap items-center cursor-pointer select-none ${className}`}
+      aria-label={text}
+    >
+      {words.map((word, wordIdx) => {
+        const chars = word.split('');
+        return (
+          <span key={wordIdx} className="inline-flex whitespace-nowrap mr-[0.28em] last:mr-0">
+            {chars.map((char, charIdx) => {
+              const idx = charCounter++;
+              const delay = idx * 20; // 20ms staggered mechanical wave delay
+              return (
+                <span
+                  key={charIdx}
+                  aria-hidden="true"
+                  className="relative inline-block overflow-hidden h-[1.35em] leading-[1.35em] align-top"
+                >
+                  <span
+                    className="inline-flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.34,1.35,0.64,1)] group-hover/flap:-translate-y-1/2 will-change-transform"
+                    style={{ transitionDelay: `${delay}ms` }}
+                  >
+                    {/* Face 1: Default Text Face */}
+                    <span className="block h-[1.35em] leading-[1.35em]">
+                      {char}
+                    </span>
+                    {/* Face 2: Mechanical Split-Flap Target Face in Brand Terracotta */}
+                    <span className={`block h-[1.35em] leading-[1.35em] font-extrabold ${flippedColor}`}>
+                      {char}
+                    </span>
+                  </span>
+                </span>
+              );
+            })}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 export default function LandingPage() {
   const [selectedDeal, setSelectedDeal] = useState<SampleDeal>(SAMPLE_DEALS[0]);
   const [calcDealSize, setCalcDealSize] = useState<number>(10000);
@@ -349,12 +407,12 @@ export default function LandingPage() {
                   </div>
 
                   {/* Right Column: Step Description Side-Panel */}
-                  <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2">
+                  <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2 group/flap">
                     <div className="inline-flex items-center space-x-2 text-xs font-sans font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit">
                       <span>Step 01 · Ingestion Trigger</span>
                     </div>
                     <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
-                      Autonomous PDF Contract Ingestion
+                      <SplitFlapText text="Autonomous PDF Contract Ingestion" />
                     </h5>
                     <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] max-w-sm leading-relaxed">
                       Agent continuously listens for sponsorship PDF agreements, extracts fee amounts and deliverable deadlines, and locks mandatory 50% upfront milestone rules into code.
@@ -387,12 +445,12 @@ export default function LandingPage() {
                 {/* ROW 2: NODE 2 (EXPLANATION ON LEFT + SQUARE CARD ON RIGHT) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
                   {/* Left Column: Step Description Side-Panel */}
-                  <div className="hidden sm:flex flex-col justify-center pr-6 text-right space-y-2">
+                  <div className="hidden sm:flex flex-col justify-center pr-6 text-right space-y-2 group/flap">
                     <div className="inline-flex items-center space-x-2 text-xs font-sans font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit ml-auto">
                       <span>Step 02 · Escrow Lock Action</span>
                     </div>
-                    <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
-                      PayPal Milestone Invoicing v2
+                    <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4] flex justify-end">
+                      <SplitFlapText text="PayPal Milestone Invoicing v2" className="justify-end" />
                     </h5>
                     <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] max-w-sm ml-auto leading-relaxed">
                       Automatically constructs and dispatches official PayPal Invoice v2. Production is authorized the exact millisecond funds clear into your business balance.
@@ -541,12 +599,12 @@ export default function LandingPage() {
                   </div>
 
                   {/* Right Column: Step Description Side-Panel */}
-                  <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2">
+                  <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2 group/flap">
                     <div className="inline-flex items-center space-x-2 text-xs font-sans font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit">
                       <span>Step 03 · Deliverable Condition</span>
                     </div>
                     <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
-                      Multimodal Video & Timestamp Verification
+                      <SplitFlapText text="Multimodal Video & Timestamp Verification" />
                     </h5>
                     <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] max-w-sm leading-relaxed">
                       AI audits YouTube video feed at timestamp 02:45, verifies live UTM sponsor link and FTC disclosure, authorizing the parallel team settlement.
@@ -579,7 +637,7 @@ export default function LandingPage() {
                     <div className="flex items-center space-x-2.5">
                       <Users className="w-4 h-4 text-brand-500 dark:text-brand-400" />
                       <span className="text-xs sm:text-sm font-bold text-[#43322A] dark:text-[#FAF6F4]">
-                        Disbursement Hub · Connected Collaborator Roster
+                        <SplitFlapText text="Disbursement Hub · Connected Collaborator Roster" />
                       </span>
                     </div>
                     <span className="text-[11px] font-sans text-[#9E8D86] dark:text-[#8C7A72]">
