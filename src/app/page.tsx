@@ -145,25 +145,25 @@ export default function LandingPage() {
   const calcCreator = calcDealSize - calcEditor - calcDesigner;
 
   return (
-    <div className="min-h-screen bg-[#ffffff] dark:bg-[#07090e] text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-100 selection:text-brand-900 overflow-x-hidden relative transition-colors duration-500 ease-in-out">
+    <div className="min-h-screen bg-[#FFFDFC] dark:bg-[#120D0B] text-[#2B1D19] dark:text-[#FDF8F6] font-sans selection:bg-brand-100 selection:text-brand-900 overflow-x-hidden relative transition-colors duration-500 ease-in-out">
       
       {/* 1. TOP FLOATING PILL NAVBAR (FIXED ON SCROLL) */}
       <div className="fixed top-0 left-0 right-0 z-50 pt-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
-        <header className="max-w-6xl mx-auto rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 shadow-md dark:shadow-2xl px-5 sm:px-7 py-3 flex items-center justify-between transition-all duration-500 pointer-events-auto">
+        <header className="max-w-6xl mx-auto rounded-full bg-[#FFFDFC]/90 dark:bg-[#1A1310]/90 backdrop-blur-md border border-espresso-200/90 dark:border-espresso-800/90 shadow-md dark:shadow-2xl px-5 sm:px-7 py-3 flex items-center justify-between transition-all duration-500 pointer-events-auto">
           {/* Brand Typography */}
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-extrabold text-xl tracking-tight text-slate-950 dark:text-white transition-colors duration-300">
-              CreatorPay<span className="text-brand-600 dark:text-brand-400">.AI</span>
+            <span className="font-extrabold text-xl tracking-tight text-[#2B1D19] dark:text-[#FDF8F6] transition-colors duration-300">
+              CreatorPay<span className="text-brand-500 dark:text-brand-400">.AI</span>
             </span>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-7 text-xs font-semibold text-slate-600 dark:text-slate-400">
-            <a href="#how-it-works" className="hover:text-slate-950 dark:hover:text-white transition-colors">How It Works</a>
-            <a href="#interactive-demo" className="hover:text-slate-950 dark:hover:text-white transition-colors">Live Deal Flow</a>
-            <a href="#comparison" className="hover:text-slate-950 dark:hover:text-white transition-colors">The Problem</a>
-            <a href="#calculator" className="hover:text-slate-950 dark:hover:text-white transition-colors">Split Calculator</a>
-            <a href="#security" className="hover:text-slate-950 dark:hover:text-white transition-colors">PayPal Rails</a>
+          <nav className="hidden md:flex items-center space-x-7 text-xs font-semibold text-[#75645E] dark:text-[#B8A9A2]">
+            <a href="#how-it-works" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">How It Works</a>
+            <a href="#interactive-demo" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">Live Deal Flow</a>
+            <a href="#comparison" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">The Problem</a>
+            <a href="#calculator" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">Split Calculator</a>
+            <a href="#security" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">PayPal Rails</a>
           </nav>
 
           {/* Right Controls: Theme Switch & CTA */}
@@ -173,10 +173,10 @@ export default function LandingPage() {
               <button
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
-                className="relative flex items-center p-1.5 w-14 h-8 rounded-full bg-slate-100 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 transition-colors duration-500 cursor-pointer focus:outline-hidden"
+                className="relative flex items-center p-1.5 w-14 h-8 rounded-full bg-espresso-100 dark:bg-espresso-900 border border-espresso-200/80 dark:border-espresso-700/80 transition-colors duration-500 cursor-pointer focus:outline-hidden"
               >
                 <div 
-                  className={`w-5 h-5 rounded-full bg-white dark:bg-slate-900 shadow-sm border border-slate-200/60 dark:border-slate-700 flex items-center justify-center transform transition-transform duration-500 ease-out ${
+                  className={`w-5 h-5 rounded-full bg-white dark:bg-[#120D0B] shadow-sm border border-espresso-200/60 dark:border-espresso-700 flex items-center justify-center transform transition-transform duration-500 ease-out ${
                     isDark ? 'translate-x-6' : 'translate-x-0'
                   }`}
                 >
@@ -191,13 +191,13 @@ export default function LandingPage() {
 
             <Link
               href="/dashboard"
-              className="text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white px-2 py-1.5 hidden sm:inline transition-colors"
+              className="text-xs font-semibold text-[#75645E] dark:text-[#B8A9A2] hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] px-2 py-1.5 hidden sm:inline transition-colors"
             >
               Sign In
             </Link>
             <Link
               href="/dashboard"
-              className="flex items-center space-x-1.5 px-5 py-2 rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group"
+              className="flex items-center space-x-1.5 px-5 py-2 rounded-full bg-[#2B1D19] dark:bg-brand-500 hover:bg-[#3E2B25] dark:hover:bg-brand-600 text-white text-xs font-bold transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group"
             >
               <span>Launch Studio</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -211,31 +211,31 @@ export default function LandingPage() {
         
         {/* Background Concentric Orbital Rings */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          <div className="w-[450px] h-[450px] rounded-full border border-slate-200/50 dark:border-slate-800/50 absolute transition-colors duration-500" />
-          <div className="w-[750px] h-[750px] rounded-full border border-slate-200/40 dark:border-slate-800/40 absolute transition-colors duration-500" />
-          <div className="w-[1050px] h-[1050px] rounded-full border border-slate-200/25 dark:border-slate-800/25 absolute transition-colors duration-500" />
-          <div className="w-[1350px] h-[1350px] rounded-full border border-slate-100 dark:border-slate-900 absolute transition-colors duration-500" />
+          <div className="w-[450px] h-[450px] rounded-full border border-espresso-200/50 dark:border-espresso-800/50 absolute transition-colors duration-500" />
+          <div className="w-[750px] h-[750px] rounded-full border border-espresso-200/40 dark:border-espresso-800/40 absolute transition-colors duration-500" />
+          <div className="w-[1050px] h-[1050px] rounded-full border border-espresso-200/25 dark:border-espresso-800/25 absolute transition-colors duration-500" />
+          <div className="w-[1350px] h-[1350px] rounded-full border border-espresso-100 dark:border-espresso-900 absolute transition-colors duration-500" />
         </div>
 
         {/* Hero Content Container */}
         <div className="relative z-10 max-w-4xl mx-auto">
           
           {/* USER REQUESTED BADGE */}
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-200 mb-6 shadow-2xs transition-colors duration-500">
-            <span className="w-2 h-2 rounded-full bg-brand-600 dark:bg-brand-400 animate-pulse" />
-            <span className="font-bold text-slate-900 dark:text-slate-100">The Financial Agent for Digital Creators & Agencies</span>
+          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-espresso-50 dark:bg-espresso-900/70 border border-espresso-200 dark:border-espresso-800 text-xs font-semibold text-[#43322A] dark:text-[#E8D8D0] mb-6 shadow-2xs transition-colors duration-500">
+            <span className="w-2 h-2 rounded-full bg-brand-500 dark:bg-brand-400 animate-pulse" />
+            <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">The Financial Agent for Digital Creators & Agencies</span>
           </div>
 
           {/* Master Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-950 dark:text-white tracking-tight leading-[1.08] mb-5 transition-colors duration-500">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-[#2B1D19] dark:text-[#FAF6F4] tracking-tight leading-[1.08] mb-5 transition-colors duration-500">
             Never chase a brand <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-slate-950 via-brand-700 to-slate-900 dark:from-white dark:via-brand-400 dark:to-slate-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#2B1D19] via-brand-500 to-[#43322A] dark:from-white dark:via-brand-400 dark:to-espresso-200 bg-clip-text text-transparent">
               payment again.
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 font-normal leading-relaxed transition-colors duration-500">
+          <p className="text-base sm:text-lg text-[#75645E] dark:text-[#B8A9A2] max-w-2xl mx-auto mb-8 font-normal leading-relaxed transition-colors duration-500">
             Turn raw sponsorship agreements into verified PayPal milestone invoices, automated video deliverable checks, and instant team splits — on pure autopilot.
           </p>
 
@@ -243,16 +243,16 @@ export default function LandingPage() {
           <div className="flex flex-wrap items-center justify-center gap-3.5 mb-14">
             <Link
               href="/dashboard"
-              className="px-8 py-3.5 rounded-full bg-slate-950 dark:bg-brand-600 hover:bg-slate-800 dark:hover:bg-brand-500 text-white text-sm font-bold shadow-md hover:shadow-xl dark:shadow-brand-600/30 transition-all flex items-center space-x-2 cursor-pointer group"
+              className="px-8 py-3.5 rounded-full bg-[#2B1D19] dark:bg-brand-500 hover:bg-[#3E2B25] dark:hover:bg-brand-600 text-white text-sm font-bold shadow-md hover:shadow-xl dark:shadow-brand-500/30 transition-all flex items-center space-x-2 cursor-pointer group"
             >
               <span>Launch Studio Free</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <a
               href="#interactive-demo"
-              className="px-7 py-3.5 rounded-full bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold border border-slate-200 dark:border-slate-800 transition-all shadow-2xs flex items-center space-x-2"
+              className="px-7 py-3.5 rounded-full bg-white dark:bg-espresso-900/80 hover:bg-espresso-50 dark:hover:bg-espresso-800 text-[#43322A] dark:text-[#E8D8D0] text-sm font-semibold border border-espresso-200 dark:border-espresso-800 transition-all shadow-2xs flex items-center space-x-2"
             >
-              <Play className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 fill-slate-500 dark:fill-slate-400" />
+              <Play className="w-3.5 h-3.5 text-[#75645E] dark:text-[#B8A9A2] fill-[#75645E] dark:fill-[#B8A9A2]" />
               <span>See Live Deal Flow</span>
             </a>
           </div>
@@ -264,11 +264,11 @@ export default function LandingPage() {
             <div className="flex flex-wrap items-center justify-between gap-4 mb-10 px-2 sm:px-4">
               <div className="flex items-center space-x-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 font-mono">
+                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#43322A] dark:text-[#E8D8D0] font-mono">
                   Autonomous Agent Workflow Canvas
                 </span>
-                <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 font-mono hidden sm:inline">
+                <span className="text-espresso-300 dark:text-espresso-700 hidden sm:inline">•</span>
+                <span className="text-xs text-[#9E8D86] dark:text-[#8C7A72] font-mono hidden sm:inline">
                   Interactive Node Graph · Click any node to inspect agent logic
                 </span>
               </div>
@@ -276,7 +276,7 @@ export default function LandingPage() {
               <button
                 onClick={runWorkflowSimulation}
                 disabled={isSimulating}
-                className="flex items-center space-x-2 px-5 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-75 hover:scale-[1.02]"
+                className="flex items-center space-x-2 px-5 py-2.5 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-75 hover:scale-[1.02]"
               >
                 {isSimulating ? (
                   <>
@@ -300,17 +300,17 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('ingest')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
-                        simStep >= 1 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-slate-200 dark:border-slate-800'
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                        simStep >= 1 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Direct origin for S-line 1) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
+                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
@@ -324,23 +324,23 @@ export default function LandingPage() {
 
                       {/* Card Center: Icon & Title */}
                       <div className="text-center my-auto">
-                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform">
+                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform">
                           <FileText className="w-6 h-6" />
                         </div>
-                        <h4 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                        <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
                           Contract Ingestion
                         </h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-mono mt-1">
                           AI OCR & Milestone Parser
                         </p>
                       </div>
 
                       {/* Card Bottom: Metric & Click Prompt */}
                       <div className="text-center space-y-1.5">
-                        <div className="px-3 py-1 rounded-xl bg-slate-50 dark:bg-slate-800/80 text-[10px] font-mono text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
+                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-mono text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60">
                           50% Advance Lock Rule
                         </div>
-                        <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
+                        <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
                           <span>Inspect Stage Logic</span>
                           <span>↗</span>
                         </span>
@@ -353,10 +353,10 @@ export default function LandingPage() {
                     <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit">
                       <span>Step 01 · Ingestion Trigger</span>
                     </div>
-                    <h5 className="text-base font-extrabold text-slate-900 dark:text-white">
+                    <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
                       Autonomous PDF Contract Ingestion
                     </h5>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+                    <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] max-w-sm leading-relaxed">
                       Agent continuously listens for sponsorship PDF agreements, extracts fee amounts and deliverable deadlines, and locks mandatory 50% upfront milestone rules into code.
                     </p>
                   </div>
@@ -391,10 +391,10 @@ export default function LandingPage() {
                     <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-[#003087] dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-xl border border-blue-200/60 dark:border-blue-800/60 w-fit ml-auto">
                       <span>Step 02 · Escrow Lock Action</span>
                     </div>
-                    <h5 className="text-base font-extrabold text-slate-900 dark:text-white">
+                    <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
                       PayPal Milestone Invoicing v2
                     </h5>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm ml-auto leading-relaxed">
+                    <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] max-w-sm ml-auto leading-relaxed">
                       Automatically constructs and dispatches official PayPal Invoice v2. Production is authorized the exact millisecond funds clear into your business balance.
                     </p>
                   </div>
@@ -402,22 +402,22 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('invoice')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-blue-500 ${
-                        simStep >= 2 ? 'border-blue-500/80 dark:border-blue-500/80 ring-2 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-blue-500 ${
+                        simStep >= 2 ? 'border-blue-500/80 dark:border-blue-500/80 ring-2 ring-blue-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 1) */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for S-line 2) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: LEFT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500/70 items-center justify-center shadow-xs z-10">
+                      <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500/70 items-center justify-center shadow-xs z-10">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                       </div>
 
@@ -436,10 +436,10 @@ export default function LandingPage() {
                         <div className="w-13 h-13 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-[#003087] dark:text-sky-400 flex items-center justify-center mx-auto mb-2.5 border border-blue-200 dark:border-blue-800 shadow-2xs group-hover:scale-110 transition-transform font-black text-lg">
                           P
                         </div>
-                        <h4 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                        <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
                           Milestone Escrow
                         </h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-mono mt-1">
                           PayPal Invoicing API v2
                         </p>
                       </div>
@@ -467,7 +467,7 @@ export default function LandingPage() {
                         d="M 615 0 C 615 92, 205 52, 205 144" 
                         stroke="currentColor" 
                         strokeWidth="3" 
-                        className={`animate-flow-thread ${simStep >= 3 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} 
+                        className={`animate-flow-thread ${simStep >= 3 ? 'text-blue-500 dark:text-sky-400' : 'text-espresso-300 dark:text-espresso-700'}`} 
                       />
                     </svg>
                   </div>
@@ -485,22 +485,22 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('verify')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-emerald-500 ${
-                        simStep >= 3 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-2 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-emerald-500 ${
+                        simStep >= 3 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-2 ring-emerald-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 2) */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for Branching Lines) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500/70 items-center justify-center shadow-xs z-10">
+                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500/70 items-center justify-center shadow-xs z-10">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                       </div>
 
@@ -519,10 +519,10 @@ export default function LandingPage() {
                         <div className="w-13 h-13 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-2.5 border border-emerald-200 dark:border-emerald-800 shadow-2xs group-hover:scale-110 transition-transform">
                           <Video className="w-6 h-6" />
                         </div>
-                        <h4 className="text-sm font-black text-slate-900 dark:text-white leading-tight">
+                        <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
                           Deliverable Audit
                         </h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-mono mt-1">
                           Multimodal Vision OCR
                         </p>
                       </div>
@@ -545,10 +545,10 @@ export default function LandingPage() {
                     <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-xl border border-emerald-200/60 dark:border-emerald-800/60 w-fit">
                       <span>Step 03 · Deliverable Condition</span>
                     </div>
-                    <h5 className="text-base font-extrabold text-slate-900 dark:text-white">
+                    <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
                       Multimodal Video & Timestamp Verification
                     </h5>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+                    <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] max-w-sm leading-relaxed">
                       AI audits YouTube video feed at timestamp 02:45, verifies live UTM sponsor link and FTC disclosure, authorizing the parallel team settlement.
                     </p>
                   </div>
@@ -577,12 +577,12 @@ export default function LandingPage() {
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-2 px-1">
                     <div className="flex items-center space-x-2.5">
-                      <Users className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-                      <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+                      <Users className="w-4 h-4 text-brand-500 dark:text-brand-400" />
+                      <span className="text-xs sm:text-sm font-bold text-[#43322A] dark:text-[#FAF6F4]">
                         Disbursement Hub · Connected Collaborator Roster
                       </span>
                     </div>
-                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                    <span className="text-[11px] font-mono text-[#9E8D86] dark:text-[#8C7A72]">
                       Connect any team role & set custom %
                     </span>
                   </div>
@@ -593,103 +593,103 @@ export default function LandingPage() {
                     {/* Branch 1: Video Editor */}
                     <div 
                       onClick={() => openInspector('editor')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-emerald-400 hover:shadow-xl ${
-                        simStep >= 4 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-1 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-800'
+                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-emerald-400 hover:shadow-xl ${
+                        simStep >= 4 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-1 ring-emerald-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 flex items-center justify-center shadow-xs z-10">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500 flex items-center justify-center shadow-xs z-10">
                         <div className="w-2 h-2 rounded-full bg-emerald-500" />
                       </div>
 
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#75645E] dark:text-[#B8A9A2]">
                           Video Editor
                         </span>
                         <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
                           15% Cut
                         </span>
                       </div>
-                      <p className="text-xl font-black text-slate-900 dark:text-white font-mono">
-                        +${selectedDeal.editorCut}.00 <span className="text-[11px] font-normal text-slate-400">USD</span>
+                      <p className="text-xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono">
+                        +${selectedDeal.editorCut}.00 <span className="text-[11px] font-normal text-[#9E8D86]">USD</span>
                       </p>
-                      <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 font-medium pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                      <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 font-medium pt-3 mt-3 border-t border-espresso-100 dark:border-espresso-800">
                         <span className="flex items-center space-x-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Disbursed ✓</span>
                         </span>
-                        <span className="text-slate-400 hover:underline">Inspect ↗</span>
+                        <span className="text-[#9E8D86] hover:underline">Inspect ↗</span>
                       </div>
                     </div>
 
                     {/* Branch 2: Thumbnail Designer */}
                     <div 
                       onClick={() => openInspector('designer')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-blue-400 hover:shadow-xl ${
-                        simStep >= 4 ? 'border-blue-500/80 dark:border-blue-500/80 ring-1 ring-blue-500/20' : 'border-slate-200 dark:border-slate-800'
+                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-blue-400 hover:shadow-xl ${
+                        simStep >= 4 ? 'border-blue-500/80 dark:border-blue-500/80 ring-1 ring-blue-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500 flex items-center justify-center shadow-xs z-10">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500 flex items-center justify-center shadow-xs z-10">
                         <div className="w-2 h-2 rounded-full bg-blue-500" />
                       </div>
 
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#75645E] dark:text-[#B8A9A2]">
                           Thumbnail Designer
                         </span>
                         <span className="text-[10px] font-mono font-bold text-blue-700 dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md">
                           5% Cut
                         </span>
                       </div>
-                      <p className="text-xl font-black text-slate-900 dark:text-white font-mono">
-                        +${selectedDeal.designerCut}.00 <span className="text-[11px] font-normal text-slate-400">USD</span>
+                      <p className="text-xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono">
+                        +${selectedDeal.designerCut}.00 <span className="text-[11px] font-normal text-[#9E8D86]">USD</span>
                       </p>
-                      <div className="flex items-center justify-between text-[11px] text-blue-600 dark:text-sky-400 font-medium pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                      <div className="flex items-center justify-between text-[11px] text-blue-600 dark:text-sky-400 font-medium pt-3 mt-3 border-t border-espresso-100 dark:border-espresso-800">
                         <span className="flex items-center space-x-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Disbursed ✓</span>
                         </span>
-                        <span className="text-slate-400 hover:underline">Inspect ↗</span>
+                        <span className="text-[#9E8D86] hover:underline">Inspect ↗</span>
                       </div>
                     </div>
 
                     {/* Branch 3: Creator / Studio Treasury */}
                     <div 
                       onClick={() => openInspector('creator')}
-                      className={`p-5 rounded-3xl bg-slate-950 dark:bg-black text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-2xl ${
-                        simStep >= 4 ? 'border-brand-500/80 ring-1 ring-brand-500/30' : 'border-slate-800'
+                      className={`p-5 rounded-3xl bg-[#2B1D19] dark:bg-[#150F0D] text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-2xl ${
+                        simStep >= 4 ? 'border-brand-500/80 ring-1 ring-brand-500/30' : 'border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-slate-950 border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#2B1D19] dark:bg-[#150F0D] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
                         <div className="w-2 h-2 rounded-full bg-brand-500" />
                       </div>
 
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-espresso-300">
                           Creator Net Retained
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-brand-300 bg-slate-800 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-mono font-bold text-brand-300 bg-espresso-800 px-2 py-0.5 rounded-md">
                           80% Retained
                         </span>
                       </div>
                       <p className="text-xl font-black text-white font-mono">
-                        +${selectedDeal.creatorCut}.00 <span className="text-[11px] font-normal text-slate-400">USD</span>
+                        +${selectedDeal.creatorCut}.00 <span className="text-[11px] font-normal text-espresso-400">USD</span>
                       </p>
-                      <div className="flex items-center justify-between text-[11px] text-emerald-400 font-medium pt-3 mt-3 border-t border-slate-800">
+                      <div className="flex items-center justify-between text-[11px] text-emerald-400 font-medium pt-3 mt-3 border-t border-espresso-800">
                         <span className="flex items-center space-x-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Merchant Balance ✓</span>
                         </span>
-                        <span className="text-slate-400 hover:underline">Inspect ↗</span>
+                        <span className="text-espresso-400 hover:underline">Inspect ↗</span>
                       </div>
                     </div>
 
                   </div>
 
                   {/* Bottom Assurance Strip */}
-                  <div className="mt-6 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400 shadow-xs">
+                  <div className="mt-6 p-4 rounded-2xl bg-[#FAF6F4] dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800 flex flex-wrap items-center justify-between gap-2 text-xs text-[#75645E] dark:text-[#B8A9A2] shadow-xs">
                     <span className="flex items-center space-x-2 font-medium">
                       <Zap className="w-4 h-4 text-amber-500" />
                       <span>Single PayPal Batch API call • 3 parallel transactions settled in 4.2s</span>
@@ -705,18 +705,18 @@ export default function LandingPage() {
             {/* DEDICATED AGENT STAGE INSPECTOR MODAL ("ALAG SE DESCRIPTION OPEN HOGA") */}
             {inspectorNode && (
               <div 
-                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 dark:bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-espresso-950/60 dark:bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
                 onClick={closeInspector}
               >
                 <div 
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative animate-in zoom-in-95 duration-200 text-left"
+                  className="bg-white dark:bg-[#1A1310] border border-espresso-200 dark:border-espresso-800 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative animate-in zoom-in-95 duration-200 text-left"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Close Button */}
                   <button 
                     onClick={closeInspector}
                     aria-label="Close inspector"
-                    className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    className="absolute top-5 right-5 p-2 rounded-full text-[#9E8D86] hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] hover:bg-espresso-100 dark:hover:bg-espresso-800 transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -725,14 +725,14 @@ export default function LandingPage() {
                   {inspectorNode === 'ingest' && (
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
+                        <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
                           <FileText className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-500 dark:text-brand-400">
                             Stage 01 Inspector
                           </span>
-                          <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                          <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
                             Autonomous Contract Ingestion
                           </h3>
                         </div>
@@ -740,26 +740,26 @@ export default function LandingPage() {
 
                       <div className="p-4 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-200/60 dark:border-brand-800/60">
                         <p className="text-xs font-bold text-brand-950 dark:text-brand-200 mb-1 flex items-center space-x-1.5">
-                          <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                          <Sparkles className="w-4 h-4 text-brand-500 dark:text-brand-400" />
                           <span>What the AI Agent Does Here:</span>
                         </p>
-                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
                           The agent continuously listens for incoming PDF agreements or emails. It executes multimodal OCR extraction to parse brand names, agreed fee totals, deliverable deadlines, and locks in a strict <strong>50% upfront milestone</strong> escrow policy before creator production commences.
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 text-xs font-mono space-y-1.5 text-slate-600 dark:text-slate-300 border border-slate-200/70 dark:border-slate-700/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Extraction Model:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">Gemini 1.5 Flash Multimodal OCR</span>
+                          <span className="text-[#9E8D86]">Extraction Model:</span>
+                          <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">Gemini 1.5 Flash Multimodal OCR</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Processing Time:</span>
+                          <span className="text-[#9E8D86]">Processing Time:</span>
                           <span className="font-bold text-emerald-600 dark:text-emerald-400">0.8 seconds (99.8% Confidence)</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Escrow Trigger:</span>
-                          <span className="font-bold text-brand-600 dark:text-brand-400">Advance Deposit Enforced ($2,500.00)</span>
+                          <span className="text-[#9E8D86]">Escrow Trigger:</span>
+                          <span className="font-bold text-brand-500 dark:text-brand-400">Advance Deposit Enforced ($2,500.00)</span>
                         </p>
                       </div>
                     </div>
@@ -775,7 +775,7 @@ export default function LandingPage() {
                           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#003087] dark:text-sky-300">
                             Stage 02 Inspector
                           </span>
-                          <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                          <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
                             PayPal Milestone Escrow & Invoicing
                           </h3>
                         </div>
@@ -786,22 +786,22 @@ export default function LandingPage() {
                           <ShieldCheck className="w-4 h-4 text-[#003087] dark:text-sky-400" />
                           <span>What the AI Agent Does Here:</span>
                         </p>
-                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
                           Constructs and sends an official PayPal Invoicing v2 document to brand finance accounts. The agent monitors PayPal Webhooks (<code className="font-mono font-bold">INVOICING.INVOICE.PAID</code>). The exact millisecond advance payment settles in your merchant balance, video shooting is unlocked.
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 text-xs font-mono space-y-1.5 text-slate-600 dark:text-slate-300 border border-slate-200/70 dark:border-slate-700/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Financial Rail:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">PayPal Merchant Invoicing API v2</span>
+                          <span className="text-[#9E8D86]">Financial Rail:</span>
+                          <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">PayPal Merchant Invoicing API v2</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Escrow Security:</span>
+                          <span className="text-[#9E8D86]">Escrow Security:</span>
                           <span className="font-bold text-emerald-600 dark:text-emerald-400">Zero Middleman / Direct Merchant Balance</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Webhook Status:</span>
+                          <span className="text-[#9E8D86]">Webhook Status:</span>
                           <span className="font-bold text-blue-600 dark:text-sky-400">Cryptographically Signed & Verified</span>
                         </p>
                       </div>
@@ -818,7 +818,7 @@ export default function LandingPage() {
                           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
                             Stage 03 Inspector
                           </span>
-                          <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                          <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
                             Autonomous Deliverable Audit
                           </h3>
                         </div>
@@ -829,23 +829,23 @@ export default function LandingPage() {
                           <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                           <span>What the AI Agent Does Here:</span>
                         </p>
-                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
                           The multimodal vision agent watches the uploaded YouTube video stream, verifies the dedicated sponsor segment timestamp at <strong>02:45</strong>, checks the video description for active tracking UTM links, and verifies FTC disclosure compliance before issuing payouts.
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 text-xs font-mono space-y-1.5 text-slate-600 dark:text-slate-300 border border-slate-200/70 dark:border-slate-700/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Timestamp Match:</span>
+                          <span className="text-[#9E8D86]">Timestamp Match:</span>
                           <span className="font-bold text-emerald-600 dark:text-emerald-400">02:45 Confirmed (99.4% Match)</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">FTC Compliance:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">#ad / #sponsored tag verified</span>
+                          <span className="text-[#9E8D86]">FTC Compliance:</span>
+                          <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">#ad / #sponsored tag verified</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Next Action:</span>
-                          <span className="font-bold text-brand-600 dark:text-brand-400">Authorized Instant Parallel Payouts →</span>
+                          <span className="text-[#9E8D86]">Next Action:</span>
+                          <span className="font-bold text-brand-500 dark:text-brand-400">Authorized Instant Parallel Payouts →</span>
                         </p>
                       </div>
                     </div>
@@ -854,14 +854,14 @@ export default function LandingPage() {
                   {(inspectorNode === 'editor' || inspectorNode === 'designer' || inspectorNode === 'creator') && (
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
+                        <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
                           <Users className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-500 dark:text-brand-400">
                             Stage 04 Inspector
                           </span>
-                          <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                          <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
                             PayPal Multi-Party Payout Settlement
                           </h3>
                         </div>
@@ -872,33 +872,33 @@ export default function LandingPage() {
                           <Zap className="w-4 h-4 text-amber-500" />
                           <span>What the AI Agent Does Here:</span>
                         </p>
-                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
                           Rather than requiring you to manually calculate cuts and send individual transfers, the agent triggers a single <strong>PayPal Payouts Batch API</strong> call. Funds disburse in parallel to your Video Editor, Thumbnail Designer, and Creator balance in under 4.2 seconds.
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 text-xs font-mono space-y-1.5 text-slate-600 dark:text-slate-300 border border-slate-200/70 dark:border-slate-700/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Disbursement Rail:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">PayPal Payouts Batch REST API</span>
+                          <span className="text-[#9E8D86]">Disbursement Rail:</span>
+                          <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">PayPal Payouts Batch REST API</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">Parallel Execution:</span>
+                          <span className="text-[#9E8D86]">Parallel Execution:</span>
                           <span className="font-bold text-emerald-600 dark:text-emerald-400">3 Transfers Settled in 4.2 Seconds</span>
                         </p>
                         <p className="flex justify-between">
-                          <span className="text-slate-400">IRS Compliance:</span>
-                          <span className="font-bold text-slate-900 dark:text-white">1099-NEC Expense Ledger Recorded</span>
+                          <span className="text-[#9E8D86]">IRS Compliance:</span>
+                          <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">1099-NEC Expense Ledger Recorded</span>
                         </p>
                       </div>
                     </div>
                   )}
 
                   {/* Modal Footer */}
-                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                  <div className="mt-5 pt-4 border-t border-espresso-100 dark:border-espresso-800 flex justify-end">
                     <button
                       onClick={closeInspector}
-                      className="px-5 py-2 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-xs font-bold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors"
+                      className="px-5 py-2 rounded-xl bg-[#2B1D19] hover:bg-[#3E2B25] dark:bg-brand-500 dark:hover:bg-brand-600 text-white text-xs font-bold transition-colors"
                     >
                       Close Inspector
                     </button>
@@ -912,19 +912,19 @@ export default function LandingPage() {
       </section>
 
       {/* 4. LOGO & PLATFORM STRIP */}
-      <section className="py-12 border-y border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/30 transition-colors duration-500">
+      <section className="py-12 border-y border-espresso-100 dark:border-espresso-800/80 bg-espresso-50/50 dark:bg-espresso-950/30 transition-colors duration-500">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-6">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#9E8D86] dark:text-[#8C7A72] mb-6">
             Engineered on the PayPal Global Merchant Ecosystem • Built for Modern Creator Studios
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 text-slate-400 dark:text-slate-500 font-bold text-sm">
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors font-mono">PayPal Invoicing</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors font-mono">PayPal Payouts API</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors">YouTube Studio</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors">Instagram Creators</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors">TikTok Creator Fund</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors">Substack</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 transition-colors">Discord Agencies</span>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 text-[#9E8D86] dark:text-[#8C7A72] font-bold text-sm">
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors font-mono">PayPal Invoicing</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors font-mono">PayPal Payouts API</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">YouTube Studio</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">Instagram Creators</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">TikTok Creator Fund</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">Substack</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">Discord Agencies</span>
           </div>
         </div>
       </section>
@@ -932,11 +932,11 @@ export default function LandingPage() {
       {/* 5. THE PROBLEM VS THE SOLUTION: THE CONTRAST SECTION */}
       <section id="comparison" className="py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight transition-colors duration-500">
+          <h2 className="text-3xl sm:text-4xl font-black text-[#2B1D19] dark:text-[#FAF6F4] tracking-tight transition-colors duration-500">
             The traditional sponsor deal is broken. <br />
-            <span className="text-brand-600 dark:text-brand-400">CreatorPay fixes it.</span>
+            <span className="text-brand-500 dark:text-brand-400">CreatorPay fixes it.</span>
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed transition-colors duration-500">
+          <p className="text-sm text-[#75645E] dark:text-[#B8A9A2] mt-3 leading-relaxed transition-colors duration-500">
             Creators waste 15+ hours every month calculating team percentages, tracking email threads, and praying that brands wire payments on time.
           </p>
         </div>
@@ -950,14 +950,14 @@ export default function LandingPage() {
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>The Manual Chaos (Before)</span>
               </div>
-              <ul className="space-y-4 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              <ul className="space-y-4 text-xs sm:text-sm text-[#43322A] dark:text-[#E8D8D0]">
                 <li className="flex items-start space-x-3">
                   <span className="text-red-500 font-bold text-base leading-none">✕</span>
                   <span><strong>Net-60 / Net-90 Delay:</strong> Brands hold payments for 3 months after your video goes live.</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <span className="text-red-500 font-bold text-base leading-none">✕</span>
-                  <span><strong>Awkward WhatsApp Chasing:</strong> "Hey checking in on invoice #24" sent 10 times a week.</span>
+                  <span><strong>Awkward WhatsApp Chasing:</strong> &ldquo;Hey checking in on invoice #24&rdquo; sent 10 times a week.</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <span className="text-red-500 font-bold text-base leading-none">✕</span>
@@ -975,13 +975,13 @@ export default function LandingPage() {
           </div>
 
           {/* Card: The CreatorPay Autonomous Standard */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-slate-950 dark:bg-slate-900 text-white flex flex-col justify-between shadow-xl border border-slate-800 transition-colors duration-500">
+          <div className="p-8 sm:p-10 rounded-3xl bg-[#1A1310] dark:bg-[#150F0D] text-white flex flex-col justify-between shadow-xl border border-espresso-800 transition-colors duration-500">
             <div>
-              <div className="inline-flex items-center space-x-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mb-6 bg-slate-800 dark:bg-slate-800/80 px-3 py-1 rounded-full border border-slate-700">
+              <div className="inline-flex items-center space-x-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mb-6 bg-espresso-900 dark:bg-espresso-900/80 px-3 py-1 rounded-full border border-espresso-700">
                 <Sparkles className="w-3.5 h-3.5 text-brand-400" />
                 <span>The CreatorPay Standard</span>
               </div>
-              <ul className="space-y-4 text-xs sm:text-sm text-slate-300">
+              <ul className="space-y-4 text-xs sm:text-sm text-espresso-200">
                 <li className="flex items-start space-x-3">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span><strong>Enforced Advance Milestone:</strong> Official PayPal Invoicing locks in 30-50% advance before you start filming.</span>
@@ -1000,7 +1000,7 @@ export default function LandingPage() {
                 </li>
               </ul>
             </div>
-            <div className="mt-8 pt-4 border-t border-slate-800 text-xs text-emerald-400 font-medium">
+            <div className="mt-8 pt-4 border-t border-espresso-800 text-xs text-emerald-400 font-medium">
               Zero manual follow-ups. Zero custody risk. 100% automated settlement.
             </div>
           </div>
@@ -1009,26 +1009,26 @@ export default function LandingPage() {
       </section>
 
       {/* 6. INTERACTIVE ROSTER SPLIT CALCULATOR */}
-      <section id="calculator" className="py-20 bg-slate-50/70 dark:bg-slate-900/30 border-y border-slate-100 dark:border-slate-800/80 transition-colors duration-500">
+      <section id="calculator" className="py-20 bg-espresso-50/60 dark:bg-espresso-950/30 border-y border-espresso-100 dark:border-espresso-800/80 transition-colors duration-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-12">
-            <h2 className="text-3xl font-black text-slate-950 dark:text-white tracking-tight transition-colors duration-500">
+            <h2 className="text-3xl font-black text-[#2B1D19] dark:text-[#FAF6F4] tracking-tight transition-colors duration-500">
               Interactive Team Split Calculator
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 transition-colors duration-500">
+            <p className="text-xs sm:text-sm text-[#75645E] dark:text-[#B8A9A2] mt-2 transition-colors duration-500">
               See how CreatorPay autonomously divides your brand sponsorship between you, your editor, and your designer.
             </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-10 shadow-lg transition-colors duration-500">
+          <div className="bg-white dark:bg-[#1A1310] border border-espresso-200/90 dark:border-espresso-800/90 rounded-3xl p-6 sm:p-10 shadow-lg transition-colors duration-500">
             
             {/* Slider Control */}
             <div className="mb-8">
               <div className="flex justify-between items-center mb-3">
-                <span className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">
                   Brand Sponsorship Deal Size:
                 </span>
-                <span className="text-2xl font-black text-slate-950 dark:text-white font-mono transition-colors duration-500">
+                <span className="text-2xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono transition-colors duration-500">
                   ${calcDealSize.toLocaleString()} USD
                 </span>
               </div>
@@ -1039,9 +1039,9 @@ export default function LandingPage() {
                 step="500"
                 value={calcDealSize}
                 onChange={(e) => setCalcDealSize(Number(e.target.value))}
-                className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-slate-950 dark:accent-brand-500 transition-colors"
+                className="w-full h-2.5 bg-espresso-200 dark:bg-espresso-800 rounded-lg appearance-none cursor-pointer accent-brand-500 transition-colors"
               />
-              <div className="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-mono mt-1">
+              <div className="flex justify-between text-[11px] text-[#9E8D86] dark:text-[#8C7A72] font-mono mt-1">
                 <span>$1,000 (Single Reel)</span>
                 <span>$25,000 (Channel Retainer)</span>
                 <span>$50,000 (Studio Agency)</span>
@@ -1051,28 +1051,28 @@ export default function LandingPage() {
             {/* Live Calculation Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center transition-colors duration-500">
-                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lead Video Editor (15%)</span>
+              <div className="p-4 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500">
+                <span className="text-[10px] font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">Lead Video Editor (15%)</span>
                 <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-1">
                   ${calcEditor.toLocaleString()}
                 </p>
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Instant PayPal Payout</p>
+                <p className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] mt-0.5">Instant PayPal Payout</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center transition-colors duration-500">
-                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Thumbnail Designer (5%)</span>
+              <div className="p-4 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500">
+                <span className="text-[10px] font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">Thumbnail Designer (5%)</span>
                 <p className="text-2xl font-black text-blue-600 dark:text-sky-400 font-mono mt-1">
                   ${calcDesigner.toLocaleString()}
                 </p>
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Instant PayPal Payout</p>
+                <p className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] mt-0.5">Instant PayPal Payout</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-950 dark:bg-black/90 text-white border border-transparent dark:border-slate-800 text-center transition-colors duration-500">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Creator Net Retained (80%)</span>
+              <div className="p-4 rounded-2xl bg-[#2B1D19] dark:bg-[#120D0B] text-white border border-espresso-800 text-center transition-colors duration-500">
+                <span className="text-[10px] font-bold text-espresso-300 uppercase tracking-wider">Creator Net Retained (80%)</span>
                 <p className="text-2xl font-black text-white font-mono mt-1">
                   ${calcCreator.toLocaleString()}
                 </p>
-                <p className="text-[10px] text-slate-400 mt-0.5">Direct to Business Account</p>
+                <p className="text-[10px] text-espresso-400 mt-0.5">Direct to Business Account</p>
               </div>
 
             </div>
@@ -1097,42 +1097,42 @@ export default function LandingPage() {
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Bank-Grade Financial Rails</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight transition-colors duration-500">
+          <h2 className="text-3xl sm:text-4xl font-black text-[#2B1D19] dark:text-[#FAF6F4] tracking-tight transition-colors duration-500">
             Zero Custody Risk. <br />Direct Peer-to-Peer Settlement.
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed transition-colors duration-500">
+          <p className="text-sm text-[#75645E] dark:text-[#B8A9A2] mt-3 leading-relaxed transition-colors duration-500">
             CreatorPay does not hold your sponsor funds in middleman custodial bank accounts. All transactions move directly over PayPal merchant infrastructure.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-500">
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800/80 shadow-xs hover:border-espresso-300 dark:hover:border-espresso-700 transition-all duration-500">
             <div className="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#003087] dark:text-sky-300 flex items-center justify-center font-bold text-sm mb-4 border border-blue-200 dark:border-blue-800">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <h3 className="font-extrabold text-slate-900 dark:text-white text-base mb-2">Zero Escrow Custody</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            <h3 className="font-extrabold text-[#2B1D19] dark:text-[#FAF6F4] text-base mb-2">Zero Escrow Custody</h3>
+            <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
               Funds flow directly from the sponsor's PayPal or credit card into your verified PayPal Business merchant balance. We never touch or hold your money.
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-500">
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800/80 shadow-xs hover:border-espresso-300 dark:hover:border-espresso-700 transition-all duration-500">
             <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm mb-4 border border-emerald-200 dark:border-emerald-800">
               <Zap className="w-5 h-5" />
             </div>
-            <h3 className="font-extrabold text-slate-900 dark:text-white text-base mb-2">Real-Time Webhooks</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            <h3 className="font-extrabold text-[#2B1D19] dark:text-[#FAF6F4] text-base mb-2">Real-Time Webhooks</h3>
+            <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
               Every invoice status change, payment completion, and payout delivery is cryptographically verified via PayPal Webhook signatures.
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-500">
-            <div className="w-10 h-10 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-brand-300 flex items-center justify-center font-bold text-sm mb-4 border border-purple-200 dark:border-purple-800">
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800/80 shadow-xs hover:border-espresso-300 dark:hover:border-espresso-700 transition-all duration-500">
+            <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-300 flex items-center justify-center font-bold text-sm mb-4 border border-brand-200 dark:border-brand-800">
               <FileText className="w-5 h-5" />
             </div>
-            <h3 className="font-extrabold text-slate-900 dark:text-white text-base mb-2">IRS & Tax Compliance</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            <h3 className="font-extrabold text-[#2B1D19] dark:text-[#FAF6F4] text-base mb-2">IRS & Tax Compliance</h3>
+            <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
               Immutable audit ledger automatically generates 1099-NEC expense exports and contractor receipt logs for clean Schedule C tax deductions.
             </p>
           </div>
@@ -1141,37 +1141,37 @@ export default function LandingPage() {
       </section>
 
       {/* 8. IMPACT STATS */}
-      <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-100 dark:border-slate-800/80 transition-colors duration-500">
+      <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-espresso-100 dark:border-espresso-800/80 transition-colors duration-500">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-slate-950 dark:text-white font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
               384%
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
               Average cashflow efficiency gain
             </p>
           </div>
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-slate-950 dark:text-white font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
               \$3.9M
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
               Sponsorship volume modeled
             </p>
           </div>
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-slate-950 dark:text-white font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
               0 hrs
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
               Manual invoice chasing required
             </p>
           </div>
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-slate-950 dark:text-white font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
               &lt; 5s
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
               PayPal multi-party payout speed
             </p>
           </div>
@@ -1179,22 +1179,22 @@ export default function LandingPage() {
       </section>
 
       {/* 9. FINAL CTA BANNER */}
-      <section className="py-20 bg-slate-950 dark:bg-black text-white relative overflow-hidden transition-colors duration-500">
+      <section className="py-20 bg-[#1A1310] dark:bg-[#120D0B] text-white relative overflow-hidden transition-colors duration-500">
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-800 dark:bg-slate-900 border border-slate-700 dark:border-slate-800 text-xs font-bold text-slate-300 mb-5">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-espresso-900 border border-espresso-800 text-xs font-bold text-espresso-200 mb-5">
             <Sparkles className="w-3.5 h-3.5 text-brand-400" />
             <span>Built for High-Growth Creators & Talent Agencies</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
             Start getting paid like an institutional studio
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mb-8 font-normal leading-relaxed">
+          <p className="text-sm sm:text-base text-espresso-300 max-w-xl mx-auto mb-8 font-normal leading-relaxed">
             Stop losing hours on spreadsheets and unpaid invoices. Launch your CreatorPay financial co-pilot today.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/dashboard"
-              className="px-8 py-3.5 rounded-full bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold shadow-lg shadow-brand-600/30 transition-all cursor-pointer flex items-center space-x-2 group"
+              className="px-8 py-3.5 rounded-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold shadow-lg shadow-brand-500/30 transition-all cursor-pointer flex items-center space-x-2 group"
             >
               <span>Launch Studio App Free</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -1203,7 +1203,7 @@ export default function LandingPage() {
               href="https://github.com/ius-sharma/CreatorPay-AI"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-full bg-slate-800 dark:bg-slate-900 hover:bg-slate-700 dark:hover:bg-slate-800 text-slate-200 text-sm font-semibold transition-all border border-slate-700 dark:border-slate-800"
+              className="px-8 py-3.5 rounded-full bg-espresso-900 hover:bg-espresso-800 text-espresso-100 text-sm font-semibold transition-all border border-espresso-700"
             >
               View GitHub Source Code
             </a>
@@ -1212,16 +1212,16 @@ export default function LandingPage() {
       </section>
 
       {/* 10. CLEAN MINIMALIST FOOTER */}
-      <footer className="py-8 bg-white dark:bg-[#07090e] border-t border-slate-200/80 dark:border-slate-800/80 text-xs text-slate-500 dark:text-slate-400 transition-colors duration-500">
+      <footer className="py-8 bg-[#FFFDFC] dark:bg-[#120D0B] border-t border-espresso-200/80 dark:border-espresso-800/80 text-xs text-[#75645E] dark:text-[#B8A9A2] transition-colors duration-500">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center space-x-2">
-            <span className="font-extrabold text-slate-900 dark:text-slate-100">CreatorPay.AI</span>
+            <span className="font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">CreatorPay.AI</span>
             <span>• The Financial Agent for Digital Creators & Agencies</span>
           </div>
-          <div className="flex items-center space-x-6 text-slate-600 dark:text-slate-400">
-            <Link href="/dashboard" className="hover:text-slate-950 dark:hover:text-white font-semibold transition-colors">Studio App</Link>
-            <a href="https://developer.paypal.com" target="_blank" rel="noopener noreferrer" className="hover:text-slate-950 dark:hover:text-white transition-colors">PayPal Developer</a>
-            <a href="https://github.com/ius-sharma/CreatorPay-AI" target="_blank" rel="noopener noreferrer" className="hover:text-slate-950 dark:hover:text-white transition-colors">GitHub</a>
+          <div className="flex items-center space-x-6 text-[#75645E] dark:text-[#B8A9A2]">
+            <Link href="/dashboard" className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] font-semibold transition-colors">Studio App</Link>
+            <a href="https://developer.paypal.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">PayPal Developer</a>
+            <a href="https://github.com/ius-sharma/CreatorPay-AI" target="_blank" rel="noopener noreferrer" className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">GitHub</a>
           </div>
         </div>
       </footer>
