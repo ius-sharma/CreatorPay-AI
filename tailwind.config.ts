@@ -50,7 +50,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-jakarta)", "Plus Jakarta Sans", "Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
-        mono: ["JetBrains Mono", "Courier New", "monospace"],
+        mono: ["var(--font-jakarta)", "Plus Jakarta Sans", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
     },
   },
