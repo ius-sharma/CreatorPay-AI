@@ -264,11 +264,11 @@ export default function LandingPage() {
             <div className="flex flex-wrap items-center justify-between gap-4 mb-10 px-2 sm:px-4">
               <div className="flex items-center space-x-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#43322A] dark:text-[#E8D8D0] font-mono">
+                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#43322A] dark:text-[#E8D8D0] font-sans">
                   Autonomous Agent Workflow Canvas
                 </span>
                 <span className="text-espresso-300 dark:text-espresso-700 hidden sm:inline">•</span>
-                <span className="text-xs text-[#9E8D86] dark:text-[#8C7A72] font-mono hidden sm:inline">
+                <span className="text-xs text-[#9E8D86] dark:text-[#8C7A72] font-sans hidden sm:inline">
                   Interactive Node Graph · Click any node to inspect agent logic
                 </span>
               </div>
@@ -316,7 +316,7 @@ export default function LandingPage() {
 
                       {/* Card Top: Stage Tag & Live Dot */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-mono bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-sans bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
                           Stage 01 · Trigger
                         </span>
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -330,14 +330,14 @@ export default function LandingPage() {
                         <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
                           Contract Ingestion
                         </h4>
-                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-mono mt-1">
+                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-sans mt-1">
                           AI OCR & Milestone Parser
                         </p>
                       </div>
 
                       {/* Card Bottom: Metric & Click Prompt */}
                       <div className="text-center space-y-1.5">
-                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-mono text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60">
+                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-sans font-bold text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60">
                           50% Advance Lock Rule
                         </div>
                         <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
@@ -350,7 +350,7 @@ export default function LandingPage() {
 
                   {/* Right Column: Step Description Side-Panel */}
                   <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2">
-                    <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit">
+                    <div className="inline-flex items-center space-x-2 text-xs font-sans font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit">
                       <span>Step 01 · Ingestion Trigger</span>
                     </div>
                     <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
@@ -388,7 +388,7 @@ export default function LandingPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
                   {/* Left Column: Step Description Side-Panel */}
                   <div className="hidden sm:flex flex-col justify-center pr-6 text-right space-y-2">
-                    <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-[#003087] dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-xl border border-blue-200/60 dark:border-blue-800/60 w-fit ml-auto">
+                    <div className="inline-flex items-center space-x-2 text-xs font-sans font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit ml-auto">
                       <span>Step 02 · Escrow Lock Action</span>
                     </div>
                     <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
@@ -402,54 +402,54 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('invoice')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-blue-500 ${
-                        simStep >= 2 ? 'border-blue-500/80 dark:border-blue-500/80 ring-2 ring-blue-500/20' : 'border-espresso-200 dark:border-espresso-800'
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                        simStep >= 2 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 1) */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
-                        <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for S-line 2) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500 flex items-center justify-center shadow-md z-20">
-                        <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: LEFT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500/70 items-center justify-center shadow-xs z-10">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
                       {/* Card Top: Stage Tag & Paid Status */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#003087] dark:text-sky-300 font-mono bg-blue-50 dark:bg-blue-950/70 px-2.5 py-1 rounded-md border border-blue-200/60 dark:border-blue-800/60">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-sans bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
                           Stage 02 · Action
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-sans font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
                           PAID ✓
                         </span>
                       </div>
 
                       {/* Card Center: Icon & Title */}
                       <div className="text-center my-auto">
-                        <div className="w-13 h-13 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-[#003087] dark:text-sky-400 flex items-center justify-center mx-auto mb-2.5 border border-blue-200 dark:border-blue-800 shadow-2xs group-hover:scale-110 transition-transform font-black text-lg">
+                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform font-black text-lg">
                           P
                         </div>
                         <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
                           Milestone Escrow
                         </h4>
-                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-mono mt-1">
+                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-sans mt-1">
                           PayPal Invoicing API v2
                         </p>
                       </div>
 
                       {/* Card Bottom: Metric & Click Prompt */}
                       <div className="text-center space-y-1.5">
-                        <div className="px-3 py-1 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 text-[10px] font-mono text-[#003087] dark:text-sky-300 border border-blue-100 dark:border-blue-900/60 font-bold">
+                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-sans text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60 font-bold">
                           ${selectedDeal.advanceMilestone.toLocaleString()}.00 USD Locked
                         </div>
-                        <span className="text-[10px] font-bold text-blue-600 dark:text-sky-400 inline-flex items-center space-x-1 group-hover:underline">
+                        <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
                           <span>Inspect Stage Logic</span>
                           <span>↗</span>
                         </span>
@@ -467,7 +467,7 @@ export default function LandingPage() {
                         d="M 615 0 C 615 92, 205 52, 205 144" 
                         stroke="currentColor" 
                         strokeWidth="3" 
-                        className={`animate-flow-thread ${simStep >= 3 ? 'text-blue-500 dark:text-sky-400' : 'text-espresso-300 dark:text-espresso-700'}`} 
+                        className={`animate-flow-thread ${simStep >= 3 ? 'text-brand-500 dark:text-brand-400' : 'text-espresso-300 dark:text-espresso-700'}`} 
                       />
                     </svg>
                   </div>
@@ -475,7 +475,7 @@ export default function LandingPage() {
                   {/* Mobile Fallback Vertical Line */}
                   <div className="sm:hidden flex flex-col items-center">
                     <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64" fill="none">
-                      <line x1="12" y1="0" x2="12" y2="64" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-blue-500" />
+                      <line x1="12" y1="0" x2="12" y2="64" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-brand-500" />
                     </svg>
                   </div>
                 </div>
@@ -485,54 +485,54 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('verify')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-emerald-500 ${
-                        simStep >= 3 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-2 ring-emerald-500/20' : 'border-espresso-200 dark:border-espresso-800'
+                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                        simStep >= 3 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 2) */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for Branching Lines) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500 flex items-center justify-center shadow-md z-20">
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500/70 items-center justify-center shadow-xs z-10">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
                       {/* Card Top: Stage Tag & Verified Status */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 font-mono bg-emerald-50 dark:bg-emerald-950/70 px-2.5 py-1 rounded-md border border-emerald-200/60 dark:border-emerald-800/60">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-sans bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
                           Stage 03 · Condition
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-sans font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
                           VERIFIED ✓
                         </span>
                       </div>
 
                       {/* Card Center: Icon & Title */}
                       <div className="text-center my-auto">
-                        <div className="w-13 h-13 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-2.5 border border-emerald-200 dark:border-emerald-800 shadow-2xs group-hover:scale-110 transition-transform">
+                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform">
                           <Video className="w-6 h-6" />
                         </div>
                         <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
                           Deliverable Audit
                         </h4>
-                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-mono mt-1">
+                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-sans mt-1">
                           Multimodal Vision OCR
                         </p>
                       </div>
 
                       {/* Card Bottom: Metric & Click Prompt */}
                       <div className="text-center space-y-1.5">
-                        <div className="px-3 py-1 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 text-[10px] font-mono text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/60 font-bold">
+                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-sans text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60 font-bold">
                           02:45 Match Confirmed
                         </div>
-                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center space-x-1 group-hover:underline">
+                        <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
                           <span>Inspect Stage Logic</span>
                           <span>↗</span>
                         </span>
@@ -542,7 +542,7 @@ export default function LandingPage() {
 
                   {/* Right Column: Step Description Side-Panel */}
                   <div className="hidden sm:flex flex-col justify-center pl-6 text-left space-y-2">
-                    <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-xl border border-emerald-200/60 dark:border-emerald-800/60 w-fit">
+                    <div className="inline-flex items-center space-x-2 text-xs font-sans font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-3 py-1 rounded-xl border border-brand-200/60 dark:border-brand-800/60 w-fit">
                       <span>Step 03 · Deliverable Condition</span>
                     </div>
                     <h5 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
@@ -559,16 +559,16 @@ export default function LandingPage() {
                   {/* Desktop SVG Branching Lines */}
                   <div className="w-full h-full hidden sm:block">
                     <svg className="w-full h-full overflow-visible" viewBox="0 0 820 144" fill="none">
-                      <path d="M 205 0 C 205 76, 137 56, 137 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-300 dark:text-slate-700'}`} />
-                      <path d="M 205 0 C 205 76, 410 56, 410 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-blue-500 dark:text-sky-400' : 'text-slate-300 dark:text-slate-700'}`} />
-                      <path d="M 205 0 C 205 76, 683 56, 683 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-slate-300 dark:text-slate-700'}`} />
+                      <path d="M 205 0 C 205 76, 137 56, 137 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-espresso-300 dark:text-espresso-700'}`} />
+                      <path d="M 205 0 C 205 76, 410 56, 410 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-espresso-300 dark:text-espresso-700'}`} />
+                      <path d="M 205 0 C 205 76, 683 56, 683 144" stroke="currentColor" strokeWidth="3" className={`animate-flow-thread ${simStep >= 4 ? 'text-brand-500 dark:text-brand-400' : 'text-espresso-300 dark:text-espresso-700'}`} />
                     </svg>
                   </div>
 
                   {/* Mobile Fallback Drop */}
                   <div className="sm:hidden flex flex-col items-center">
                     <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64" fill="none">
-                      <line x1="12" y1="0" x2="12" y2="64" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-emerald-500" />
+                      <line x1="12" y1="0" x2="12" y2="64" stroke="currentColor" strokeWidth="2.5" className="animate-flow-thread text-brand-500" />
                     </svg>
                   </div>
                 </div>
@@ -582,7 +582,7 @@ export default function LandingPage() {
                         Disbursement Hub · Connected Collaborator Roster
                       </span>
                     </div>
-                    <span className="text-[11px] font-mono text-[#9E8D86] dark:text-[#8C7A72]">
+                    <span className="text-[11px] font-sans text-[#9E8D86] dark:text-[#8C7A72]">
                       Connect any team role & set custom %
                     </span>
                   </div>
@@ -593,27 +593,27 @@ export default function LandingPage() {
                     {/* Branch 1: Video Editor */}
                     <div 
                       onClick={() => openInspector('editor')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-emerald-400 hover:shadow-xl ${
-                        simStep >= 4 ? 'border-emerald-500/80 dark:border-emerald-500/80 ring-1 ring-emerald-500/20' : 'border-espresso-200 dark:border-espresso-800'
+                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-brand-400 hover:shadow-xl ${
+                        simStep >= 4 ? 'border-brand-500/80 dark:border-brand-500/80 ring-1 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-emerald-500 flex items-center justify-center shadow-xs z-10">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
+                        <div className="w-2 h-2 rounded-full bg-brand-500" />
                       </div>
 
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#75645E] dark:text-[#B8A9A2]">
                           Video Editor
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-sans font-bold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/60 px-2 py-0.5 rounded-md border border-brand-200/60 dark:border-brand-800/60">
                           15% Cut
                         </span>
                       </div>
-                      <p className="text-xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono">
+                      <p className="text-xl font-extrabold text-[#2B1D19] dark:text-[#FAF6F4] font-sans">
                         +${selectedDeal.editorCut}.00 <span className="text-[11px] font-normal text-[#9E8D86]">USD</span>
                       </p>
-                      <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 font-medium pt-3 mt-3 border-t border-espresso-100 dark:border-espresso-800">
+                      <div className="flex items-center justify-between text-[11px] text-brand-600 dark:text-brand-400 font-medium pt-3 mt-3 border-t border-espresso-100 dark:border-espresso-800">
                         <span className="flex items-center space-x-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Disbursed ✓</span>
@@ -625,27 +625,27 @@ export default function LandingPage() {
                     {/* Branch 2: Thumbnail Designer */}
                     <div 
                       onClick={() => openInspector('designer')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-blue-400 hover:shadow-xl ${
-                        simStep >= 4 ? 'border-blue-500/80 dark:border-blue-500/80 ring-1 ring-blue-500/20' : 'border-espresso-200 dark:border-espresso-800'
+                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-brand-400 hover:shadow-xl ${
+                        simStep >= 4 ? 'border-brand-500/80 dark:border-brand-500/80 ring-1 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-blue-500 flex items-center justify-center shadow-xs z-10">
-                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
+                        <div className="w-2 h-2 rounded-full bg-brand-500" />
                       </div>
 
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#75645E] dark:text-[#B8A9A2]">
                           Thumbnail Designer
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-blue-700 dark:text-sky-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-sans font-bold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/60 px-2 py-0.5 rounded-md border border-brand-200/60 dark:border-brand-800/60">
                           5% Cut
                         </span>
                       </div>
-                      <p className="text-xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono">
+                      <p className="text-xl font-extrabold text-[#2B1D19] dark:text-[#FAF6F4] font-sans">
                         +${selectedDeal.designerCut}.00 <span className="text-[11px] font-normal text-[#9E8D86]">USD</span>
                       </p>
-                      <div className="flex items-center justify-between text-[11px] text-blue-600 dark:text-sky-400 font-medium pt-3 mt-3 border-t border-espresso-100 dark:border-espresso-800">
+                      <div className="flex items-center justify-between text-[11px] text-brand-600 dark:text-brand-400 font-medium pt-3 mt-3 border-t border-espresso-100 dark:border-espresso-800">
                         <span className="flex items-center space-x-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Disbursed ✓</span>
@@ -670,14 +670,14 @@ export default function LandingPage() {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-espresso-300">
                           Creator Net Retained
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-brand-300 bg-espresso-800 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-sans font-bold text-brand-300 bg-espresso-800 px-2 py-0.5 rounded-md border border-espresso-700">
                           80% Retained
                         </span>
                       </div>
-                      <p className="text-xl font-black text-white font-mono">
+                      <p className="text-xl font-extrabold text-white font-sans">
                         +${selectedDeal.creatorCut}.00 <span className="text-[11px] font-normal text-espresso-400">USD</span>
                       </p>
-                      <div className="flex items-center justify-between text-[11px] text-emerald-400 font-medium pt-3 mt-3 border-t border-espresso-800">
+                      <div className="flex items-center justify-between text-[11px] text-brand-400 font-medium pt-3 mt-3 border-t border-espresso-800">
                         <span className="flex items-center space-x-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Merchant Balance ✓</span>
@@ -691,10 +691,10 @@ export default function LandingPage() {
                   {/* Bottom Assurance Strip */}
                   <div className="mt-6 p-4 rounded-2xl bg-[#FAF6F4] dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800 flex flex-wrap items-center justify-between gap-2 text-xs text-[#75645E] dark:text-[#B8A9A2] shadow-xs">
                     <span className="flex items-center space-x-2 font-medium">
-                      <Zap className="w-4 h-4 text-amber-500" />
+                      <Zap className="w-4 h-4 text-brand-500" />
                       <span>Single PayPal Batch API call • 3 parallel transactions settled in 4.2s</span>
                     </span>
-                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                    <span className="font-sans text-brand-600 dark:text-brand-400 font-bold">
                       IRS 1099 Expense Logged ✓
                     </span>
                   </div>
@@ -729,7 +729,7 @@ export default function LandingPage() {
                           <FileText className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-500 dark:text-brand-400">
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-brand-500 dark:text-brand-400">
                             Stage 01 Inspector
                           </span>
                           <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
@@ -748,7 +748,7 @@ export default function LandingPage() {
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-sans space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
                           <span className="text-[#9E8D86]">Extraction Model:</span>
                           <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">Gemini 1.5 Flash Multimodal OCR</span>
@@ -768,11 +768,11 @@ export default function LandingPage() {
                   {inspectorNode === 'invoice' && (
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-[#003087] dark:text-sky-400 flex items-center justify-center font-black text-lg border border-blue-200 dark:border-blue-800">
+                        <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center font-black text-lg border border-brand-200 dark:border-brand-800">
                           P
                         </div>
                         <div>
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#003087] dark:text-sky-300">
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
                             Stage 02 Inspector
                           </span>
                           <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
@@ -781,17 +781,17 @@ export default function LandingPage() {
                         </div>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-blue-50/60 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/60">
-                        <p className="text-xs font-bold text-blue-950 dark:text-blue-200 mb-1 flex items-center space-x-1.5">
-                          <ShieldCheck className="w-4 h-4 text-[#003087] dark:text-sky-400" />
+                      <div className="p-4 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-200/60 dark:border-brand-800/60">
+                        <p className="text-xs font-bold text-brand-950 dark:text-brand-200 mb-1 flex items-center space-x-1.5">
+                          <ShieldCheck className="w-4 h-4 text-brand-500 dark:text-brand-400" />
                           <span>What the AI Agent Does Here:</span>
                         </p>
                         <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
-                          Constructs and sends an official PayPal Invoicing v2 document to brand finance accounts. The agent monitors PayPal Webhooks (<code className="font-mono font-bold">INVOICING.INVOICE.PAID</code>). The exact millisecond advance payment settles in your merchant balance, video shooting is unlocked.
+                          Constructs and sends an official PayPal Invoicing v2 document to brand finance accounts. The agent monitors PayPal Webhooks (<code className="font-sans font-bold">INVOICING.INVOICE.PAID</code>). The exact millisecond advance payment settles in your merchant balance, video shooting is unlocked.
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-sans space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
                           <span className="text-[#9E8D86]">Financial Rail:</span>
                           <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">PayPal Merchant Invoicing API v2</span>
@@ -802,7 +802,7 @@ export default function LandingPage() {
                         </p>
                         <p className="flex justify-between">
                           <span className="text-[#9E8D86]">Webhook Status:</span>
-                          <span className="font-bold text-blue-600 dark:text-sky-400">Cryptographically Signed & Verified</span>
+                          <span className="font-bold text-brand-500 dark:text-brand-400">Cryptographically Signed & Verified</span>
                         </p>
                       </div>
                     </div>
@@ -811,11 +811,11 @@ export default function LandingPage() {
                   {inspectorNode === 'verify' && (
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
+                        <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center border border-brand-200 dark:border-brand-800">
                           <Video className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
                             Stage 03 Inspector
                           </span>
                           <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
@@ -824,9 +824,9 @@ export default function LandingPage() {
                         </div>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/60">
-                        <p className="text-xs font-bold text-emerald-950 dark:text-emerald-200 mb-1 flex items-center space-x-1.5">
-                          <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <div className="p-4 rounded-2xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-200/60 dark:border-brand-800/60">
+                        <p className="text-xs font-bold text-brand-950 dark:text-brand-200 mb-1 flex items-center space-x-1.5">
+                          <Sparkles className="w-4 h-4 text-brand-500 dark:text-brand-400" />
                           <span>What the AI Agent Does Here:</span>
                         </p>
                         <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] leading-relaxed">
@@ -834,7 +834,7 @@ export default function LandingPage() {
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-sans space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
                           <span className="text-[#9E8D86]">Timestamp Match:</span>
                           <span className="font-bold text-emerald-600 dark:text-emerald-400">02:45 Confirmed (99.4% Match)</span>
@@ -858,7 +858,7 @@ export default function LandingPage() {
                           <Users className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-500 dark:text-brand-400">
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-brand-500 dark:text-brand-400">
                             Stage 04 Inspector
                           </span>
                           <h3 className="text-base font-extrabold text-[#2B1D19] dark:text-[#FAF6F4]">
@@ -877,7 +877,7 @@ export default function LandingPage() {
                         </p>
                       </div>
 
-                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-mono space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
+                      <div className="p-3.5 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 text-xs font-sans space-y-1.5 text-[#75645E] dark:text-[#B8A9A2] border border-espresso-200/70 dark:border-espresso-800/60">
                         <p className="flex justify-between">
                           <span className="text-[#9E8D86]">Disbursement Rail:</span>
                           <span className="font-bold text-[#2B1D19] dark:text-[#FAF6F4]">PayPal Payouts Batch REST API</span>
@@ -918,8 +918,8 @@ export default function LandingPage() {
             Engineered on the PayPal Global Merchant Ecosystem • Built for Modern Creator Studios
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 text-[#9E8D86] dark:text-[#8C7A72] font-bold text-sm">
-            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors font-mono">PayPal Invoicing</span>
-            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors font-mono">PayPal Payouts API</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors font-sans font-semibold">PayPal Invoicing</span>
+            <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors font-sans font-semibold">PayPal Payouts API</span>
             <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">YouTube Studio</span>
             <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">Instagram Creators</span>
             <span className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">TikTok Creator Fund</span>
@@ -1028,7 +1028,7 @@ export default function LandingPage() {
                 <span className="text-xs font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">
                   Brand Sponsorship Deal Size:
                 </span>
-                <span className="text-2xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono transition-colors duration-500">
+                <span className="text-2xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-sans tabular-nums transition-colors duration-500">
                   ${calcDealSize.toLocaleString()} USD
                 </span>
               </div>
@@ -1041,7 +1041,7 @@ export default function LandingPage() {
                 onChange={(e) => setCalcDealSize(Number(e.target.value))}
                 className="w-full h-2.5 bg-espresso-200 dark:bg-espresso-800 rounded-lg appearance-none cursor-pointer accent-brand-500 transition-colors"
               />
-              <div className="flex justify-between text-[11px] text-[#9E8D86] dark:text-[#8C7A72] font-mono mt-1">
+              <div className="flex justify-between text-[11px] text-[#9E8D86] dark:text-[#8C7A72] font-sans mt-1">
                 <span>$1,000 (Single Reel)</span>
                 <span>$25,000 (Channel Retainer)</span>
                 <span>$50,000 (Studio Agency)</span>
@@ -1053,7 +1053,7 @@ export default function LandingPage() {
               
               <div className="p-4 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500">
                 <span className="text-[10px] font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">Lead Video Editor (15%)</span>
-                <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-1">
+                <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-sans tabular-nums mt-1">
                   ${calcEditor.toLocaleString()}
                 </p>
                 <p className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] mt-0.5">Instant PayPal Payout</p>
@@ -1061,7 +1061,7 @@ export default function LandingPage() {
 
               <div className="p-4 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500">
                 <span className="text-[10px] font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">Thumbnail Designer (5%)</span>
-                <p className="text-2xl font-black text-blue-600 dark:text-sky-400 font-mono mt-1">
+                <p className="text-2xl font-black text-blue-600 dark:text-sky-400 font-sans tabular-nums mt-1">
                   ${calcDesigner.toLocaleString()}
                 </p>
                 <p className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] mt-0.5">Instant PayPal Payout</p>
@@ -1069,7 +1069,7 @@ export default function LandingPage() {
 
               <div className="p-4 rounded-2xl bg-[#2B1D19] dark:bg-[#120D0B] text-white border border-espresso-800 text-center transition-colors duration-500">
                 <span className="text-[10px] font-bold text-espresso-300 uppercase tracking-wider">Creator Net Retained (80%)</span>
-                <p className="text-2xl font-black text-white font-mono mt-1">
+                <p className="text-2xl font-black text-white font-sans tabular-nums mt-1">
                   ${calcCreator.toLocaleString()}
                 </p>
                 <p className="text-[10px] text-espresso-400 mt-0.5">Direct to Business Account</p>
@@ -1083,7 +1083,7 @@ export default function LandingPage() {
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>All 3 disbursements execute in parallel via a single <strong>PayPal Payouts Batch call</strong>.</span>
               </div>
-              <span className="font-mono font-bold text-emerald-700 dark:text-emerald-300 hidden sm:inline">Execution time: ~4.2s</span>
+              <span className="font-sans font-bold text-emerald-700 dark:text-emerald-300 hidden sm:inline">Execution time: ~4.2s</span>
             </div>
 
           </div>
@@ -1144,7 +1144,7 @@ export default function LandingPage() {
       <section className="py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-espresso-100 dark:border-espresso-800/80 transition-colors duration-500">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-sans tracking-tight tabular-nums transition-colors duration-500">
               384%
             </p>
             <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
@@ -1152,7 +1152,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-sans tracking-tight tabular-nums transition-colors duration-500">
               \$3.9M
             </p>
             <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
@@ -1160,7 +1160,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-sans tracking-tight tabular-nums transition-colors duration-500">
               0 hrs
             </p>
             <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
@@ -1168,7 +1168,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div>
-            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-mono tracking-tight tabular-nums transition-colors duration-500">
+            <p className="text-4xl sm:text-5xl font-black text-[#2B1D19] dark:text-[#FAF6F4] font-sans tracking-tight tabular-nums transition-colors duration-500">
               &lt; 5s
             </p>
             <p className="text-xs text-[#75645E] dark:text-[#B8A9A2] mt-2 font-medium">
