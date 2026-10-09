@@ -201,11 +201,11 @@ export default function Home() {
 
   if (loading || !deal) {
     return (
-      <div className="min-h-screen bg-[#fbfbfe] flex flex-col items-center justify-center text-slate-700">
-        <div className="w-12 h-12 rounded-2xl bg-brand-600 animate-pulse flex items-center justify-center mb-4 shadow-xl shadow-brand-600/25">
+      <div className="min-h-screen bg-[#FFFDFC] flex flex-col items-center justify-center text-[#75645E]">
+        <div className="w-12 h-12 rounded-2xl bg-brand-500 animate-pulse flex items-center justify-center mb-4 shadow-xl shadow-brand-500/25">
           <Bot className="w-6 h-6 text-white" />
         </div>
-        <p className="font-extrabold text-sm text-slate-900">
+        <p className="font-extrabold text-sm text-[#2B1D19]">
           Connecting to PayPal Developer Platform & Apex Media Studio...
         </p>
       </div>
@@ -213,7 +213,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbfbfe] text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#FFFDFC] text-[#2B1D19] flex flex-col">
       {/* 5-Tab Navigation Header */}
       <Navbar
         activeTab={activeTab}
@@ -323,7 +323,7 @@ export default function Home() {
       )}
 
       {/* Ultra-Grade Footer */}
-      <footer className="border-t border-brand-100 bg-white py-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-espresso-100 bg-[#FFFDFC] py-4 text-center text-xs text-[#75645E]">
         <p>
           CreatorPay AI • Enterprise Merchant Solutions • Powered by PayPal Invoicing v2, Payouts v1 & Webhooks • PayPal AI Hackathon 2026
         </p>
