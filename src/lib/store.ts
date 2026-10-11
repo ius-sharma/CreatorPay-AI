@@ -1,5 +1,6 @@
 import { Deal, AgentLog, TeamSplit, PayPalInvoiceSummary, AuditLedgerEntry } from './types';
 import { parseDealPromptWithHeuristics } from './agent';
+import { database, transaction } from './database';
 
 declare global {
   var __CREATORPAY_STORE__: {
@@ -85,7 +86,7 @@ function initializeSeedDeals(): Deal[] {
   d3.milestones[0].invoiceId = 'INV2-SHOP-551';
   d3.milestones[0].invoiceNumber = 'INV-883902';
 
-  return [d1, d2, d3];
+  return [d1, d2, d3].map(d => ({ ...d, demo: true }));
 }
 
 function initializeInvoices(deals: Deal[]): PayPalInvoiceSummary[] {
@@ -173,122 +174,59 @@ function initializeAuditLedger(): AuditLedgerEntry[] {
   ];
 }
 
-export function getStore() {
-  if (!global.__CREATORPAY_STORE__) {
-    const deals = initializeSeedDeals();
-    global.__CREATORPAY_STORE__ = {
-      deals,
-      activeDealId: deals[0].id,
-      teamRoster: defaultRoster,
-      invoices: initializeInvoices(deals),
-      auditLedger: initializeAuditLedger(),
-    };
-  }
-  return global.__CREATORPAY_STORE__;
-}
-
-export function getAllDeals(): Deal[] {
-  return getStore().deals;
-}
-
-export function getActiveDeal(): Deal | null {
-  const store = getStore();
-  return store.deals.find((d) => d.id === store.activeDealId) || store.deals[0] || null;
-}
-
-export function setActiveDealId(id: string): Deal | null {
-  const store = getStore();
-  const found = store.deals.find((d) => d.id === id);
-  if (found) {
-    store.activeDealId = id;
-    return found;
-  }
-  return getActiveDeal();
-}
-
-export function setActiveDeal(deal: Deal): Deal {
-  const store = getStore();
-  const existingIdx = store.deals.findIndex((d) => d.id === deal.id);
-  if (existingIdx >= 0) {
-    store.deals[existingIdx] = deal;
-  } else {
-    store.deals.unshift(deal);
-  }
-  store.activeDealId = deal.id;
-  return deal;
-}
-
-export function updateActiveDeal(updater: (prev: Deal) => Deal): Deal | null {
-  const store = getStore();
-  const active = getActiveDeal();
-  if (!active) return null;
-
-  const updated = updater(active);
-  updated.updatedAt = new Date().toISOString();
-
-  const idx = store.deals.findIndex((d) => d.id === active.id);
-  if (idx >= 0) {
-    store.deals[idx] = updated;
-  }
-
-  return updated;
-}
-
-export function appendDealLog(log: Omit<AgentLog, 'id' | 'timestamp'>): AgentLog {
-  const store = getStore();
-  const active = getActiveDeal();
-
-  const fullLog: AgentLog = {
-    ...log,
-    id: `log-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-    timestamp: new Date().toLocaleTimeString(),
-  };
-
-  if (active) {
-    active.logs = [fullLog, ...active.logs];
-    active.updatedAt = new Date().toISOString();
-  }
-
-  return fullLog;
-}
-
-export function getTeamRoster(): TeamSplit[] {
-  return getStore().teamRoster;
-}
-
-export function updateTeamRoster(roster: TeamSplit[]): TeamSplit[] {
-  const store = getStore();
-  store.teamRoster = roster;
-  return roster;
-}
-
-export function getInvoicesRegistry(): PayPalInvoiceSummary[] {
-  return getStore().invoices;
-}
-
-export function addInvoiceToRegistry(inv: PayPalInvoiceSummary): PayPalInvoiceSummary {
-  const store = getStore();
-  store.invoices.unshift(inv);
-  return inv;
-}
-
-export function getAuditLedger(): AuditLedgerEntry[] {
-  return getStore().auditLedger;
-}
-
-export function addAuditEntry(entry: AuditLedgerEntry): AuditLedgerEntry {
-  const store = getStore();
-  store.auditLedger.unshift(entry);
-  return entry;
-}
-
-export function resetDemo(): Deal {
-  const store = getStore();
+type Store = NonNullable<typeof global.__CREATORPAY_STORE__>;
+function initialStore(): Store {
   const deals = initializeSeedDeals();
-  store.deals = deals;
-  store.activeDealId = deals[0].id;
-  store.teamRoster = defaultRoster;
-  store.invoices = initializeInvoices(deals);
-  store.auditLedger = initializeAuditLedger();
-  return deals[0];
+  const prior = global.__CREATORPAY_STORE__;
+  return prior ? { ...prior, deals: prior.deals.map(d => ({ ...d, demo: d.demo ?? (d.id === 'deal-cloudhost' || d.id === 'deal-nordvpn' || d.id === 'deal-shopify') })) } : { deals, activeDealId: deals[0].id, teamRoster: defaultRoster, invoices: initializeInvoices(deals), auditLedger: initializeAuditLedger() };
+}
+function readStore(): Store {
+  const db = database();
+  const row = db.prepare('SELECT body FROM app_state WHERE id=1').get();
+  if (row) return JSON.parse(row.body);
+  const initial = initialStore();
+  db.prepare('INSERT OR IGNORE INTO app_state(id,body) VALUES(1,?)').run(JSON.stringify(initial));
+  return JSON.parse(db.prepare('SELECT body FROM app_state WHERE id=1').get().body);
+}
+export function mutateStore<T>(fn: (store: Store) => T): T {
+  return transaction(() => {
+    const store = readStore();
+    const result = fn(store);
+    database().prepare('UPDATE app_state SET body=? WHERE id=1').run(JSON.stringify(store));
+    return result;
+  });
+}
+export function getStore(): Store { return readStore(); }
+export function getAllDeals(): Deal[] { return readStore().deals; }
+export function getActiveDeal(): Deal | null {
+  const store = readStore(); return store.deals.find(d => d.id === store.activeDealId) || store.deals[0] || null;
+}
+export function getDeal(id: string): Deal | null { return readStore().deals.find(d => d.id === id) || null; }
+export function setActiveDealId(id: string): Deal | null {
+  return mutateStore(store => { const deal = store.deals.find(d => d.id === id); if (deal) store.activeDealId = id; return deal || null; });
+}
+export function setActiveDeal(deal: Deal): Deal {
+  return mutateStore(store => { const i = store.deals.findIndex(d => d.id === deal.id); if (i >= 0) return store.deals[i]; store.deals.unshift(deal); store.activeDealId = deal.id; return deal; });
+}
+export function updateActiveDeal(updater: (prev: Deal) => Deal): Deal | null {
+  return mutateStore(store => { const i = store.deals.findIndex(d => d.id === store.activeDealId); if (i < 0) return null; const d = updater(store.deals[i]); d.updatedAt = new Date().toISOString(); store.deals[i] = d; return d; });
+}
+export function appendDealLog(log: Omit<AgentLog, 'id' | 'timestamp'>): AgentLog {
+  return mutateStore(store => { const full = { ...log, id: 'log-' + Date.now() + '-' + Math.random().toString(36).slice(2,6), timestamp: new Date().toLocaleTimeString() }; const deal = store.deals.find(d => d.id === store.activeDealId); if (deal) { deal.logs.unshift(full); deal.updatedAt = new Date().toISOString(); } return full; });
+}
+export function getTeamRoster(): TeamSplit[] { return readStore().teamRoster; }
+export function updateTeamRoster(roster: TeamSplit[]): TeamSplit[] { return mutateStore(store => { store.teamRoster = roster; return roster; }); }
+export function getInvoicesRegistry(): PayPalInvoiceSummary[] { return readStore().invoices; }
+export function addInvoiceToRegistry(inv: PayPalInvoiceSummary): PayPalInvoiceSummary { return mutateStore(store => { store.invoices = [inv, ...store.invoices.filter(i => i.id !== inv.id)]; return inv; }); }
+export function getAuditLedger(): AuditLedgerEntry[] { return readStore().auditLedger; }
+export function addAuditEntry(entry: AuditLedgerEntry): AuditLedgerEntry { return mutateStore(store => { store.auditLedger.unshift(entry); return entry; }); }
+export function resetDemo(): Deal {
+  return mutateStore(store => {
+    const demos = initializeSeedDeals();
+    const demoInvoices = initializeInvoices(demos);
+    store.deals = [...store.deals.filter(d => !d.demo), ...demos];
+    store.invoices = [...store.invoices.filter(i => !['INV2-NORD-092','INV2-SHOP-551'].includes(i.id)), ...demoInvoices];
+    store.activeDealId = store.deals[0].id;
+    return store.deals[0];
+  });
 }
