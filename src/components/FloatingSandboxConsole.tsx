@@ -32,6 +32,8 @@ export const FloatingSandboxConsole: React.FC<FloatingSandboxConsoleProps> = ({
   const isM2Paid = m2?.status === 'paid';
   const isPayoutSettled = deal.status === 'deal_closed';
 
+  if (deal.contractExtraction || deal.demo) return null;
+
   return (
     <div className="fixed bottom-5 right-5 z-40 max-w-xl w-full px-4 sm:px-0">
       <div className="bg-white/95 backdrop-blur-md border border-brand-200 rounded-3xl shadow-2xl overflow-hidden transition-all duration-300">
