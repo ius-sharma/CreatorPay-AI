@@ -16,6 +16,10 @@ import { AuditLedgerView } from '@/components/AuditLedgerView';
 import { DiagnosticsView } from '@/components/DiagnosticsView';
 import { Deal, TeamSplit, TabType, PayPalInvoiceSummary, AuditLedgerEntry } from '@/lib/types';
 import { Bot } from 'lucide-react';
+import { PayoutControl } from '@/components/PayoutControl';
+import { DeliverableReviewPanel } from '@/components/DeliverableReviewPanel';
+import { ContractReview } from '@/components/ContractReview';
+import type { ContractReview as Review } from '@/lib/contract';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabType>('workspace');
@@ -29,6 +33,8 @@ export default function Home() {
   const [actionLoading, setActionLoading] = useState<boolean>(false);
   const [isResetting, setIsResetting] = useState<boolean>(false);
   const [isDeliverableModalOpen, setIsDeliverableModalOpen] = useState<boolean>(false);
+  const [contractReview, setContractReview] = useState<{ review: Review; token: string } | null>(null);
+  const [analysisError, setAnalysisError] = useState('');
 
   const fetchPortfolioData = async () => {
     try {
@@ -49,6 +55,8 @@ export default function Home() {
 
   useEffect(() => {
     fetchPortfolioData();
+    const timer = setInterval(fetchPortfolioData, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleSelectDeal = async (dealId: string) => {
@@ -71,20 +79,38 @@ export default function Home() {
 
   const handlePromptSubmit = async (prompt: string, updatedSplits: TeamSplit[]) => {
     setActionLoading(true);
+    setAnalysisError('');
+    setContractReview(null);
     try {
-      const res = await fetch('/api/deals', {
+      const res = await fetch('/api/agent/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt, customSplits: updatedSplits }),
       });
       const data = await res.json();
-      if (data.activeDeal) setDeal(data.activeDeal);
-      if (data.allDeals) setAllDeals(data.allDeals);
+      if (!res.ok || !data.success) throw new Error(data.error || 'Contract analysis failed.');
+      setContractReview({ review: data.review, token: data.token });
     } catch (err) {
-      console.error('Error submitting prompt:', err);
+      setAnalysisError(err instanceof Error ? err.message : 'Contract analysis failed. Please retry.');
     } finally {
       setActionLoading(false);
     }
+  };
+
+  const handleConfirmContract = async () => {
+    if (!contractReview) return;
+    setActionLoading(true);
+    setAnalysisError('');
+    try {
+      const res = await fetch('/api/deals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'confirm_analysis', token: contractReview.token }) });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Could not confirm this review.');
+      setDeal(data.activeDeal);
+      setAllDeals(data.allDeals);
+      setContractReview(null);
+    } catch (err) {
+      setAnalysisError(err instanceof Error ? err.message : 'Could not confirm this review.');
+    } finally { setActionLoading(false); }
   };
 
   const handleUpdateRoster = async (updatedRoster: TeamSplit[]) => {
@@ -102,19 +128,22 @@ export default function Home() {
 
   const handleGenerateInvoice = async (milestoneIndex: number) => {
     setActionLoading(true);
+    setAnalysisError('');
     try {
       const res = await fetch('/api/paypal/invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ milestoneIndex }),
+        body: JSON.stringify({ dealId: deal?.id, milestoneIndex }),
       });
       const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'PayPal invoice request failed.');
       if (data.deal) {
         setDeal(data.deal);
         fetchPortfolioData(); // refresh invoices and KPIs
       }
     } catch (err) {
-      console.error('Error creating invoice:', err);
+      setAnalysisError(err instanceof Error ? err.message : 'PayPal invoice request failed.');
+      fetchPortfolioData();
     } finally {
       setActionLoading(false);
     }
@@ -243,6 +272,7 @@ export default function Home() {
               {/* Left Column (5 cols): Command Center & Agent Feed */}
               <div className="lg:col-span-5 space-y-6">
                 <DealInput
+                  onEdit={() => { setContractReview(null); setAnalysisError(''); }}
                   onSubmit={handlePromptSubmit}
                   splits={deal.teamSplits}
                   onUpdateSplits={(newSplits) => {
@@ -252,6 +282,8 @@ export default function Home() {
                   isLoading={actionLoading}
                 />
 
+                {analysisError && <p role="alert" className="rounded-xl bg-red-50 border border-red-200 p-3 text-sm text-red-800">{analysisError}</p>}
+                {contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}
                 <AgentTerminal logs={deal.logs} />
               </div>
 
@@ -266,6 +298,8 @@ export default function Home() {
                   actionLoading={actionLoading}
                 />
 
+                <DeliverableReviewPanel key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} />
+                <PayoutControl key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} />
                 <PayoutLedger deal={deal} />
               </div>
             </div>
