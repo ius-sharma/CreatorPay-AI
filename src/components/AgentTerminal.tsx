@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Terminal, ChevronDown, ChevronRight, Activity, Copy, Check } from 'lucide-react';
 import { AgentLog } from '@/lib/types';
 
@@ -12,11 +12,6 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ logs }) => {
   const [expandedLogId, setExpandedLogId] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'action' | 'thought' | 'webhook' | 'payout'>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const logsEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [logs]);
 
   const toggleExpand = (id: string) => {
     setExpandedLogId(expandedLogId === id ? null : id);
@@ -85,8 +80,8 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ logs }) => {
         </div>
       </div>
 
-      {/* Terminal Logs Body with Auto-Scroll */}
-      <div className="p-4 flex-1 overflow-y-auto space-y-3 font-mono text-xs scrollbar-thin">
+      {/* Newest-first logs refresh without moving the reader's scroll position. */}
+      <div className="p-4 flex-1 overflow-y-auto space-y-3 font-mono text-xs scrollbar-thin [overflow-anchor:none]">
         {filteredLogs.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-slate-400 text-xs">
             <Activity className="w-6 h-6 mb-2 animate-pulse text-brand-400" />
@@ -161,7 +156,6 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ logs }) => {
             );
           })
         )}
-        <div ref={logsEndRef} />
       </div>
     </div>
   );
