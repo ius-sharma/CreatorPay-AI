@@ -128,5 +128,16 @@ test('cloud handlers isolate accounts, enforce signed ownership and preserve dur
     assert.equal((await routes.payout(request({dealId:'deal-cloud-a',action:'execute',confirmPayout:true}))).status,200);assert.equal(payoutCreates,1);
     assert.equal((await db.query('select count(*)::integer as n from public.creatorpay_audit')).rows[0].n,1);
     assert.equal((await db.query('select count(*)::integer as n from public.creatorpay_webhook_events')).rows[0].n,2);
+    const diagnostics=await routes.status();
+    assert.equal(diagnostics.status,200);
+    const configuration=await diagnostics.json();
+    assert.equal(typeof configuration.aiConfigured,'boolean');
+    assert.ok(configuration.lastPaymentVerifiedAt);
+    assert.equal(configuration.storage,'Supabase PostgreSQL (per-user)');
+    assert.deepEqual(Object.keys(configuration).sort(),['aiConfigured','credentialsConfigured','environment','lastPaymentVerifiedAt','payoutsEnabled','storage','webhookConfigured'].sort());
+    owner=B;
+    assert.equal((await (await routes.status()).json()).lastPaymentVerifiedAt,null);
+    owner=null;
+    assert.equal((await routes.status()).status,401);
   }finally{global.fetch=originalFetch;await db.close();}
 });

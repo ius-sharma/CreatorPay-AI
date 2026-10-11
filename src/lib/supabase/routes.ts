@@ -196,6 +196,6 @@ export async function status() {
   return guarded(async()=>{
     const data=await portfolio(await requireOwner());
     const dates=data.allDeals.flatMap(d=>d.milestones.map(m=>m.paymentVerifiedAt).filter((v):v is string=>Boolean(v)));
-    return {environment:process.env.PAYPAL_ENVIRONMENT||'not configured',credentialsConfigured:Boolean(process.env.PAYPAL_CLIENT_ID&&process.env.PAYPAL_CLIENT_SECRET&&process.env.PAYPAL_BUSINESS_EMAIL),webhookConfigured:Boolean(process.env.PAYPAL_WEBHOOK_ID),lastPaymentVerifiedAt:dates.sort().pop()||null,storage:'Supabase PostgreSQL (per-user)',payoutsEnabled:process.env.PAYPAL_ENVIRONMENT==='sandbox'};
+    return {aiConfigured:Boolean(process.env.GROQ_API_KEY && !process.env.GROQ_API_KEY.startsWith('your_')),environment:process.env.PAYPAL_ENVIRONMENT||'not configured',credentialsConfigured:Boolean(process.env.PAYPAL_CLIENT_ID&&process.env.PAYPAL_CLIENT_SECRET&&process.env.PAYPAL_BUSINESS_EMAIL),webhookConfigured:Boolean(process.env.PAYPAL_WEBHOOK_ID),lastPaymentVerifiedAt:dates.sort().pop()||null,storage:'Supabase PostgreSQL (per-user)',payoutsEnabled:process.env.PAYPAL_ENVIRONMENT==='sandbox'};
   });
 }

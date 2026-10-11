@@ -52,6 +52,8 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('view');
+    if (requested && ['overview','deals','new','invoicing','splits','audit','diagnostics'].includes(requested)) setActiveTab(requested as WorkspaceView);
     fetchPortfolioData();
     const timer = setInterval(fetchPortfolioData, 5000);
     return () => clearInterval(timer);
