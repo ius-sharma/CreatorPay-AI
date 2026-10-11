@@ -2,7 +2,10 @@
   "name": "creatorpay-ai",
   "version": "1.0.0",
   "private": true,
+  "engines": { "node": ">=22.13.0" },
   "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "webhook:relay": "node scripts/webhook-relay.cjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
