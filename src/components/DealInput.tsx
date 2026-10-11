@@ -9,6 +9,7 @@ interface DealInputProps {
   splits: TeamSplit[];
   onUpdateSplits: (splits: TeamSplit[]) => void;
   isLoading: boolean;
+  onEdit: () => void;
 }
 
 const PRESETS = [
@@ -34,14 +35,16 @@ export const DealInput: React.FC<DealInputProps> = ({
   splits,
   onUpdateSplits,
   isLoading,
+  onEdit,
 }) => {
   const [prompt, setPrompt] = useState(PRESETS[0].prompt);
   const [showSplitsEditor, setShowSplitsEditor] = useState(false);
+  const [useTeamRules, setUseTeamRules] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim() || isLoading) return;
-    onSubmit(prompt, splits);
+    onSubmit(prompt, useTeamRules ? splits : []);
   };
 
   return (
@@ -70,7 +73,8 @@ export const DealInput: React.FC<DealInputProps> = ({
           <button
             key={idx}
             type="button"
-            onClick={() => setPrompt(p.prompt)}
+            disabled={isLoading}
+            onClick={() => { setPrompt(p.prompt); onEdit(); }}
             className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-700 border border-slate-200 hover:border-brand-200 transition-colors cursor-pointer"
           >
             {p.label}
@@ -102,12 +106,16 @@ export const DealInput: React.FC<DealInputProps> = ({
       )}
 
       {/* Main Input Form */}
+      <label className="flex items-center gap-2 mb-3 text-xs text-slate-600"><input type="checkbox" disabled={isLoading} checked={useTeamRules} onChange={e => { setUseTeamRules(e.target.checked); onEdit(); }} />Use saved team rules when the contract specifies no splits</label>
+      <p className="mb-3 text-xs text-slate-500">Include currency, billing email, payment terms, deliverables and deadline. Contract text is sent to Groq. Demo limit: 10 analyses per session/day, 10 seconds between requests.</p>
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <textarea
             value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
+            onChange={(e) => { setPrompt(e.target.value); onEdit(); }}
+            disabled={isLoading}
             rows={3}
+            maxLength={12000}
             placeholder="Drop contract terms or email (e.g. '$2,000 deal with CloudHost, 30% advance, rest upon video live')..."
             className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white resize-none leading-relaxed transition-all shadow-inner"
           />
@@ -116,7 +124,7 @@ export const DealInput: React.FC<DealInputProps> = ({
             disabled={isLoading || !prompt.trim()}
             className="absolute bottom-3 right-3 flex items-center space-x-1.5 px-4 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-md shadow-brand-600/25 disabled:opacity-50 transition-all cursor-pointer"
           >
-            <span>{isLoading ? 'Analyzing...' : 'Parse & Execute Deal'}</span>
+            <span>{isLoading ? 'Analyzing...' : 'Analyze Contract'}</span>
             <Send className="w-3.5 h-3.5" />
           </button>
         </div>
