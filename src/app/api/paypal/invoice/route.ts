@@ -7,6 +7,7 @@ import { isSameOrigin } from '@/lib/request-origin';
 
 export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).invoice(req);
   let job: string | undefined;
   try {
     if (!isSameOrigin(req)) throw new PayPalError('Cross-origin requests are not allowed.', 403);

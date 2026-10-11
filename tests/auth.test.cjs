@@ -67,3 +67,15 @@ test('callback verifies code and ignores external redirect targets', async () =>
   error = { message: 'invalid code' };
   assert.equal((await GET(new NextRequest('http://localhost/auth/callback?code=bad'))).headers.get('location'), 'http://localhost/login');
 });
+test('cloud dashboard and all application APIs require Auth; PayPal webhook remains cookie-free', async () => {
+  process.env.CREATORPAY_BACKEND = 'supabase';
+  user = null; error = null;
+  assert.equal((await middleware(new NextRequest('http://localhost/dashboard'))).status, 307);
+  for (const path of ['/api/deals','/api/agent/analyze','/api/agent/verify','/api/paypal/invoice','/api/paypal/payout','/api/paypal/status']) {
+    const result = await middleware(new NextRequest('http://localhost'+path));
+    assert.equal(result.status, 401);
+    assert.equal(result.headers.get('cache-control'), 'private, no-store');
+  }
+  assert.equal((await middleware(new NextRequest('http://localhost/api/paypal/webhook'))).status, 200);
+  delete process.env.CREATORPAY_BACKEND;
+});

@@ -30,8 +30,11 @@ export function makePayoutPlan(deal: Deal, mappings: unknown): NonNullable<Deal[
   });
   return { senderBatchId: stableId(`${deal.id}:team-payout`), createdAt: new Date().toISOString(), items };
 }
-export async function sendPayout(dealId: string): Promise<Deal> {
-  const deal = getDeal(dealId)!; assertPayoutEligible(deal);
+type PayoutStore = { deals: Deal[]; auditLedger: import('./types').AuditLedgerEntry[] };
+type PayoutRepository = { getDeal: (id: string) => Deal | null | Promise<Deal>; mutateStore: (fn: (store: PayoutStore) => Deal) => Deal | Promise<Deal> };
+const localRepository: PayoutRepository = { getDeal, mutateStore };
+export async function sendPayout(dealId: string, repository: PayoutRepository = localRepository): Promise<Deal> {
+  const deal = (await repository.getDeal(dealId))!; assertPayoutEligible(deal);
   const plan = deal.payout!;
   if (!plan || plan.batchId) throw new PayPalError('Prepare a payout plan first or refresh the existing batch.', 409);
   if (plan.items.length !== deal.teamSplits.length || plan.items.some(i => !deal.teamSplits.some(s => s.id === i.splitId && s.email === i.contractEmail && cents(s.calculatedAmount || 0) === cents(i.amount)))) throw new PayPalError('Contract splits no longer match the locked payout plan.', 409);
@@ -46,11 +49,11 @@ export async function sendPayout(dealId: string): Promise<Deal> {
     else throw e;
   }
   if (typeof id !== 'string' || !/^[A-Z0-9]+$/.test(id)) throw new PayPalError('PayPal returned no valid payout batch ID. Retry the same stored plan.', 502);
-  mutateStore(store => { const d = store.deals.find(d => d.id === dealId)!; d.payout!.batchId = id; d.payout!.batchStatus = 'SUBMITTED'; delete d.payout!.error; d.updatedAt = new Date().toISOString(); });
-  return refreshPayout(dealId);
+  await repository.mutateStore(store => { const d = store.deals.find(d => d.id === dealId)!; d.payout!.batchId = id; d.payout!.batchStatus = 'SUBMITTED'; delete d.payout!.error; d.updatedAt = new Date().toISOString(); return d; });
+  return refreshPayout(dealId, repository);
 }
-export async function refreshPayout(dealId: string): Promise<Deal> {
-  const deal = getDeal(dealId)!; const plan = deal.payout!;
+export async function refreshPayout(dealId: string, repository: PayoutRepository = localRepository): Promise<Deal> {
+  const deal = (await repository.getDeal(dealId))!; const plan = deal.payout!;
   if (!plan?.batchId) throw new PayPalError('No submitted payout batch to check.', 409);
   const result = await paypalRequest(`/v1/payments/payouts/${plan.batchId}?page_size=1000&total_required=true`);
   const header = result.batch_header;
@@ -64,7 +67,7 @@ export async function refreshPayout(dealId: string): Promise<Deal> {
     if (item.transaction_status === 'SUCCESS' && !item.transaction_id) throw new PayPalError('Successful payout has no transaction confirmation.', 422);
     return { ...expected, payoutItemId: item.payout_item_id, transactionId: item.transaction_id, status: item.transaction_status || 'UNKNOWN' };
   });
-  return mutateStore(store => {
+  return repository.mutateStore(store => {
     const d = store.deals.find(d => d.id === dealId)!;
     d.payout!.items = checked; d.payout!.batchStatus = header.batch_status; d.payout!.lastCheckedAt = new Date().toISOString(); delete d.payout!.error;
     for (const item of checked) {

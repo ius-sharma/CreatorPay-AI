@@ -8,6 +8,7 @@ import { assertPayoutEligible, makePayoutPlan, sendPayout, refreshPayout } from 
 import { acquireInvoiceJob, releaseInvoiceJob } from '@/lib/database';
 export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).payout(req);
   let job: string | undefined; let dealId: string | undefined;
   try {
     if (!isSameOrigin(req)) throw new PayPalError('Cross-origin requests are not allowed.', 403);

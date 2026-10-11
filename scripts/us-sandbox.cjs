@@ -12,8 +12,10 @@ for (const line of fs.readFileSync(profile, 'utf8').split(/\r?\n/)) {
 if (values.PAYPAL_ENVIRONMENT !== 'sandbox' || values.PAYPAL_BUSINESS_EMAIL !== 'sb-jv4yo53303566@business.example.com' || values.CREATORPAY_DB_PATH !== '.data/creatorpay-us.sqlite') throw new Error('US profile must use its expected sandbox merchant and separate database.');
 if (!values.PAYPAL_CLIENT_ID || !values.PAYPAL_CLIENT_SECRET) throw new Error('Add US app credentials to the private US profile.');
 const action = process.argv[2] || 'start';
-const env = { ...process.env, ...values, CREATORPAY_ENV_FILE: profile, NEXT_BUILD_DIR: '.next-phase4-check' };
-const command = action === 'start' ? [path.join('node_modules', 'next', 'dist', 'bin', 'next'), 'start', '--port', '3020', '--hostname', '127.0.0.1']
+const port = process.env.CREATORPAY_PORT || '3020';
+if (!/^\d+$/.test(port) || Number(port) < 1 || Number(port) > 65535) throw new Error('Invalid local app port.');
+const env = { ...process.env, ...values, CREATORPAY_ENV_FILE: profile, NEXT_BUILD_DIR: process.env.NEXT_BUILD_DIR || '.next-phase4-check' };
+const command = action === 'start' ? [path.join('node_modules', 'next', 'dist', 'bin', 'next'), 'start', '--port', port, '--hostname', '127.0.0.1']
   : action === 'webhook' ? ['scripts/paypal-webhook.cjs', process.argv[3]]
   : action === 'check' ? ['scripts/us-sandbox-check.cjs'] : null;
 if (!command) throw new Error('Use start, webhook <HTTPS URL>, or check.');

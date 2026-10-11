@@ -57,7 +57,7 @@ export interface SandboxInvoice {
 }
 export interface InvoiceCreationParams {
   brandName: string; brandEmail: string; milestoneTitle: string; amount: number; currency?: string; note?: string;
-  operationKey: string; existingInvoiceId?: string; onCreated?: (invoice: SandboxInvoice) => void;
+  operationKey: string; existingInvoiceId?: string; onCreated?: (invoice: SandboxInvoice) => void | Promise<void>;
 }
 export interface InvoiceResult {
   invoiceId: string; invoiceNumber: string; status: string; amount: number; currency: string; paymentUrl: string;
@@ -104,11 +104,11 @@ export async function createAndSendMilestoneInvoice(params: InvoiceCreationParam
     id = created.id || (typeof href === 'string' ? href.split('/').pop() : undefined);
     if (!id || !/^INV2-[A-Z0-9-]+$/.test(id)) throw new PayPalError('PayPal created a draft but returned no valid invoice ID. Retry to recover it.');
     // Persist ID before any subsequent network call.
-    params.onCreated?.({ id, status: 'DRAFT', detail: { invoice_number: invoiceNumber } });
+    await params.onCreated?.({ id, status: 'DRAFT', detail: { invoice_number: invoiceNumber } });
   }
   let invoice = await getSandboxInvoice(id);
   if (!matchesExpected(invoice, params)) throw new PayPalError('PayPal invoice details do not match the confirmed milestone. Review merchant, currency, amount and recipient.');
-  params.onCreated?.(invoice);
+  await params.onCreated?.(invoice);
   if (invoice.status === 'DRAFT') {
     // Generate a payable sandbox link without sending notifications to outside recipients.
     await paypalRequest(`/v2/invoicing/invoices/${id}/send`, 'POST', { send_to_recipient: false, send_to_invoicer: false });

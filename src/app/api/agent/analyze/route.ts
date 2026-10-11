@@ -8,6 +8,7 @@ import { isSameOrigin } from '@/lib/request-origin';
 
 export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).analyze(req);
   const session = getSession(req.cookies.get('creatorpay-analysis')?.value);
   let result: NextResponse;
   try {

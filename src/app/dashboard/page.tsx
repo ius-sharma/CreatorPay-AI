@@ -35,19 +35,25 @@ export default function Home() {
   const [isDeliverableModalOpen, setIsDeliverableModalOpen] = useState<boolean>(false);
   const [contractReview, setContractReview] = useState<{ review: Review; token: string } | null>(null);
   const [analysisError, setAnalysisError] = useState('');
+  const [portfolioError, setPortfolioError] = useState('');
+  const [authenticated, setAuthenticated] = useState(false);
 
   const fetchPortfolioData = async () => {
     try {
       const res = await fetch('/api/deals');
+      if (res.status === 401) { window.location.assign('/login'); return; }
       const data = await res.json();
-      if (data.activeDeal) setDeal(data.activeDeal);
+      if (!res.ok) throw new Error(data.error || 'Could not load your workspace.');
+      setPortfolioError('');
+      setAuthenticated(Boolean(data.authenticated));
+      setDeal(data.activeDeal || null);
       if (data.allDeals) setAllDeals(data.allDeals);
       if (data.teamRoster) setRoster(data.teamRoster);
       if (data.invoices) setInvoices(data.invoices);
       if (data.auditLedger) setAuditLedger(data.auditLedger);
       if (data.sandboxAccount) setSandboxAccount(data.sandboxAccount);
     } catch (err) {
-      console.error('Failed to fetch portfolio data:', err);
+      setPortfolioError(err instanceof Error ? err.message : 'Could not load your workspace.');
     } finally {
       setLoading(false);
     }
@@ -228,7 +234,7 @@ export default function Home() {
     }
   };
 
-  if (loading || !deal) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-[#FFFDFC] flex flex-col items-center justify-center text-[#75645E]">
         <div className="w-12 h-12 rounded-2xl bg-brand-500 animate-pulse flex items-center justify-center mb-4 shadow-xl shadow-brand-500/25">
@@ -241,6 +247,17 @@ export default function Home() {
     );
   }
 
+  if (!deal) return <div className="min-h-screen bg-[#FFFDFC] text-slate-900">
+    <div className="mx-auto max-w-3xl space-y-5 px-5 py-10">
+      <div className="flex items-center justify-between"><h1 className="text-2xl font-bold">Your CreatorPay workspace</h1><a href="/account" className="text-sm text-brand-700">Account</a></div>
+      <p className="text-slate-600">Create your first deal by analysing a contract and confirming its terms.</p>
+      {portfolioError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">{portfolioError}</p>}
+      <DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} onUpdateSplits={setRoster} isLoading={actionLoading} />
+      {analysisError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">{analysisError}</p>}
+      {contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}
+    </div>
+  </div>;
+
   return (
     <div className="min-h-screen bg-[#FFFDFC] text-[#2B1D19] flex flex-col">
       {/* 5-Tab Navigation Header */}
@@ -250,10 +267,13 @@ export default function Home() {
         sandboxAccount={sandboxAccount}
         onReset={handleResetDemo}
         isResetting={isResetting}
+        showReset={!authenticated}
       />
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 pb-28">
+        {authenticated && <a href="/account" className="inline-block text-sm font-semibold text-brand-700">Account & sign out</a>}
+        {portfolioError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">{portfolioError}</p>}
         {/* Top Executive KPI Financial Bar */}
         <ExecutiveKpiStrip deals={allDeals} activeDeal={deal} />
 

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { SignOutButton } from '@/components/SignOutButton';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ export default async function AccountPage() {
     <div className="mx-auto max-w-lg space-y-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
       <h1 className="text-2xl font-bold">CreatorPay account</h1>
       <p>Signed in as <strong className="break-all">{user.email}</strong></p>
-      <p className="text-sm text-slate-600">Your account is ready. Your workspace will be available after database setup is complete.</p>
+      {process.env.CREATORPAY_BACKEND === 'supabase' ? <Link href="/dashboard" className="inline-block rounded-xl bg-brand-600 px-4 py-3 font-semibold text-white">Open your workspace</Link> : <p className="text-sm text-slate-600">Your account is ready. Your workspace will be available after database setup is complete.</p>}
       <SignOutButton />
     </div>
   </main>;

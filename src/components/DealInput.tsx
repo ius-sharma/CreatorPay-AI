@@ -107,7 +107,7 @@ export const DealInput: React.FC<DealInputProps> = ({
 
       {/* Main Input Form */}
       <label className="flex items-center gap-2 mb-3 text-xs text-slate-600"><input type="checkbox" disabled={isLoading} checked={useTeamRules} onChange={e => { setUseTeamRules(e.target.checked); onEdit(); }} />Use saved team rules when the contract specifies no splits</label>
-      <p className="mb-3 text-xs text-slate-500">Include currency, billing email, payment terms, deliverables and deadline. Contract text is sent to Groq. Demo limit: 10 analyses per session/day, 10 seconds between requests.</p>
+      <p className="mb-3 text-xs text-slate-500">Include currency, billing email, payment terms, deliverables and deadline. Contract text is sent to Groq. Account limit: 10 AI requests per UTC day, 10 seconds between requests. Contract and deliverable reviews share this limit.</p>
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <textarea

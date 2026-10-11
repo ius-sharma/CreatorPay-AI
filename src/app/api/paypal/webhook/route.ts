@@ -4,6 +4,7 @@ import { applyVerifiedPayment, findTrackedInvoice } from '@/lib/payment-tracking
 
 export const runtime = 'nodejs';
 export async function POST(req: Request) {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).webhook(req);
   try {
     if (!req.headers.get('paypal-transmission-sig')) throw new PayPalError('Unsigned payment events are rejected.', 401);
     const raw = await req.text();

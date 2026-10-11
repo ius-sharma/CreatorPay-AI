@@ -19,6 +19,7 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function GET() {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).dealsGet();
   const activeDeal = getActiveDeal();
   const allDeals = getAllDeals();
   const teamRoster = getTeamRoster();
@@ -37,6 +38,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).dealsPost(req);
   try {
     if (!isSameOrigin(req)) throw new AnalysisError('Cross-origin requests are not allowed.', 403);
     const body = await req.json();
@@ -72,7 +74,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).dealsDelete(req);
   const freshDeal = resetDemo();
   return NextResponse.json({ 
     success: true, 

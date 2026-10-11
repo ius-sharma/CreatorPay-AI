@@ -10,6 +10,7 @@ interface NavbarProps {
   sandboxAccount: string;
   onReset: () => void;
   isResetting: boolean;
+  showReset?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,6 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   sandboxAccount,
   onReset,
   isResetting,
+  showReset = true,
 }) => {
   const tabs = [
     { id: 'workspace' as TabType, label: 'Deals Workspace', icon: Briefcase },
@@ -44,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 font-medium">
-                Studio: <strong className="text-slate-800">Apex Media LLC</strong> (1.6M Creators)
+                {showReset ? <>Studio: <strong className="text-slate-800">Apex Media LLC</strong> (1.6M Creators)</> : 'Your creator workspace'}
               </p>
             </div>
           </div>
@@ -54,14 +56,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Live Sandbox Status Pill */}
             <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>PayPal Sandbox Connected:</span>
+              <span>PayPal Sandbox Merchant:</span>
               <span className="font-mono text-emerald-700 max-w-[190px] truncate" title={sandboxAccount}>
                 {sandboxAccount}
               </span>
             </div>
 
             {/* Reset Demo */}
-            <button
+            {showReset && <button
               onClick={onReset}
               disabled={isResetting}
               className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors border border-slate-200 disabled:opacity-50 cursor-pointer"
@@ -69,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <RotateCcw className={`w-3.5 h-3.5 text-slate-500 ${isResetting ? 'animate-spin' : ''}`} />
               <span>Reset</span>
-            </button>
+            </button>}
 
             {/* GitHub */}
             <a

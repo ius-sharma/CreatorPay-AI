@@ -7,6 +7,7 @@ import { contractFingerprint, validateDeliverableReview } from '@/lib/deliverabl
 import { isSameOrigin } from '@/lib/request-origin';
 export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
+  if (process.env.CREATORPAY_BACKEND === "supabase") return (await import("@/lib/supabase/routes")).verify(req);
   try {
     if (!isSameOrigin(req)) throw new AnalysisError('Cross-origin requests are not allowed.', 403);
     if (Number(req.headers.get('content-length')) > 100000) throw new AnalysisError('Submission is too large.', 413);
