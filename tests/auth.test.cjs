@@ -9,12 +9,14 @@ let calls = [];
 let error = null;
 let user = null;
 let signupSession = null;
+let verificationThrows = false;
 const client = { auth: {
   getUser: async () => ({ data: { user }, error }),
   signInWithPassword: async (credentials) => { calls.push(['login', credentials]); return { error }; },
   signUp: async (credentials) => { calls.push(['signup', credentials]); return { data: { session: signupSession }, error }; },
   signOut: async () => ({ error }),
-  exchangeCodeForSession: async (code) => { calls.push(['exchange', code]); return { error }; },
+  exchangeCodeForSession: async (code) => { if (verificationThrows) throw new Error('private diagnostics'); calls.push(['exchange', code]); return { error }; },
+  verifyOtp: async (details) => { if (verificationThrows) throw new Error('private diagnostics'); calls.push(['verify', details]); return { error }; },
 } };
 const load = Module._load;
 Module._load = function(request, parent, ...args) {
@@ -27,6 +29,7 @@ const { NextRequest } = require('next/server');
 const { authenticate } = require('../src/app/login/actions.ts');
 const { middleware } = require('../src/middleware.ts');
 const { GET } = require('../src/app/auth/callback/route.ts');
+const { GET: confirm } = require('../src/app/auth/confirm/route.ts');
 const form = (mode, email, password) => { const f = new FormData(); f.set('mode', mode); f.set('email', email); f.set('password', password); return f; };
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
 process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_test';
@@ -65,7 +68,17 @@ test('callback verifies code and ignores external redirect targets', async () =>
   const good = await GET(new NextRequest('http://localhost/auth/callback?code=test&next=https://evil.example'));
   assert.equal(good.headers.get('location'), 'http://localhost/account');
   error = { message: 'invalid code' };
-  assert.equal((await GET(new NextRequest('http://localhost/auth/callback?code=bad'))).headers.get('location'), 'http://localhost/login');
+  assert.equal((await GET(new NextRequest('http://localhost/auth/callback?code=bad'))).headers.get('location'), 'http://localhost/login?error=confirmation');
+});
+test('confirmation failures and unavailable Auth recover to login without exposing diagnostics', async () => {
+  error = null;
+  assert.equal((await confirm(new NextRequest('http://localhost/auth/confirm?token_hash=test&type=email'))).headers.get('location'), 'http://localhost/account');
+  assert.equal((await confirm(new NextRequest('http://localhost/auth/confirm?token_hash=test&type=recovery'))).headers.get('location'), 'http://localhost/login?error=confirmation');
+  verificationThrows = true;
+  for (const [handler, url] of [[GET, '/auth/callback?code=test'], [confirm, '/auth/confirm?token_hash=test&type=email']]) {
+    assert.equal((await handler(new NextRequest('http://localhost'+url))).headers.get('location'), 'http://localhost/login?error=confirmation');
+  }
+  verificationThrows = false;
 });
 test('cloud dashboard and all application APIs require Auth; PayPal webhook remains cookie-free', async () => {
   process.env.CREATORPAY_BACKEND = 'supabase';

@@ -220,7 +220,7 @@ export default function LandingPage() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center space-x-7 text-xs font-semibold text-[#75645E] dark:text-[#B8A9A2]">
-            <a href="#how-it-works" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">How It Works</a>
+            <a href="#interactive-demo" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">How It Works</a>
             <a href="#interactive-demo" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">Live Deal Flow</a>
             <a href="#comparison" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">The Problem</a>
             <a href="#calculator" className="hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] transition-colors">Split Calculator</a>
@@ -251,8 +251,8 @@ export default function LandingPage() {
             )}
 
             <Link
-              href="/dashboard"
-              className="text-xs font-semibold text-[#75645E] dark:text-[#B8A9A2] hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] px-2 py-1.5 hidden sm:inline transition-colors"
+              href="/login"
+              className="text-xs font-semibold text-[#75645E] dark:text-[#B8A9A2] hover:text-[#2B1D19] dark:hover:text-[#FDF8F6] px-2 py-1.5 transition-colors"
             >
               Sign In
             </Link>

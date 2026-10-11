@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
 import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate, type AuthState } from '@/app/login/actions';
 
@@ -9,8 +9,7 @@ function Submit({ signup }: { signup: boolean }) {
   return <button disabled={pending} className="w-full rounded-xl bg-brand-600 px-4 py-3 font-semibold text-white disabled:opacity-50">{pending ? 'Please wait…' : signup ? 'Create account' : 'Log in'}</button>;
 }
 
-export function LoginForm() {
-  const [signup, setSignup] = useState(false);
+export function LoginForm({ signup = false }: { signup?: boolean }) {
   const [state, action] = useFormState<AuthState, FormData>(authenticate, {});
   return <>
     <form action={action} className="space-y-5">
@@ -22,6 +21,6 @@ export function LoginForm() {
       {state.message && <p role="status" className="text-sm text-emerald-700">{state.message}</p>}
       <Submit signup={signup} />
     </form>
-    <button type="button" onClick={() => setSignup(!signup)} className="mt-5 text-sm font-medium text-brand-700">{signup ? 'Already have an account? Log in' : 'New to CreatorPay? Create an account'}</button>
+    <Link href={signup ? '/login' : '/login?mode=signup'} className="mt-5 inline-block text-sm font-medium text-brand-700">{signup ? 'Already have an account? Log in' : 'New to CreatorPay? Create an account'}</Link>
   </>;
 }
