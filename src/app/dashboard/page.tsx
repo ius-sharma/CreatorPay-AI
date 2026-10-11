@@ -1,42 +1,40 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Navbar } from '@/components/Navbar';
-import { ExecutiveKpiStrip } from '@/components/ExecutiveKpiStrip';
-import { DealSwitcherTray } from '@/components/DealSwitcherTray';
 import { DealInput } from '@/components/DealInput';
 import { DealTimeline } from '@/components/DealTimeline';
 import { AgentTerminal } from '@/components/AgentTerminal';
 import { PayoutLedger } from '@/components/PayoutLedger';
 import { DeliverableModal } from '@/components/DeliverableModal';
-import { FloatingSandboxConsole } from '@/components/FloatingSandboxConsole';
 import { InvoicingHubView } from '@/components/InvoicingHubView';
 import { ContractsManagerView } from '@/components/ContractsManagerView';
 import { AuditLedgerView } from '@/components/AuditLedgerView';
 import { DiagnosticsView } from '@/components/DiagnosticsView';
-import { Deal, TeamSplit, TabType, PayPalInvoiceSummary, AuditLedgerEntry } from '@/lib/types';
-import { Bot } from 'lucide-react';
+import { Deal, TeamSplit, PayPalInvoiceSummary, AuditLedgerEntry } from '@/lib/types';
+import { ArrowLeft } from 'lucide-react';
+import { WorkspaceShell, type WorkspaceView } from '@/components/WorkspaceShell';
+import { WorkspaceHome } from '@/components/WorkspaceHome';
 import { PayoutControl } from '@/components/PayoutControl';
 import { DeliverableReviewPanel } from '@/components/DeliverableReviewPanel';
 import { ContractReview } from '@/components/ContractReview';
 import type { ContractReview as Review } from '@/lib/contract';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabType>('workspace');
+  const [activeTab, setActiveTab] = useState<WorkspaceView>('overview');
   const [deal, setDeal] = useState<Deal | null>(null);
   const [allDeals, setAllDeals] = useState<Deal[]>([]);
   const [roster, setRoster] = useState<TeamSplit[]>([]);
   const [invoices, setInvoices] = useState<PayPalInvoiceSummary[]>([]);
   const [auditLedger, setAuditLedger] = useState<AuditLedgerEntry[]>([]);
-  const [sandboxAccount, setSandboxAccount] = useState<string>('sb-9l0ms53173777@business.example.com');
+  const [sandboxAccount, setSandboxAccount] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
-  const [isResetting, setIsResetting] = useState<boolean>(false);
+
   const [isDeliverableModalOpen, setIsDeliverableModalOpen] = useState<boolean>(false);
   const [contractReview, setContractReview] = useState<{ review: Review; token: string } | null>(null);
   const [analysisError, setAnalysisError] = useState('');
   const [portfolioError, setPortfolioError] = useState('');
-  const [authenticated, setAuthenticated] = useState(false);
+
 
   const fetchPortfolioData = async () => {
     try {
@@ -45,7 +43,7 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not load your workspace.');
       setPortfolioError('');
-      setAuthenticated(Boolean(data.authenticated));
+
       setDeal(data.activeDeal || null);
       if (data.allDeals) setAllDeals(data.allDeals);
       if (data.teamRoster) setRoster(data.teamRoster);
@@ -67,6 +65,7 @@ export default function Home() {
 
   const handleSelectDeal = async (dealId: string) => {
     setActionLoading(true);
+    setPortfolioError('');
     try {
       const res = await fetch('/api/deals', {
         method: 'POST',
@@ -74,10 +73,11 @@ export default function Home() {
         body: JSON.stringify({ action: 'switch_deal', dealId }),
       });
       const data = await res.json();
-      if (data.activeDeal) setDeal(data.activeDeal);
+      if (!res.ok) throw new Error(data.error || 'Could not open this deal.');
+      if (data.activeDeal) { setDeal(data.activeDeal); setActiveTab('detail'); }
       if (data.allDeals) setAllDeals(data.allDeals);
     } catch (err) {
-      console.error('Error switching deal:', err);
+      setPortfolioError(err instanceof Error ? err.message : 'Could not open this deal.');
     } finally {
       setActionLoading(false);
     }
@@ -114,22 +114,26 @@ export default function Home() {
       setDeal(data.activeDeal);
       setAllDeals(data.allDeals);
       setContractReview(null);
+      setActiveTab('detail');
     } catch (err) {
       setAnalysisError(err instanceof Error ? err.message : 'Could not confirm this review.');
     } finally { setActionLoading(false); }
   };
 
   const handleUpdateRoster = async (updatedRoster: TeamSplit[]) => {
-    setRoster(updatedRoster);
+    setActionLoading(true);
     try {
-      await fetch('/api/deals', {
+      const res = await fetch('/api/deals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'update_roster', teamRoster: updatedRoster }),
       });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Could not save team changes.');
+      setRoster(data.teamRoster || updatedRoster);
     } catch (err) {
-      console.error('Error updating roster:', err);
-    }
+      setPortfolioError(err instanceof Error ? err.message : 'Could not save team changes.');
+    } finally { setActionLoading(false); }
   };
 
   const handleGenerateInvoice = async (milestoneIndex: number) => {
@@ -217,171 +221,38 @@ export default function Home() {
     }
   };
 
-  const handleResetDemo = async () => {
-    setIsResetting(true);
-    try {
-      const res = await fetch('/api/deals', { method: 'DELETE' });
-      const data = await res.json();
-      if (data.activeDeal) setDeal(data.activeDeal);
-      if (data.allDeals) setAllDeals(data.allDeals);
-      if (data.teamRoster) setRoster(data.teamRoster);
-      if (data.invoices) setInvoices(data.invoices);
-      if (data.auditLedger) setAuditLedger(data.auditLedger);
-    } catch (err) {
-      console.error('Error resetting demo:', err);
-    } finally {
-      setIsResetting(false);
-    }
+  const navigate = (view: WorkspaceView) => {
+    setActiveTab(view);
+    setAnalysisError('');
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FFFDFC] flex flex-col items-center justify-center text-[#75645E]">
-        <div className="w-12 h-12 rounded-2xl bg-brand-500 animate-pulse flex items-center justify-center mb-4 shadow-xl shadow-brand-500/25">
-          <Bot className="w-6 h-6 text-white" />
+  const titles: Record<WorkspaceView, [string, string]> = {
+    overview: ['Your workspace, at a glance.', 'Keep track of your deals, payments and what needs your attention.'],
+    deals: ['Deals', 'Every partnership, from agreed terms to final settlement.'],
+    detail: [deal?.brandName || 'Deal details', deal?.dealTitle || 'Milestones, deliverables and payments.'],
+    new: ['Start a new deal', 'Add your contract. Review the extracted terms before confirming the deal.'],
+    invoicing: ['Invoices', 'Track the invoices attached to your contract milestones.'],
+    splits: ['Your team', 'Manage collaborators and default split rules for new contracts.'],
+    audit: ['Payout activity', 'Recorded collaborator payouts and settlement history.'],
+    diagnostics: ['Connections', 'Check your workspace storage and PayPal sandbox configuration.'],
+  };
+  return <WorkspaceShell view={activeTab} onNavigate={navigate} title={titles[activeTab][0]} description={titles[activeTab][1]} merchant={sandboxAccount} busy={actionLoading}>
+    {portfolioError && <div role="alert" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>{portfolioError}</span><button onClick={fetchPortfolioData} className="font-semibold underline">Retry</button></div>}
+    {loading ? <div role="status" aria-label="Loading workspace" className="space-y-5"><p className="text-sm text-slate-500">Loading your workspace…</p><div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[1,2,3,4].map(i => <div key={i} className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white" />)}</div><div className="h-64 animate-pulse rounded-xl border border-slate-200 bg-white" /></div> : <>
+      {(activeTab === 'overview' || activeTab === 'deals') && <WorkspaceHome deals={allDeals} overview={activeTab === 'overview'} busy={actionLoading} onOpen={handleSelectDeal} onNew={() => navigate('new')} />}
+      {analysisError && <p role="alert" className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{analysisError}</p>}
+      {activeTab === 'new' && <div className="max-w-3xl space-y-5"><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} onUpdateSplits={setRoster} isLoading={actionLoading} />{contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
+      {activeTab === 'detail' && deal && <div className="space-y-5">
+        <button onClick={() => navigate('deals')} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900"><ArrowLeft className="h-4 w-4" />All deals</button>
+        <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="min-w-0 space-y-5"><DealTimeline deal={deal} onGenerateInvoice={handleGenerateInvoice} onSimulateWebhook={handleSimulateWebhook} onOpenDeliverableModal={() => setIsDeliverableModalOpen(true)} onExecutePayout={handleExecutePayout} actionLoading={actionLoading} /><DeliverableReviewPanel key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} /><PayoutControl key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} /></div>
+          <div className="min-w-0 space-y-5"><PayoutLedger deal={deal} /><details className="rounded-xl border border-slate-200 bg-white p-4"><summary className="cursor-pointer text-sm font-semibold">AI & payment history</summary><div className="mt-4"><AgentTerminal logs={deal.logs} /></div></details></div>
         </div>
-        <p className="font-extrabold text-sm text-[#2B1D19]">
-          Connecting to PayPal Developer Platform & Apex Media Studio...
-        </p>
-      </div>
-    );
-  }
-
-  if (!deal) return <div className="min-h-screen bg-[#FFFDFC] text-slate-900">
-    <div className="mx-auto max-w-3xl space-y-5 px-5 py-10">
-      <div className="flex items-center justify-between"><h1 className="text-2xl font-bold">Your CreatorPay workspace</h1><a href="/account" className="text-sm text-brand-700">Account</a></div>
-      <p className="text-slate-600">Create your first deal by analysing a contract and confirming its terms.</p>
-      {portfolioError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">{portfolioError}</p>}
-      <DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} onUpdateSplits={setRoster} isLoading={actionLoading} />
-      {analysisError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">{analysisError}</p>}
-      {contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}
-    </div>
-  </div>;
-
-  return (
-    <div className="min-h-screen bg-[#FFFDFC] text-[#2B1D19] flex flex-col">
-      {/* 5-Tab Navigation Header */}
-      <Navbar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        sandboxAccount={sandboxAccount}
-        onReset={handleResetDemo}
-        isResetting={isResetting}
-        showReset={!authenticated}
-      />
-
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 pb-28">
-        {authenticated && <a href="/account" className="inline-block text-sm font-semibold text-brand-700">Account & sign out</a>}
-        {portfolioError && <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-800">{portfolioError}</p>}
-        {/* Top Executive KPI Financial Bar */}
-        <ExecutiveKpiStrip deals={allDeals} activeDeal={deal} />
-
-        {/* Tab 1: Deals Workspace */}
-        {activeTab === 'workspace' && (
-          <div className="space-y-6 animate-in fade-in duration-150">
-            {/* Multi-Deal Portfolio Tray */}
-            <DealSwitcherTray
-              deals={allDeals}
-              activeDealId={deal.id}
-              onSelectDeal={handleSelectDeal}
-            />
-
-            {/* 2-Column Deal Execution Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* Left Column (5 cols): Command Center & Agent Feed */}
-              <div className="lg:col-span-5 space-y-6">
-                <DealInput
-                  onEdit={() => { setContractReview(null); setAnalysisError(''); }}
-                  onSubmit={handlePromptSubmit}
-                  splits={deal.teamSplits}
-                  onUpdateSplits={(newSplits) => {
-                    const updated = { ...deal, teamSplits: newSplits };
-                    setDeal(updated);
-                  }}
-                  isLoading={actionLoading}
-                />
-
-                {analysisError && <p role="alert" className="rounded-xl bg-red-50 border border-red-200 p-3 text-sm text-red-800">{analysisError}</p>}
-                {contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}
-                <AgentTerminal logs={deal.logs} />
-              </div>
-
-              {/* Right Column (7 cols): Pipeline Stepper & Settlement Ledger */}
-              <div className="lg:col-span-7 space-y-6">
-                <DealTimeline
-                  deal={deal}
-                  onGenerateInvoice={handleGenerateInvoice}
-                  onSimulateWebhook={handleSimulateWebhook}
-                  onOpenDeliverableModal={() => setIsDeliverableModalOpen(true)}
-                  onExecutePayout={handleExecutePayout}
-                  actionLoading={actionLoading}
-                />
-
-                <DeliverableReviewPanel key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} />
-                <PayoutControl key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} />
-                <PayoutLedger deal={deal} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Tab 2: PayPal Invoicing Hub */}
-        {activeTab === 'invoicing' && (
-          <div className="animate-in fade-in duration-150">
-            <InvoicingHubView invoices={invoices} />
-          </div>
-        )}
-
-        {/* Tab 3: Team Splits & Roster Manager */}
-        {activeTab === 'splits' && (
-          <div className="animate-in fade-in duration-150">
-            <ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} />
-          </div>
-        )}
-
-        {/* Tab 4: Audit & Tax Ledger */}
-        {activeTab === 'audit' && (
-          <div className="animate-in fade-in duration-150">
-            <AuditLedgerView ledger={auditLedger} />
-          </div>
-        )}
-
-        {/* Tab 5: API Diagnostics & Telemetry */}
-        {activeTab === 'diagnostics' && (
-          <div className="animate-in fade-in duration-150">
-            <DiagnosticsView />
-          </div>
-        )}
-      </main>
-
-      {/* Floating Non-Intrusive Sandbox Console for Hackathon Judges */}
-      <FloatingSandboxConsole
-        deal={deal}
-        onGenerateInvoice={handleGenerateInvoice}
-        onSimulateWebhook={handleSimulateWebhook}
-        onOpenDeliverableModal={() => setIsDeliverableModalOpen(true)}
-        onExecutePayout={handleExecutePayout}
-        actionLoading={actionLoading}
-      />
-
-      {/* Deliverable Verification Modal */}
-      {deal.deliverable && (
-        <DeliverableModal
-          isOpen={isDeliverableModalOpen}
-          onClose={() => setIsDeliverableModalOpen(false)}
-          deliverable={deal.deliverable}
-          onVerify={handleVerifyDeliverable}
-          isLoading={actionLoading}
-        />
-      )}
-
-      {/* Ultra-Grade Footer */}
-      <footer className="border-t border-espresso-100 bg-[#FFFDFC] py-4 text-center text-xs text-[#75645E]">
-        <p>
-          CreatorPay AI • Enterprise Merchant Solutions • Powered by PayPal Invoicing v2, Payouts v1 & Webhooks • PayPal AI Hackathon 2026
-        </p>
-      </footer>
-    </div>
-  );
+      </div>}
+      {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
+      {activeTab === 'splits' && <ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} />}
+      {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}
+      {activeTab === 'diagnostics' && <DiagnosticsView />}
+      {deal?.deliverable && <DeliverableModal isOpen={isDeliverableModalOpen} onClose={() => setIsDeliverableModalOpen(false)} deliverable={deal.deliverable} onVerify={handleVerifyDeliverable} isLoading={actionLoading} />}
+    </>}
+  </WorkspaceShell>;
 }
