@@ -257,7 +257,7 @@ export default function LandingPage() {
               Sign In
             </Link>
             <Link
-              href="/dashboard"
+              href="/login?mode=signup"
               className="flex items-center space-x-1.5 px-5 py-2 rounded-full bg-[#2B1D19] dark:bg-brand-500 hover:bg-[#3E2B25] dark:hover:bg-brand-600 text-white text-xs font-bold transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group"
             >
               <span>Launch Studio</span>
@@ -303,7 +303,7 @@ export default function LandingPage() {
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3.5 mb-14">
             <Link
-              href="/dashboard"
+              href="/login?mode=signup"
               className="px-8 py-3.5 rounded-full bg-[#2B1D19] dark:bg-brand-500 hover:bg-[#3E2B25] dark:hover:bg-brand-600 text-white text-sm font-bold shadow-md hover:shadow-xl dark:shadow-brand-500/30 transition-all flex items-center space-x-2 cursor-pointer group"
             >
               <span>Launch Studio Free</span>
@@ -1280,7 +1280,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="/dashboard"
+              href="/login?mode=signup"
               className="px-8 py-3.5 rounded-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold shadow-lg shadow-brand-500/30 transition-all cursor-pointer flex items-center space-x-2 group"
             >
               <span>Launch Studio App Free</span>
@@ -1306,7 +1306,7 @@ export default function LandingPage() {
             <span>• The Financial Agent for Digital Creators & Agencies</span>
           </div>
           <div className="flex items-center space-x-6 text-[#75645E] dark:text-[#B8A9A2]">
-            <Link href="/dashboard" className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] font-semibold transition-colors">Studio App</Link>
+            <Link href="/login?mode=signup" className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] font-semibold transition-colors">Studio App</Link>
             <a href="https://developer.paypal.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">PayPal Developer</a>
             <a href="https://github.com/ius-sharma/CreatorPay-AI" target="_blank" rel="noopener noreferrer" className="hover:text-[#2B1D19] dark:hover:text-[#FAF6F4] transition-colors">GitHub</a>
           </div>
