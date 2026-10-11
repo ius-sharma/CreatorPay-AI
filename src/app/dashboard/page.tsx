@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DealInput } from '@/components/DealInput';
 import { InvoicingHubView } from '@/components/InvoicingHubView';
 import { ContractsManagerView } from '@/components/ContractsManagerView';
@@ -12,8 +12,15 @@ import { WorkspaceShell, type WorkspaceView } from '@/components/WorkspaceShell'
 import { WorkspaceHome } from '@/components/WorkspaceHome';
 import { ContractReview } from '@/components/ContractReview';
 import type { ContractReview as Review } from '@/lib/contract';
+import { readWorkspaceLocation, workspaceUrl } from '@/lib/workspace-navigation';
 
 export default function Home() {
+  const selectedDeal = useRef<string | null>(null);
+  const dealsCache = useRef<Deal[]>([]);
+  const requestVersion = useRef(0);
+  const actionBusy = useRef(false);
+  const [draftPrompt, setDraftPrompt] = useState('');
+  const [draftTeamRules, setDraftTeamRules] = useState(false);
   const [activeTab, setActiveTab] = useState<WorkspaceView>('overview');
   const [deal, setDeal] = useState<Deal | null>(null);
   const [allDeals, setAllDeals] = useState<Deal[]>([]);
@@ -31,35 +38,64 @@ export default function Home() {
 
 
   const fetchPortfolioData = async () => {
+    if (actionBusy.current) return;
+    const version = ++requestVersion.current;
     try {
       const res = await fetch('/api/deals');
       if (res.status === 401) { window.location.assign('/login'); return; }
       const data = await res.json();
+      if (version !== requestVersion.current) return;
       if (!res.ok) throw new Error(data.error || 'Could not load your workspace.');
       setPortfolioError('');
 
-      setDeal(data.activeDeal || null);
+      dealsCache.current = data.allDeals || [];
+      setDeal(selectedDeal.current ? dealsCache.current.find(d => d.id === selectedDeal.current) || null : data.activeDeal || null);
       if (data.allDeals) setAllDeals(data.allDeals);
       if (data.teamRoster) setRoster(data.teamRoster);
       if (data.invoices) setInvoices(data.invoices);
       if (data.auditLedger) setAuditLedger(data.auditLedger);
       if (data.sandboxAccount) setSandboxAccount(data.sandboxAccount);
     } catch (err) {
-      setPortfolioError(err instanceof Error ? err.message : 'Could not load your workspace.');
+      if (version === requestVersion.current) setPortfolioError(err instanceof Error ? err.message : 'Could not load your workspace.');
     } finally {
-      setLoading(false);
+      if (version === requestVersion.current) setLoading(false);
     }
   };
 
   useEffect(() => {
-    const requested = new URLSearchParams(window.location.search).get('view');
-    if (requested && ['overview','deals','new','invoicing','splits','audit','diagnostics'].includes(requested)) setActiveTab(requested as WorkspaceView);
+    const restore = () => {
+      const route = readWorkspaceLocation(window.location.search);
+      selectedDeal.current = route.dealId;
+      setActiveTab(route.view);
+      if (route.view === 'detail') setDeal(dealsCache.current.find(d => d.id === route.dealId) || null);
+      setAnalysisError('');
+    };
+    restore();
     fetchPortfolioData();
     const timer = setInterval(fetchPortfolioData, 5000);
-    return () => clearInterval(timer);
+    window.addEventListener('popstate', restore);
+    return () => { clearInterval(timer); window.removeEventListener('popstate', restore); requestVersion.current++; };
   }, []);
 
+  const navigate = (view: WorkspaceView, dealId?: string) => {
+    const url = workspaceUrl(view, dealId);
+    if (window.location.pathname + window.location.search !== url) window.history.pushState(null, '', url);
+    selectedDeal.current = view === 'detail' ? dealId || null : null;
+    setActiveTab(view);
+    if (view === 'detail') setDeal(dealsCache.current.find(d => d.id === dealId) || null);
+    setAnalysisError('');
+  };
+
+  const applyDealUpdate = (updated: Deal) => {
+    requestVersion.current++;
+    dealsCache.current = dealsCache.current.map(item => item.id === updated.id ? updated : item);
+    setAllDeals(dealsCache.current);
+    if (selectedDeal.current === updated.id) setDeal(updated);
+  };
+
   const handleSelectDeal = async (dealId: string) => {
+    actionBusy.current = true;
+    requestVersion.current++;
     setActionLoading(true);
     setPortfolioError('');
     try {
@@ -70,16 +106,19 @@ export default function Home() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not open this deal.');
-      if (data.activeDeal) { setDeal(data.activeDeal); setActiveTab('detail'); }
-      if (data.allDeals) setAllDeals(data.allDeals);
+      if (data.allDeals) { dealsCache.current = data.allDeals; setAllDeals(data.allDeals); }
+      if (data.activeDeal) navigate('detail', data.activeDeal.id);
     } catch (err) {
       setPortfolioError(err instanceof Error ? err.message : 'Could not open this deal.');
     } finally {
-      setActionLoading(false);
+      actionBusy.current = false; setActionLoading(false);
+      void fetchPortfolioData();
     }
   };
 
   const handlePromptSubmit = async (prompt: string, updatedSplits: TeamSplit[]) => {
+    actionBusy.current = true;
+    requestVersion.current++;
     setActionLoading(true);
     setAnalysisError('');
     setContractReview(null);
@@ -95,28 +134,36 @@ export default function Home() {
     } catch (err) {
       setAnalysisError(err instanceof Error ? err.message : 'Contract analysis failed. Please retry.');
     } finally {
-      setActionLoading(false);
+      actionBusy.current = false; setActionLoading(false);
+      void fetchPortfolioData();
     }
   };
 
   const handleConfirmContract = async () => {
     if (!contractReview) return;
+    actionBusy.current = true;
+    requestVersion.current++;
     setActionLoading(true);
     setAnalysisError('');
     try {
       const res = await fetch('/api/deals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'confirm_analysis', token: contractReview.token }) });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'Could not confirm this review.');
-      setDeal(data.activeDeal);
+      dealsCache.current = data.allDeals;
       setAllDeals(data.allDeals);
       setContractReview(null);
-      setActiveTab('detail');
+      setDraftPrompt('');
+      setDraftTeamRules(false);
+      navigate('detail', data.activeDeal.id);
     } catch (err) {
       setAnalysisError(err instanceof Error ? err.message : 'Could not confirm this review.');
-    } finally { setActionLoading(false); }
+    } finally { actionBusy.current = false; setActionLoading(false);
+      void fetchPortfolioData(); }
   };
 
   const handleUpdateRoster = async (updatedRoster: TeamSplit[]) => {
+    actionBusy.current = true;
+    requestVersion.current++;
     setActionLoading(true);
     try {
       const res = await fetch('/api/deals', {
@@ -131,10 +178,13 @@ export default function Home() {
     } catch (err) {
       setPortfolioError(err instanceof Error ? err.message : 'Could not save team changes.');
       return false;
-    } finally { setActionLoading(false); }
+    } finally { actionBusy.current = false; setActionLoading(false);
+      void fetchPortfolioData(); }
   };
 
   const handleGenerateInvoice = async (milestoneIndex: number) => {
+    actionBusy.current = true;
+    requestVersion.current++;
     setActionLoading(true);
     setAnalysisError('');
     try {
@@ -146,21 +196,17 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error || 'PayPal invoice request failed.');
       if (data.deal) {
-        setDeal(data.deal);
-        fetchPortfolioData(); // refresh invoices and KPIs
+        applyDealUpdate(data.deal);
       }
     } catch (err) {
       setAnalysisError(err instanceof Error ? err.message : 'PayPal invoice request failed.');
-      fetchPortfolioData();
     } finally {
-      setActionLoading(false);
+      actionBusy.current = false; setActionLoading(false);
+      void fetchPortfolioData();
     }
   };
 
-  const navigate = (view: WorkspaceView) => {
-    setActiveTab(view);
-    setAnalysisError('');
-  };
+
   const titles: Record<WorkspaceView, [string, string]> = {
     overview: ['Your workspace, at a glance.', 'Keep track of your deals, payments and what needs your attention.'],
     deals: ['Deals', 'Every partnership, from agreed terms to final settlement.'],
@@ -176,8 +222,9 @@ export default function Home() {
     {loading ? <div role="status" aria-label="Loading workspace" className="space-y-5"><p className="text-sm text-slate-500">Loading your workspace…</p><div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[1,2,3,4].map(i => <div key={i} className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white" />)}</div><div className="h-64 animate-pulse rounded-xl border border-slate-200 bg-white" /></div> : <>
       {(activeTab === 'overview' || activeTab === 'deals') && <WorkspaceHome deals={allDeals} overview={activeTab === 'overview'} busy={actionLoading} onOpen={handleSelectDeal} onNew={() => navigate('new')} />}
       {analysisError && <p role="alert" className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{analysisError}</p>}
-      {activeTab === 'new' && <div className="max-w-3xl space-y-5"><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} onUpdateSplits={setRoster} isLoading={actionLoading} />{contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
-      {activeTab === 'detail' && deal && <DealWorkspace key={deal.id} deal={deal} busy={actionLoading} onBack={() => navigate('deals')} onInvoice={handleGenerateInvoice} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} />}
+      {activeTab === 'new' && <div className="max-w-3xl space-y-5"><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} prompt={draftPrompt} onPromptChange={setDraftPrompt} useTeamRules={draftTeamRules} onTeamRulesChange={setDraftTeamRules} isLoading={actionLoading} />{contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
+      {activeTab === 'detail' && !deal && <div className="rounded-xl border border-slate-200 bg-white p-8 text-center"><h2 className="font-semibold">Deal unavailable</h2><p className="mt-2 text-sm text-slate-500">This deal could not be found in your workspace.</p><button onClick={() => navigate('deals')} className="mt-4 text-sm font-medium text-brand-700">Return to deals</button></div>}
+      {activeTab === 'detail' && deal && <DealWorkspace key={deal.id} deal={deal} busy={actionLoading} onBack={() => navigate('deals')} onInvoice={handleGenerateInvoice} onChange={updated => { applyDealUpdate(updated); fetchPortfolioData(); }} />}
       {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
       {activeTab === 'splits' && <ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} />}
       {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}

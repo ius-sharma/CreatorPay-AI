@@ -1,134 +1,20 @@
 'use client';
-
-import React, { useState } from 'react';
-import { Sparkles, Send, Users } from 'lucide-react';
-import { TeamSplit } from '@/lib/types';
-
-interface DealInputProps {
-  onSubmit: (prompt: string, splits: TeamSplit[]) => void;
-  splits: TeamSplit[];
-  onUpdateSplits: (splits: TeamSplit[]) => void;
-  isLoading: boolean;
-  onEdit: () => void;
+import { useState, type FormEvent } from 'react';
+import { FileText, Sparkles } from 'lucide-react';
+import type { TeamSplit } from '@/lib/types';
+import { card } from './FinanceUI';
+export function DealInput({onSubmit,splits,isLoading,onEdit,prompt,onPromptChange,useTeamRules,onTeamRulesChange}:{onSubmit:(prompt:string,splits:TeamSplit[])=>void;splits:TeamSplit[];isLoading:boolean;onEdit:()=>void;prompt:string;onPromptChange:(value:string)=>void;useTeamRules:boolean;onTeamRulesChange:(value:boolean)=>void}) {
+ const [replaceSample,setReplaceSample]=useState(false);
+ const change=(value:string)=>{onPromptChange(value);onEdit();setReplaceSample(false);};
+ const sample=()=>{const date=new Date();date.setDate(date.getDate()+30);change(`Sample contract — Acme offers USD 2,000 for a 60-second sponsor segment. Bill finance@acme.example. Total contract amount is USD 2,000. Payment terms: 30% (USD 600) advance, and 70% (USD 1,400) after human approval of the video deliverable. Deliver the video by ${date.toISOString().slice(0,10)}. The video must include a 60-second sponsor segment for Acme. No collaborator splits; the creator retains the remaining amount before PayPal fees.`);};
+ const submit=(e:FormEvent)=>{e.preventDefault();if(prompt.trim().length>=20&&!isLoading)onSubmit(prompt,useTeamRules?splits:[]);};
+ return <section className={`${card} p-5 sm:p-6`}>
+ <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="flex items-center gap-2 text-sm font-semibold"><FileText className="h-4 w-4 text-slate-400"/>Contract text</h2><button type="button" disabled={isLoading} onClick={()=>prompt.trim()?setReplaceSample(true):sample()} className="text-xs font-medium text-brand-700 disabled:opacity-50">Use a sample contract</button></div>
+ {replaceSample&&<div className="mt-4 flex flex-wrap items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800"><span>Replace your current text with the sample?</span><button disabled={isLoading} onClick={sample} className="font-semibold underline">Replace text</button><button onClick={()=>setReplaceSample(false)}>Keep my text</button></div>}
+ <p id="contract-help" className="mt-3 text-xs leading-6 text-slate-500">Include the brand, billing email, currency, total, payment milestones, deliverables and deadline. You will review the extracted terms before creating a deal.</p>
+ <form onSubmit={submit} className="mt-4 space-y-5"><label className="block"><span className="sr-only">Contract or agreement text</span><textarea required minLength={20} maxLength={12000} aria-describedby="contract-help contract-length" value={prompt} disabled={isLoading} onChange={e=>change(e.target.value)} rows={11} placeholder="Paste the agreed contract or email here…" className="block w-full resize-y rounded-lg border border-slate-200 bg-white p-4 text-sm leading-7 focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-60"/></label>
+ <div id="contract-length" className="flex flex-wrap justify-between gap-2 text-xs text-slate-500"><span>20–12,000 characters</span><span>{prompt.length.toLocaleString()} / 12,000</span></div>
+ <div className="rounded-lg border border-slate-200 p-4"><label className="flex items-start gap-3 text-sm"><input type="checkbox" className="mt-1" checked={useTeamRules} disabled={isLoading||splits.length===0} onChange={e=>{onTeamRulesChange(e.target.checked);onEdit();}}/><span>Use my saved team rules<span className="mt-1 block text-xs leading-6 text-slate-500">Only when the contract specifies no splits. {splits.length?`${splits.length} saved collaborator${splits.length===1?'':'s'}.`:'Add collaborators in Team to enable this.'}</span></span></label>{useTeamRules&&splits.length>0&&<ul className="mt-3 space-y-2 border-t border-slate-100 pt-3">{splits.map(s=><li key={s.id} className="flex flex-wrap justify-between gap-2 text-xs text-slate-600"><span>{s.name} · {s.role}</span><span>{s.type==='percentage'?`${s.value}%`:`${s.value} in contract currency`}</span></li>)}</ul>}</div>
+ <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-5"><p className="max-w-sm text-xs leading-6 text-slate-500">Text is sent to Groq. Contract and deliverable reviews share 10 AI requests per UTC day, with 10 seconds between requests.</p><button disabled={isLoading||prompt.trim().length<20} className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"><Sparkles className="h-4 w-4"/>{isLoading?'Please wait…':'Analyze contract'}</button></div>
+ </form></section>;
 }
-
-const PRESETS = [
-  {
-    label: 'CloudHost $2,000 Deal (30% Advance)',
-    prompt:
-      'Brand CloudHost offers $2,000 for a 60-second video integration. 30% ($600) advance milestone invoice, 70% ($1,400) upon video deliverable. Disburse team cuts automatically.',
-  },
-  {
-    label: 'NordVPN $4,500 Multi-Milestone Deal',
-    prompt:
-      'Brand NordVPN contract approved for $4,500 sponsorship. Send 25% ($1,125) upfront milestone invoice to sponsorships@nordvpn.com. Remaining 75% on live YouTube video.',
-  },
-  {
-    label: 'Shopify $3,000 50/50 Partnership',
-    prompt:
-      'Brand Shopify partnership for $3,000 total. 50% ($1,500) deposit advance invoice now. Final 50% upon publication. Automatically split 15% to editor and $50 to designer.',
-  },
-];
-
-export const DealInput: React.FC<DealInputProps> = ({
-  onSubmit,
-  splits,
-  onUpdateSplits,
-  isLoading,
-  onEdit,
-}) => {
-  const [prompt, setPrompt] = useState(PRESETS[0].prompt);
-  const [showSplitsEditor, setShowSplitsEditor] = useState(false);
-  const [useTeamRules, setUseTeamRules] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!prompt.trim() || isLoading) return;
-    onSubmit(prompt, useTeamRules ? splits : []);
-  };
-
-  return (
-    <div className="bg-white border border-brand-100 rounded-2xl p-5 shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          <div className="p-1.5 rounded-lg bg-brand-50 text-brand-600 border border-brand-200">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <h2 className="font-bold text-slate-900 text-sm">Deal Command Center</h2>
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowSplitsEditor(!showSplitsEditor)}
-          className="flex items-center space-x-1.5 text-xs text-brand-700 hover:text-brand-800 font-semibold cursor-pointer"
-        >
-          <Users className="w-3.5 h-3.5" />
-          <span>{showSplitsEditor ? 'Hide Team Rules' : 'Team Rules (Aman 15%, Rohan $50)'}</span>
-        </button>
-      </div>
-
-      {/* Preset Pills */}
-      <div className="mb-3 flex flex-wrap gap-1.5">
-        {PRESETS.map((p, idx) => (
-          <button
-            key={idx}
-            type="button"
-            disabled={isLoading}
-            onClick={() => { setPrompt(p.prompt); onEdit(); }}
-            className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-700 border border-slate-200 hover:border-brand-200 transition-colors cursor-pointer"
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Splits Rule Drawer */}
-      {showSplitsEditor && (
-        <div className="mb-4 p-3.5 rounded-xl bg-brand-50/50 border border-brand-200 text-xs">
-          <p className="font-bold text-slate-800 mb-2">Team Revenue Split Guardrails (Phase 0)</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {splits.map((split) => (
-              <div key={split.id} className="p-2.5 rounded-lg bg-white border border-brand-100 flex items-center justify-between shadow-2xs">
-                <div>
-                  <p className="font-semibold text-slate-900">{split.name} <span className="text-slate-500 font-normal">({split.role})</span></p>
-                  <p className="text-[10px] text-slate-400 font-mono">{split.email}</p>
-                </div>
-                <div className="text-right">
-                  <span className="font-mono font-bold text-brand-700 text-sm">
-                    {split.type === 'percentage' ? `${split.value}%` : `\$${split.value}`}
-                  </span>
-                  <p className="text-[10px] text-slate-400 capitalize">{split.type}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Main Input Form */}
-      <label className="flex items-center gap-2 mb-3 text-xs text-slate-600"><input type="checkbox" disabled={isLoading} checked={useTeamRules} onChange={e => { setUseTeamRules(e.target.checked); onEdit(); }} />Use saved team rules when the contract specifies no splits</label>
-      <p className="mb-3 text-xs text-slate-500">Include currency, billing email, payment terms, deliverables and deadline. Contract text is sent to Groq. Account limit: 10 AI requests per UTC day, 10 seconds between requests. Contract and deliverable reviews share this limit.</p>
-      <form onSubmit={handleSubmit}>
-        <div className="relative">
-          <textarea
-            value={prompt}
-            onChange={(e) => { setPrompt(e.target.value); onEdit(); }}
-            disabled={isLoading}
-            rows={3}
-            maxLength={12000}
-            placeholder="Drop contract terms or email (e.g. '$2,000 deal with CloudHost, 30% advance, rest upon video live')..."
-            className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white resize-none leading-relaxed transition-all shadow-inner"
-          />
-          <button
-            type="submit"
-            disabled={isLoading || !prompt.trim()}
-            className="absolute bottom-3 right-3 flex items-center space-x-1.5 px-4 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-md shadow-brand-600/25 disabled:opacity-50 transition-all cursor-pointer"
-          >
-            <span>{isLoading ? 'Analyzing...' : 'Analyze Contract'}</span>
-            <Send className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-};
