@@ -6,9 +6,12 @@
 
 # testing
 /coverage
+/.data/
+/.tools/
 
 # next.js
 /.next/
+/.next-*/
 /out/
 
 # production
