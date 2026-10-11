@@ -1,91 +1,41 @@
-import { NextResponse } from 'next/server';
-import { getActiveDeal, updateActiveDeal, appendDealLog, addInvoiceToRegistry } from '@/lib/store';
-import { createAndSendMilestoneInvoice } from '@/lib/paypal';
+import { NextRequest, NextResponse } from 'next/server';
+import { getDeal, mutateStore } from '@/lib/store';
+import { createAndSendMilestoneInvoice, invoicePaymentUrl, invoiceNumberFor, PayPalError, SandboxInvoice } from '@/lib/paypal';
+import { acquireInvoiceJob, rememberInvoice, releaseInvoiceJob } from '@/lib/database';
+import { getSession } from '@/lib/analysis-session';
+import { isSameOrigin } from '@/lib/request-origin';
 
-export async function POST(req: Request) {
+export const runtime = 'nodejs';
+export async function POST(req: NextRequest) {
+  let job: string | undefined;
   try {
-    const { milestoneIndex = 0 } = await req.json();
-    const deal = getActiveDeal();
-
-    if (!deal) {
-      return NextResponse.json({ success: false, error: 'No active deal found' }, { status: 404 });
-    }
-
+    if (!isSameOrigin(req)) throw new PayPalError('Cross-origin requests are not allowed.', 403);
+    const { dealId, milestoneIndex = 0 } = await req.json();
+    if (typeof dealId !== 'string' || ![0, 1].includes(milestoneIndex)) throw new PayPalError('Select the advance or final milestone of a confirmed deal.', 400);
+    const deal = getDeal(dealId);
+    if (!deal || deal.demo || !deal.contractExtraction) throw new PayPalError('Analyse and confirm a new contract first. Sample deals cannot send invoices.', 409);
+    if (deal.ownerSession !== getSession(req.cookies.get('creatorpay-analysis')?.value).id) throw new PayPalError('This deal belongs to another or expired browser session. Analyse a new contract in this session.', 403);
+    if (!process.env.PAYPAL_WEBHOOK_ID) throw new PayPalError('Configure the PayPal webhook before sending the invoice.', 503);
+    if (milestoneIndex === 1 && (deal.milestones.length !== 2 || deal.milestones[0].status !== 'paid' || !deal.milestones[0].paymentVerifiedAt || !deal.deliverableReviews?.[0]?.approvedAt || !deal.deliverable?.verified)) throw new PayPalError('Final invoicing requires a verified advance and human-approved deliverable.', 409);
     const milestone = deal.milestones[milestoneIndex];
-    if (!milestone) {
-      return NextResponse.json({ success: false, error: 'Milestone not found' }, { status: 400 });
-    }
-
-    // Call PayPal Invoicing API
-    const invoiceResult = await createAndSendMilestoneInvoice({
-      brandName: deal.brandName,
-      brandEmail: deal.brandEmail,
-      milestoneTitle: milestone.name,
-      amount: milestone.amount,
-      currency: deal.currency,
-      note: `CreatorPay AI Milestone Invoice: ${milestone.name} for ${deal.dealTitle}`,
+    if (!milestone || milestone.amount <= 0) throw new PayPalError('Invalid advance milestone.', 400);
+    const key = `${deal.id}:${milestone.id}`;
+    const existingInvoiceId = acquireInvoiceJob(key);
+    job = key;
+    const recordInvoice = (invoice: SandboxInvoice) => mutateStore(store => {
+      const current = store.deals.find(d => d.id === deal.id)!;
+      const currentMilestone = current.milestones[milestoneIndex];
+      current.milestones[milestoneIndex] = { ...currentMilestone, invoiceId: invoice.id, invoiceNumber: invoiceNumberFor(key), invoiceStatus: currentMilestone.status === 'paid' ? 'PAID' : invoice.status, invoiceUrl: invoicePaymentUrl(invoice) || currentMilestone.invoiceUrl, status: currentMilestone.status === 'paid' ? 'paid' : invoice.status === 'DRAFT' ? 'pending' : 'invoiced' };
+      if (currentMilestone.status !== 'paid') current.status = invoice.status === 'DRAFT' ? (milestoneIndex === 0 ? 'analyzed' : 'deliverable_verified') : (milestoneIndex === 0 ? 'advance_invoiced' : 'final_invoiced');
+      current.updatedAt = new Date().toISOString();
+      const item = { id: invoice.id, invoiceNumber: invoiceNumberFor(key), dealTitle: deal.dealTitle, brandName: deal.brandName, brandEmail: deal.brandEmail, milestoneTitle: milestone.name, amount: milestone.amount, currency: deal.currency, status: currentMilestone.status === 'paid' ? 'PAID' as const : invoice.status === 'DRAFT' ? 'DRAFT' as const : 'SENT' as const, issueDate: new Date().toISOString().slice(0, 10), dueDate: new Date().toISOString().slice(0, 10), paymentUrl: invoicePaymentUrl(invoice) || currentMilestone.invoiceUrl || '', terms: 'DUE_ON_RECEIPT' };
+      store.invoices = [item, ...store.invoices.filter(i => i.id !== invoice.id)];
+      return current;
     });
-
-    // Register into enterprise invoices repository
-    addInvoiceToRegistry({
-      id: invoiceResult.invoiceId,
-      invoiceNumber: invoiceResult.invoiceNumber,
-      dealTitle: deal.dealTitle,
-      brandName: deal.brandName,
-      brandEmail: deal.brandEmail,
-      milestoneTitle: milestone.name,
-      amount: milestone.amount,
-      currency: deal.currency,
-      status: invoiceResult.status === 'SENT' ? 'SENT' : 'DRAFT',
-      issueDate: new Date().toISOString().split('T')[0],
-      dueDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
-      paymentUrl: invoiceResult.paymentUrl,
-      terms: 'DUE_ON_RECEIPT',
-    });
-
-    // Update store state
-    const updatedDeal = updateActiveDeal((prev) => {
-      const newMilestones = [...prev.milestones];
-      newMilestones[milestoneIndex] = {
-        ...milestone,
-        status: 'invoiced',
-        invoiceId: invoiceResult.invoiceId,
-        invoiceNumber: invoiceResult.invoiceNumber,
-        invoiceUrl: invoiceResult.paymentUrl,
-      };
-
-      const newStatus = milestoneIndex === 0 ? 'advance_invoiced' : 'final_invoiced';
-
-      return {
-        ...prev,
-        status: newStatus,
-        milestones: newMilestones,
-      };
-    });
-
-    // Append Agent Execution Log
-    appendDealLog({
-      type: 'action',
-      title: `PayPal Milestone Invoice #${invoiceResult.invoiceNumber} Dispatched`,
-      description: `Dispatched PayPal Sandbox Invoice #${invoiceResult.invoiceNumber} (${deal.currency} \$${milestone.amount}) to ${deal.brandEmail}. Direct payment link activated.`,
-      toolCall: {
-        name: 'paypal.invoicing.create_and_send',
-        params: {
-          brand: deal.brandName,
-          amount: milestone.amount,
-          currency: deal.currency,
-          milestone: milestone.name,
-        },
-        result: invoiceResult,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      invoice: invoiceResult,
-      deal: updatedDeal,
-    });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-  }
+    const result = await createAndSendMilestoneInvoice({ brandName: deal.brandName, brandEmail: deal.brandEmail, milestoneTitle: milestone.name, amount: milestone.amount, currency: deal.currency, operationKey: key, existingInvoiceId: milestone.invoiceId || existingInvoiceId, onCreated: invoice => { rememberInvoice(key, invoice.id); recordInvoice(invoice); } });
+    recordInvoice({ id: result.invoiceId, status: result.status, detail: { metadata: { recipient_view_url: result.paymentUrl } } });
+    return NextResponse.json({ success: true, invoice: result, deal: getDeal(deal.id) });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'Invoice could not be created.' }, { status: error instanceof PayPalError ? error.status : error instanceof SyntaxError ? 400 : 409 });
+  } finally { if (job) releaseInvoiceJob(job); }
 }
