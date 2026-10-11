@@ -2,20 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { DealInput } from '@/components/DealInput';
-import { DealTimeline } from '@/components/DealTimeline';
-import { AgentTerminal } from '@/components/AgentTerminal';
-import { PayoutLedger } from '@/components/PayoutLedger';
-import { DeliverableModal } from '@/components/DeliverableModal';
 import { InvoicingHubView } from '@/components/InvoicingHubView';
 import { ContractsManagerView } from '@/components/ContractsManagerView';
 import { AuditLedgerView } from '@/components/AuditLedgerView';
 import { DiagnosticsView } from '@/components/DiagnosticsView';
 import { Deal, TeamSplit, PayPalInvoiceSummary, AuditLedgerEntry } from '@/lib/types';
-import { ArrowLeft } from 'lucide-react';
+import { DealWorkspace } from '@/components/DealWorkspace';
 import { WorkspaceShell, type WorkspaceView } from '@/components/WorkspaceShell';
 import { WorkspaceHome } from '@/components/WorkspaceHome';
-import { PayoutControl } from '@/components/PayoutControl';
-import { DeliverableReviewPanel } from '@/components/DeliverableReviewPanel';
 import { ContractReview } from '@/components/ContractReview';
 import type { ContractReview as Review } from '@/lib/contract';
 
@@ -30,7 +24,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
 
-  const [isDeliverableModalOpen, setIsDeliverableModalOpen] = useState<boolean>(false);
+
   const [contractReview, setContractReview] = useState<{ review: Review; token: string } | null>(null);
   const [analysisError, setAnalysisError] = useState('');
   const [portfolioError, setPortfolioError] = useState('');
@@ -159,68 +153,6 @@ export default function Home() {
     }
   };
 
-  const handleSimulateWebhook = async (milestoneIndex: number) => {
-    setActionLoading(true);
-    try {
-      const res = await fetch('/api/paypal/webhook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event: 'INVOICING.INVOICE.PAID',
-          milestoneIndex,
-        }),
-      });
-      const data = await res.json();
-      if (data.deal) {
-        setDeal(data.deal);
-        fetchPortfolioData();
-      }
-    } catch (err) {
-      console.error('Error simulating webhook:', err);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleVerifyDeliverable = async (submission: { videoUrl: string; proofText: string }) => {
-    setActionLoading(true);
-    try {
-      const res = await fetch('/api/agent/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(submission),
-      });
-      const data = await res.json();
-      if (data.deal) {
-        setDeal(data.deal);
-      }
-      setIsDeliverableModalOpen(false);
-    } catch (err) {
-      console.error('Error verifying deliverable:', err);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleExecutePayout = async () => {
-    setActionLoading(true);
-    try {
-      const res = await fetch('/api/paypal/payout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await res.json();
-      if (data.deal) {
-        setDeal(data.deal);
-        fetchPortfolioData(); // refresh audit ledger
-      }
-    } catch (err) {
-      console.error('Error executing payout:', err);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
   const navigate = (view: WorkspaceView) => {
     setActiveTab(view);
     setAnalysisError('');
@@ -241,18 +173,11 @@ export default function Home() {
       {(activeTab === 'overview' || activeTab === 'deals') && <WorkspaceHome deals={allDeals} overview={activeTab === 'overview'} busy={actionLoading} onOpen={handleSelectDeal} onNew={() => navigate('new')} />}
       {analysisError && <p role="alert" className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{analysisError}</p>}
       {activeTab === 'new' && <div className="max-w-3xl space-y-5"><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} onUpdateSplits={setRoster} isLoading={actionLoading} />{contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
-      {activeTab === 'detail' && deal && <div className="space-y-5">
-        <button onClick={() => navigate('deals')} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900"><ArrowLeft className="h-4 w-4" />All deals</button>
-        <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-          <div className="min-w-0 space-y-5"><DealTimeline deal={deal} onGenerateInvoice={handleGenerateInvoice} onSimulateWebhook={handleSimulateWebhook} onOpenDeliverableModal={() => setIsDeliverableModalOpen(true)} onExecutePayout={handleExecutePayout} actionLoading={actionLoading} /><DeliverableReviewPanel key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} /><PayoutControl key={deal.id} deal={deal} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} /></div>
-          <div className="min-w-0 space-y-5"><PayoutLedger deal={deal} /><details className="rounded-xl border border-slate-200 bg-white p-4"><summary className="cursor-pointer text-sm font-semibold">AI & payment history</summary><div className="mt-4"><AgentTerminal logs={deal.logs} /></div></details></div>
-        </div>
-      </div>}
+      {activeTab === 'detail' && deal && <DealWorkspace key={deal.id} deal={deal} busy={actionLoading} onBack={() => navigate('deals')} onInvoice={handleGenerateInvoice} onChange={updated => { setDeal(updated); fetchPortfolioData(); }} />}
       {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
       {activeTab === 'splits' && <ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} />}
       {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}
       {activeTab === 'diagnostics' && <DiagnosticsView />}
-      {deal?.deliverable && <DeliverableModal isOpen={isDeliverableModalOpen} onClose={() => setIsDeliverableModalOpen(false)} deliverable={deal.deliverable} onVerify={handleVerifyDeliverable} isLoading={actionLoading} />}
     </>}
   </WorkspaceShell>;
 }
