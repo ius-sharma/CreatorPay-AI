@@ -9,7 +9,7 @@ interface PayoutLedgerProps {
 }
 
 export const PayoutLedger: React.FC<PayoutLedgerProps> = ({ deal }) => {
-  const isSettled = deal.status === 'deal_closed';
+  const isSettled = deal.status === 'payouts_completed';
 
   return (
     <div className="bg-white border border-brand-100 rounded-2xl p-5 shadow-sm">
@@ -20,7 +20,7 @@ export const PayoutLedger: React.FC<PayoutLedgerProps> = ({ deal }) => {
           </div>
           <div>
             <h2 className="font-bold text-slate-900 text-sm">Multi-Party Settlement Ledger</h2>
-            <p className="text-xs text-slate-500">PayPal Payouts API (v1) Revenue Split Routing</p>
+            <p className="text-xs text-slate-500">Contract splits — see verified payout status above</p>
           </div>
         </div>
 
@@ -94,12 +94,12 @@ export const PayoutLedger: React.FC<PayoutLedgerProps> = ({ deal }) => {
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-slate-900 text-xs">Verified Creator (You)</span>
+                <span className="font-extrabold text-slate-900 text-xs">Creator (You)</span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-100 text-brand-800">
-                  Net Balance
+                  Planned Share
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500">Connected PayPal Sandbox Wallet</p>
+              <p className="text-[11px] text-slate-500">Calculated from the confirmed contract</p>
             </div>
           </div>
 
@@ -110,7 +110,7 @@ export const PayoutLedger: React.FC<PayoutLedgerProps> = ({ deal }) => {
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
               isSettled ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-brand-100 text-brand-800'
             }`}>
-              {isSettled ? 'Secured in Wallet' : 'Projected Net'}
+              {isSettled ? 'Estimated Retained (Before Fees)' : 'Projected Net'}
             </span>
           </div>
         </div>
