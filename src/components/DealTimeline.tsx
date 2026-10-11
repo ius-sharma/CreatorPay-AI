@@ -42,6 +42,19 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
   const isM2Paid = m2?.status === 'paid';
   const isPayoutSettled = deal.status === 'deal_closed';
 
+  if (deal.contractExtraction) return (
+    <section className="bg-white border border-brand-200 rounded-2xl p-5 space-y-4">
+      <h2 className="font-bold text-slate-900">{deal.dealTitle}</h2>
+      <p className="text-sm text-slate-600">Contract terms reviewed and confirmed. Create the advance invoice, then pay through PayPal Sandbox. Verified payment updates appear automatically. Invoice email notifications are disabled; use the payment link.</p>
+      <p className="font-semibold">{deal.currency} {deal.totalAmount.toFixed(2)} · {deal.brandEmail}</p>
+      {deal.milestones.map((m, index) => <div key={m.id} className="text-sm border border-slate-200 rounded-xl p-3 space-y-2"><p className="font-semibold">{m.name}: {deal.currency} {m.amount.toFixed(2)}</p><p>Status: {m.status === 'paid' ? 'Paid — PayPal payment verified' : m.invoiceStatus || 'Not invoiced'}</p>{m.invoiceId && <p className="font-mono text-xs break-all">{m.invoiceId}</p>}{(index === 0 || (index === 1 && deal.milestones.length === 2 && deal.deliverable?.verified && deal.deliverableReviews?.[0]?.approvedAt)) && m.status === 'pending' && <button disabled={actionLoading} onClick={() => onGenerateInvoice(index)} className="rounded-lg bg-[#0079C1] text-white px-3 py-2 disabled:opacity-50">{actionLoading ? 'Creating invoice...' : m.invoiceId ? 'Retry sending invoice' : index === 0 ? 'Create PayPal sandbox advance invoice' : 'Create PayPal sandbox final invoice'}</button>}{m.invoiceUrl && m.status !== 'paid' && <a className="inline-block text-[#0079C1] font-semibold underline" href={m.invoiceUrl} target="_blank" rel="noopener noreferrer">Open sandbox invoice & pay</a>}{m.paymentTransactionIds?.map(id => <p className="text-xs font-mono break-all" key={id}>Verified payment: {id}</p>)}{index > 0 && !deal.deliverableReviews?.[0]?.approvedAt && <p className="text-xs text-slate-500">Final invoicing unlocks after the deliverable approval stage.</p>}</div>)}
+      <p className="text-sm">Deadline: {deal.contractExtraction.deadline.value}</p>
+      {deal.contractExtraction.deliverables.map((d, i) => <div key={i} className="text-sm"><p>{d.requirement}</p><blockquote className="border-l-2 border-brand-200 pl-3 text-slate-500">{d.evidence}</blockquote></div>)}
+    </section>
+  );
+
+  if (deal.demo) return <section className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3"><h2 className="font-bold">{deal.dealTitle}</h2><p className="text-sm text-amber-800">Sample data. These statuses are illustrative; no real payment is verified. Analyse and confirm a new contract to test PayPal Sandbox.</p>{deal.milestones.map(m => <p className="text-sm" key={m.id}>{m.name}: {deal.currency} {m.amount.toFixed(2)} — sample {m.status}</p>)}</section>;
+
   return (
     <div className="bg-white border border-brand-100 rounded-3xl p-5 sm:p-6 shadow-sm">
       {/* Header Bar */}
