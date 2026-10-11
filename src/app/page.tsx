@@ -361,7 +361,7 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('ingest')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
                         simStep >= 1 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
@@ -375,32 +375,42 @@ export default function LandingPage() {
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
-                      {/* Card Top: Stage Tag & Live Dot */}
+                      {/* Card Top: Header with Micro-Icon & Status Tag */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-sans bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
-                          Stage 01 · Trigger
+                        <div className="flex items-center space-x-2.5">
+                          <div className="w-7 h-7 rounded-xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center border border-brand-200/60 dark:border-brand-800/60 shadow-2xs group-hover:scale-105 transition-transform">
+                            <FileText className="w-3.5 h-3.5" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-bold text-[#2B1D19] dark:text-[#FAF6F4] block leading-tight">Contract Ingestion</span>
+                            <span className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] font-sans">AI OCR & Parser</span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-sans bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60 inline-flex items-center space-x-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span>Trigger</span>
                         </span>
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                       </div>
 
-                      {/* Card Center: Icon & Title */}
-                      <div className="text-center my-auto">
-                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform">
-                          <FileText className="w-6 h-6" />
+                      {/* Card Center: Dominant Architectural Slate Metric */}
+                      <div className="my-auto py-2.5">
+                        <div className="text-[10px] uppercase tracking-wider font-semibold text-[#9E8D86] dark:text-[#8C7A72]">
+                          Automated Policy Enforced
                         </div>
-                        <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
-                          Contract Ingestion
-                        </h4>
-                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-sans mt-1">
-                          AI OCR & Milestone Parser
-                        </p>
+                        <div className="text-2xl font-black text-[#2B1D19] dark:text-[#FAF6F4] tracking-tight mt-0.5">
+                          50% Advance Lock
+                        </div>
+                        <div className="mt-1.5 flex items-center space-x-1.5 text-xs text-[#75645E] dark:text-[#B8A9A2]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-brand-500" />
+                          <span>$2,500.00 upfront escrow secured</span>
+                        </div>
                       </div>
 
-                      {/* Card Bottom: Metric & Click Prompt */}
-                      <div className="text-center space-y-1.5">
-                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-sans font-bold text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60">
-                          50% Advance Lock Rule
-                        </div>
+                      {/* Card Bottom: Metadata & Click Prompt */}
+                      <div className="pt-3 border-t border-espresso-100 dark:border-espresso-800/80 flex items-center justify-between text-[11px]">
+                        <span className="text-[#9E8D86] dark:text-[#8C7A72] font-mono text-[10px]">
+                          PDF · Agreement_v2
+                        </span>
                         <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
                           <span>Inspect Stage Logic</span>
                           <span>↗</span>
@@ -463,7 +473,7 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('invoice')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
                         simStep >= 2 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
@@ -482,34 +492,42 @@ export default function LandingPage() {
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
-                      {/* Card Top: Stage Tag & Paid Status */}
+                      {/* Card Top: Header with Micro-Icon & Status Tag */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-sans bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
-                          Stage 02 · Action
-                        </span>
-                        <span className="text-[10px] font-sans font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
-                          PAID ✓
+                        <div className="flex items-center space-x-2.5">
+                          <div className="w-7 h-7 rounded-xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center border border-brand-200/60 dark:border-brand-800/60 shadow-2xs group-hover:scale-105 transition-transform font-black text-xs">
+                            P
+                          </div>
+                          <div>
+                            <span className="text-xs font-bold text-[#2B1D19] dark:text-[#FAF6F4] block leading-tight">Milestone Escrow</span>
+                            <span className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] font-sans">PayPal Invoicing API v2</span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-sans font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span>PAID · LOCKED</span>
                         </span>
                       </div>
 
-                      {/* Card Center: Icon & Title */}
-                      <div className="text-center my-auto">
-                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform font-black text-lg">
-                          P
+                      {/* Card Center: Dominant Architectural Slate Metric */}
+                      <div className="my-auto py-2.5">
+                        <div className="text-[10px] uppercase tracking-wider font-semibold text-[#9E8D86] dark:text-[#8C7A72]">
+                          Settlement Cleared
                         </div>
-                        <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
-                          Milestone Escrow
-                        </h4>
-                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-sans mt-1">
-                          PayPal Invoicing API v2
-                        </p>
+                        <div className="text-2xl font-black text-[#2B1D19] dark:text-[#FAF6F4] tracking-tight mt-0.5">
+                          +${selectedDeal.advanceMilestone.toLocaleString()}.00 <span className="text-xs font-normal text-[#9E8D86]">USD</span>
+                        </div>
+                        <div className="mt-1.5 flex items-center space-x-1.5 text-xs text-[#75645E] dark:text-[#B8A9A2]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span>Funds locked in PayPal balance</span>
+                        </div>
                       </div>
 
-                      {/* Card Bottom: Metric & Click Prompt */}
-                      <div className="text-center space-y-1.5">
-                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-sans text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60 font-bold">
-                          ${selectedDeal.advanceMilestone.toLocaleString()}.00 USD Locked
-                        </div>
+                      {/* Card Bottom: Metadata & Click Prompt */}
+                      <div className="pt-3 border-t border-espresso-100 dark:border-espresso-800/80 flex items-center justify-between text-[11px]">
+                        <span className="text-[#9E8D86] dark:text-[#8C7A72] font-mono text-[10px]">
+                          INV · #2026-0891
+                        </span>
                         <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
                           <span>Inspect Stage Logic</span>
                           <span>↗</span>
@@ -546,7 +564,7 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('verify')}
-                      className={`w-60 h-60 sm:w-64 sm:h-64 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
                         simStep >= 3 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
@@ -565,34 +583,42 @@ export default function LandingPage() {
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
-                      {/* Card Top: Stage Tag & Verified Status */}
+                      {/* Card Top: Header with Micro-Icon & Status Tag */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300 font-sans bg-brand-50 dark:bg-brand-950/70 px-2.5 py-1 rounded-md border border-brand-200/60 dark:border-brand-800/60">
-                          Stage 03 · Condition
-                        </span>
-                        <span className="text-[10px] font-sans font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
-                          VERIFIED ✓
+                        <div className="flex items-center space-x-2.5">
+                          <div className="w-7 h-7 rounded-xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center border border-brand-200/60 dark:border-brand-800/60 shadow-2xs group-hover:scale-105 transition-transform">
+                            <Video className="w-3.5 h-3.5" />
+                          </div>
+                          <div>
+                            <span className="text-xs font-bold text-[#2B1D19] dark:text-[#FAF6F4] block leading-tight">Deliverable Audit</span>
+                            <span className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] font-sans">Gemini 1.5 Vision OCR</span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-sans font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span>VERIFIED ✓</span>
                         </span>
                       </div>
 
-                      {/* Card Center: Icon & Title */}
-                      <div className="text-center my-auto">
-                        <div className="w-13 h-13 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-500 dark:text-brand-400 flex items-center justify-center mx-auto mb-2.5 border border-brand-200 dark:border-brand-800 shadow-2xs group-hover:scale-110 transition-transform">
-                          <Video className="w-6 h-6" />
+                      {/* Card Center: Dominant Architectural Slate Metric */}
+                      <div className="my-auto py-2.5">
+                        <div className="text-[10px] uppercase tracking-wider font-semibold text-[#9E8D86] dark:text-[#8C7A72]">
+                          Compliance Attestation
                         </div>
-                        <h4 className="text-sm font-black text-[#2B1D19] dark:text-[#FAF6F4] leading-tight">
-                          Deliverable Audit
-                        </h4>
-                        <p className="text-[11px] text-[#75645E] dark:text-[#B8A9A2] font-sans mt-1">
-                          Multimodal Vision OCR
-                        </p>
+                        <div className="text-2xl font-black text-[#2B1D19] dark:text-[#FAF6F4] tracking-tight mt-0.5">
+                          Timestamp 02:45
+                        </div>
+                        <div className="mt-1.5 flex items-center space-x-1.5 text-xs text-[#75645E] dark:text-[#B8A9A2]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span>UTM link & FTC disclosure confirmed</span>
+                        </div>
                       </div>
 
-                      {/* Card Bottom: Metric & Click Prompt */}
-                      <div className="text-center space-y-1.5">
-                        <div className="px-3 py-1 rounded-xl bg-espresso-50 dark:bg-espresso-950/70 text-[10px] font-sans text-[#43322A] dark:text-[#E8D8D0] border border-espresso-200/60 dark:border-espresso-800/60 font-bold">
-                          02:45 Match Confirmed
-                        </div>
+                      {/* Card Bottom: Metadata & Click Prompt */}
+                      <div className="pt-3 border-t border-espresso-100 dark:border-espresso-800/80 flex items-center justify-between text-[11px]">
+                        <span className="text-[#9E8D86] dark:text-[#8C7A72] font-mono text-[10px]">
+                          YT · 1080p60 Feed
+                        </span>
                         <span className="text-[10px] font-bold text-brand-500 dark:text-brand-400 inline-flex items-center space-x-1 group-hover:underline">
                           <span>Inspect Stage Logic</span>
                           <span>↗</span>
