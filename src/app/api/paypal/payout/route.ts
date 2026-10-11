@@ -1,114 +1,39 @@
-import { NextResponse } from 'next/server';
-import { getActiveDeal, updateActiveDeal, appendDealLog, addAuditEntry } from '@/lib/store';
-import { createBatchPayout, PayoutRecipient } from '@/lib/paypal';
-
-export async function POST(req: Request) {
+import { NextRequest, NextResponse } from 'next/server';
+import { getDeal, mutateStore } from '@/lib/store';
+import { getSession } from '@/lib/analysis-session';
+import { isSameOrigin } from '@/lib/request-origin';
+import { PayPalError, getSandboxInvoice } from '@/lib/paypal';
+import { validateInvoicePayment } from '@/lib/payment-tracking';
+import { assertPayoutEligible, makePayoutPlan, sendPayout, refreshPayout } from '@/lib/payout-tracking';
+import { acquireInvoiceJob, releaseInvoiceJob } from '@/lib/database';
+export const runtime = 'nodejs';
+export async function POST(req: NextRequest) {
+  let job: string | undefined; let dealId: string | undefined;
   try {
-    const deal = getActiveDeal();
-
-    if (!deal) {
-      return NextResponse.json({ success: false, error: 'No active deal found' }, { status: 404 });
+    if (!isSameOrigin(req)) throw new PayPalError('Cross-origin requests are not allowed.', 403);
+    const body = await req.json();
+    const deal = typeof body.dealId === 'string' ? getDeal(body.dealId) : null;
+    if (!deal || deal.demo) throw new PayPalError('Select a confirmed deal.', 409);
+    if (deal.ownerSession !== getSession(req.cookies.get('creatorpay-analysis')?.value).id) throw new PayPalError('Use the browser session that confirmed this contract.', 403);
+    dealId = deal.id;
+    if (!['prepare', 'execute', 'refresh'].includes(body.action)) throw new PayPalError('Choose prepare, execute or refresh.', 400);
+    acquireInvoiceJob(`payout:${deal.id}`); job = `payout:${deal.id}`;
+    if (body.action === 'refresh') return NextResponse.json({ success: true, deal: await refreshPayout(deal.id) });
+    assertPayoutEligible(deal);
+    if (body.action === 'prepare') {
+      if (deal.payout) throw new PayPalError('A payout plan is already locked. Execute/recover the same plan; do not create another.', 409);
+      const plan = makePayoutPlan(deal, body.mappings);
+      const updated = mutateStore(store => { const current = store.deals.find(d => d.id === deal.id)!; current.payout = plan; current.updatedAt = new Date().toISOString(); return current; });
+      return NextResponse.json({ success: true, deal: updated });
     }
-
-    if (deal.teamSplits.length === 0) {
-      return NextResponse.json({ success: false, error: 'No team splits defined' }, { status: 400 });
-    }
-
-    // Prepare Payout Items
-    const payoutRecipients: PayoutRecipient[] = deal.teamSplits.map((split) => ({
-      recipientEmail: split.email,
-      amount: split.calculatedAmount || 0,
-      note: `CreatorPay AI Deal Settlement Cut: ${split.role} (${split.name}) for ${deal.dealTitle}`,
-      recipientId: split.id,
-    }));
-
-    // Trigger PayPal Payouts API v1
-    const payoutResult = await createBatchPayout(payoutRecipients, deal.currency);
-
-    const now = new Date().toISOString();
-    const timeFormatted = new Date().toLocaleString();
-
-    // Log into immutable audit ledger for each collaborator
-    deal.teamSplits.forEach((split, idx) => {
-      addAuditEntry({
-        id: `AUDIT-${Date.now()}-${idx}`,
-        timestamp: timeFormatted,
-        batchId: payoutResult.batchId,
-        dealTitle: deal.dealTitle,
-        recipientName: split.name,
-        recipientRole: split.role,
-        recipientEmail: split.email,
-        type: 'contractor_payout',
-        amount: split.calculatedAmount || 0,
-        currency: deal.currency,
-        status: 'COMPLETED',
-        taxDeductible: true,
-        category: '1099 Contractor Rev-Share',
-      });
-    });
-
-    // Record creator net retention
-    addAuditEntry({
-      id: `AUDIT-${Date.now()}-creator`,
-      timestamp: timeFormatted,
-      batchId: payoutResult.batchId,
-      dealTitle: deal.dealTitle,
-      recipientName: 'Apex Media (Creator)',
-      recipientRole: 'Studio Owner',
-      recipientEmail: process.env.PAYPAL_BUSINESS_EMAIL || 'sb-9l0ms53173777@business.example.com',
-      type: 'creator_retention',
-      amount: deal.creatorNetPayout,
-      currency: deal.currency,
-      status: 'COMPLETED',
-      taxDeductible: false,
-      category: 'Net Studio Operating Income',
-    });
-
-    const updatedDeal = updateActiveDeal((prev) => {
-      const settledSplits = prev.teamSplits.map((s, idx) => {
-        const itemResult = payoutResult.payoutItems[idx];
-        return {
-          ...s,
-          status: 'settled' as const,
-          payoutBatchId: payoutResult.batchId,
-          payoutItemId: itemResult?.payoutItemId || `ITEM-${idx + 1}`,
-          settledAt: now,
-        };
-      });
-
-      return {
-        ...prev,
-        status: 'deal_closed',
-        teamSplits: settledSplits,
-      };
-    });
-
-    const breakdownText = deal.teamSplits
-      .map((s) => `\$${s.calculatedAmount} to ${s.name} (${s.role})`)
-      .join(', ');
-
-    appendDealLog({
-      type: 'payout',
-      title: 'Grand Finale: Multi-Party Split Payout Dispatched',
-      description: `PayPal Payouts API Batch #${payoutResult.batchId} executed successfully. Disbursed: ${breakdownText}. Net remainder (\$${deal.creatorNetPayout}) settled to Creator. Audit ledger sealed.`,
-      toolCall: {
-        name: 'paypal.payouts.create_batch',
-        params: {
-          batch_id: payoutResult.batchId,
-          total_team_payout: payoutResult.totalAmount,
-          recipients: payoutRecipients,
-          creator_net: deal.creatorNetPayout,
-        },
-        result: payoutResult,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      payout: payoutResult,
-      deal: updatedDeal,
-    });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-  }
+    if (body.confirmPayout !== true) throw new PayPalError('Review and confirm the locked sandbox recipients and amounts.', 400);
+    if (!deal.payout) throw new PayPalError('Prepare a payout plan first.', 409);
+    if (deal.payout.batchId) return NextResponse.json({ success: true, deal: await refreshPayout(deal.id) });
+    // Recheck PayPal before moving any funds; persisted paid state alone is not sufficient.
+    for (const milestone of deal.milestones) validateInvoicePayment(await getSandboxInvoice(milestone.invoiceId!), deal, milestone);
+    return NextResponse.json({ success: true, deal: await sendPayout(deal.id) });
+  } catch (error) {
+    if (job && dealId) mutateStore(store => { const d = store.deals.find(d => d.id === dealId); if (d?.payout) d.payout.error = error instanceof Error ? error.message : 'Payout failed.'; });
+    return NextResponse.json({ success: false, error: error instanceof Error ? error.message : 'Payout failed.', deal: dealId ? getDeal(dealId) : undefined }, { status: error instanceof PayPalError ? error.status : error instanceof SyntaxError ? 400 : 409 });
+  } finally { if (job) releaseInvoiceJob(job); }
 }
