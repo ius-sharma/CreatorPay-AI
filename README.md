@@ -245,6 +245,14 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 * **Ayush Sharma** — Full-Stack & AI Systems Architect
 * Built for the **PayPal AI Hackathon 2026**.
 
+## Supabase account setup (foundation)
+
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in the ignored `.env.local`. `/login` supports email/password signup and login, `/account` verifies the user with Supabase Auth, and sign-out clears the current session. Next.js 14 uses `src/middleware.ts` to refresh account cookies. No secret/service-role key is sent to the browser.
+
+For the isolated local auth test on port 3050, set Supabase Authentication > URL Configuration > Site URL to `http://localhost:3050`. In Authentication > Email Templates > Confirm signup, replace the confirmation link's `{{ .ConfirmationURL }}` with `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email`. Keep email confirmation enabled. Build with `NEXT_BUILD_DIR=.next-auth-check` and start the same build on port 3050.
+
+This is the account foundation, not a completed multi-user migration: existing dashboard/payment APIs still use local SQLite and demo sessions. Do not publicly deploy them until per-user database access, durable quotas and API authentication are implemented and verified. Existing paid sandbox records are not automatically attached to newly created accounts. Authentication unit tests use mocked provider responses; real email confirmation and login must also be checked with an account owned by the tester.
+
 ## Separate US merchant test profile
 
 Keep .env.local and the original .data/creatorpay.sqlite for the India merchant. Put the new US merchant REST credentials in ignored .env.sandbox-us.local; use .data/creatorpay-us.sqlite for fresh contracts. Run node scripts/us-sandbox.cjs check to verify authentication and invoice API access, node scripts/us-sandbox.cjs webhook <HTTPS /api/paypal/webhook URL> to register only the US app endpoint, and node scripts/us-sandbox.cjs start for port 3020. The launcher reuses the checked .next-phase4-check build and server-only Groq settings, overrides all PayPal settings with the US profile, and does not copy paid India deals. Run a separate webhook relay with WEBHOOK_RELAY_PORT=3040 and WEBHOOK_APP_PORT=3020; tunnel only that relay. Webhook registration writes only the selected private profile. Enable Invoicing on the new app if invoice API access returns 403.
