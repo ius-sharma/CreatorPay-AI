@@ -1,0 +1,75 @@
+/* Scoped dashboard theme; landing page retains its own palette. */
+.workspace { color-scheme: light; }
+.workspace[data-theme="dark"] { color-scheme: dark; background: #101419; color: #e5e9ef; }
+.workspace-sidebar { transition: width 360ms cubic-bezier(.22,1,.36,1); }
+.workspace-body { transition: padding-left 360ms cubic-bezier(.22,1,.36,1); }
+.sidebar-label { display: inline-block; max-width: 180px; opacity: 1; transition: max-width 360ms cubic-bezier(.22,1,.36,1), opacity 180ms ease, padding 360ms cubic-bezier(.22,1,.36,1); }
+.sidebar-caption { opacity: 1; transition: opacity 160ms ease; }
+.workspace[data-collapsed="true"] .sidebar-label { max-width: 0; opacity: 0; padding-left: 0; }
+.workspace[data-collapsed="true"] .sidebar-caption { opacity: 0; pointer-events: none; }
+.workspace :is(button,a,input,select,textarea):focus-visible { outline: 2px solid #ea5834; outline-offset: 3px; }
+.workspace[data-theme="dark"] :is(input,textarea,select) { background-color: #171e27; color: #e5e9ef; border-color: #34404f; }
+.workspace[data-theme="dark"] input::placeholder, .workspace[data-theme="dark"] textarea::placeholder { color: #8b98a9; }
+.workspace[data-theme="dark"] :is([class~="border"],[class~="border-t"],[class~="border-b"],blockquote) { border-color: #303a47; }
+.workspace[data-theme="dark"] [class*="divide-"] > :not([hidden]) ~ :not([hidden]) { border-color: #303a47; }
+@media (prefers-reduced-motion: reduce) { .workspace-sidebar, .workspace-body, .sidebar-label, .sidebar-caption { transition: none; } }
+.workspace[data-theme="dark"] [class~="bg-white"],
+.workspace[data-theme="dark"] [class~="bg-white/95"],
+.workspace[data-theme="dark"] [class~="bg-[#FFFDFC]"] { background-color: #181f28; }
+.workspace[data-theme="dark"] [class~="bg-slate-50"],
+.workspace[data-theme="dark"] [class~="bg-slate-50/70"],
+.workspace[data-theme="dark"] [class~="bg-slate-100"],
+.workspace[data-theme="dark"] [class~="bg-slate-200"],
+.workspace[data-theme="dark"] [class~="bg-espresso-50"] { background-color: #202a36; }
+.workspace[data-theme="dark"] [class~="bg-brand-50"],
+.workspace[data-theme="dark"] [class~="bg-brand-100"],
+.workspace[data-theme="dark"] [class~="bg-orange-50"],
+.workspace[data-theme="dark"] [class~="bg-[#FDF0E9]"] { background-color: #34241f; }
+.workspace[data-theme="dark"] [class~="bg-emerald-50"],
+.workspace[data-theme="dark"] [class~="bg-emerald-100"] { background-color: #14352c; }
+.workspace[data-theme="dark"] [class~="bg-amber-50"],
+.workspace[data-theme="dark"] [class~="bg-amber-100"] { background-color: #342d1b; }
+.workspace[data-theme="dark"] [class~="bg-red-50"],
+.workspace[data-theme="dark"] [class~="bg-red-100"] { background-color: #3b2227; }
+.workspace[data-theme="dark"] [class~="bg-blue-50"],
+.workspace[data-theme="dark"] [class~="bg-blue-100"] { background-color: #192e47; }
+.workspace[data-theme="dark"] [class~="text-slate-900"],
+.workspace[data-theme="dark"] [class~="text-slate-800"],
+.workspace[data-theme="dark"] [class~="text-[#2B1D19]"] { color: #e5e9ef; }
+.workspace[data-theme="dark"] [class~="text-slate-700"],
+.workspace[data-theme="dark"] [class~="text-slate-600"],
+.workspace[data-theme="dark"] [class~="text-[#75645E]"] { color: #c7d0dc; }
+.workspace[data-theme="dark"] [class~="text-slate-500"],
+.workspace[data-theme="dark"] [class~="text-slate-400"] { color: #9faec1; }
+.workspace[data-theme="dark"] [class~="text-brand-600"],
+.workspace[data-theme="dark"] [class~="text-brand-700"],
+.workspace[data-theme="dark"] [class~="text-brand-800"],
+.workspace[data-theme="dark"] [class~="text-brand-900"],
+.workspace[data-theme="dark"] [class~="text-[#B94420]"] { color: #f3a68d; }
+.workspace[data-theme="dark"] [class~="text-emerald-600"],
+.workspace[data-theme="dark"] [class~="text-emerald-700"],
+.workspace[data-theme="dark"] [class~="text-emerald-800"],
+.workspace[data-theme="dark"] [class~="text-emerald-900"] { color: #7ed9b2; }
+.workspace[data-theme="dark"] [class~="text-amber-700"],
+.workspace[data-theme="dark"] [class~="text-amber-800"],
+.workspace[data-theme="dark"] [class~="text-amber-900"] { color: #f0ca7f; }
+.workspace[data-theme="dark"] [class~="text-red-600"],
+.workspace[data-theme="dark"] [class~="text-red-700"],
+.workspace[data-theme="dark"] [class~="text-red-800"] { color: #ffacb4; }
+.workspace[data-theme="dark"] [class~="text-blue-600"],
+.workspace[data-theme="dark"] [class~="text-blue-700"],
+.workspace[data-theme="dark"] [class~="text-blue-800"],
+.workspace[data-theme="dark"] [class~="text-[#003087]"] { color: #93c5fd; }
+.workspace[data-theme="dark"] [class~="border-slate-100"],
+.workspace[data-theme="dark"] [class~="border-slate-200"],
+.workspace[data-theme="dark"] [class~="border-slate-300"],
+.workspace[data-theme="dark"] [class~="border-brand-100"],
+.workspace[data-theme="dark"] [class~="border-brand-200"],
+.workspace[data-theme="dark"] [class~="border-espresso-100"],
+.workspace[data-theme="dark"] [class~="border-emerald-100"],
+.workspace[data-theme="dark"] [class~="border-emerald-200"],
+.workspace[data-theme="dark"] [class~="border-amber-200"],
+.workspace[data-theme="dark"] [class~="border-red-200"] { border-color: #303a47; }
+.workspace[data-theme="dark"] [class~="hover:bg-slate-50"]:hover, .workspace[data-theme="dark"] [class~="hover:bg-slate-100"]:hover, .workspace[data-theme="dark"] [class~="hover:bg-slate-50/70"]:hover { background-color: #273240; }
+.workspace[data-theme="dark"] [class~="hover:text-slate-900"]:hover { color: #ffffff; }
+.workspace[data-theme="dark"] [class~="bg-gradient-to-r"] { background-image: none; }
