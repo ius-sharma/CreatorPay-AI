@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { 
   getActiveDeal, 
   getAllDeals, 
@@ -10,7 +10,13 @@ import {
   getInvoicesRegistry,
   getAuditLedger
 } from '@/lib/store';
-import { parseDealPromptWithHeuristics } from '@/lib/agent';
+import { dealFromReview, reviewContract, ContractExtraction } from '@/lib/contract';
+import { getSession, unseal } from '@/lib/analysis-session';
+import { AnalysisError } from '@/lib/groq';
+import type { TeamSplit } from '@/lib/types';
+import { isSameOrigin } from '@/lib/request-origin';
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function GET() {
   const activeDeal = getActiveDeal();
@@ -30,8 +36,9 @@ export async function GET() {
   });
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    if (!isSameOrigin(req)) throw new AnalysisError('Cross-origin requests are not allowed.', 403);
     const body = await req.json();
 
     // 1. Switch active deal
@@ -46,17 +53,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, teamRoster: updated });
     }
 
-    // 3. Create / Parse new deal
-    const roster = getTeamRoster();
-    const newDeal = parseDealPromptWithHeuristics({
-      prompt: body.prompt || 'Brand deal with CloudHost',
-      creatorSplits: body.customSplits || roster.slice(0, 2),
-    });
+    // Only server-signed, reviewed AI terms can create a new deal.
+    if (body.action !== 'confirm_analysis') throw new AnalysisError('Analyse and review the contract before creating a deal.', 400);
+    const draft = unseal<{ extraction: ContractExtraction; prompt: string; splits: TeamSplit[]; session: string; expires: number; id: string }>(body.token);
+    const session = getSession(req.cookies.get('creatorpay-analysis')?.value);
+    if (draft.expires < Date.now() || draft.session !== session.id) throw new AnalysisError('Review expired. Analyse the contract again.', 400);
+    const reviewed = reviewContract(draft.extraction, draft.prompt, draft.splits);
+    const newDeal = { ...dealFromReview(reviewed, draft.prompt, draft.id), ownerSession: session.id };
 
-    setActiveDeal(newDeal);
+    const savedDeal = setActiveDeal(newDeal);
     return NextResponse.json({ 
       success: true, 
-      activeDeal: newDeal, 
+      activeDeal: savedDeal,
       allDeals: getAllDeals() 
     });
   } catch (error: any) {
