@@ -23,6 +23,9 @@ export interface Milestone {
   invoiceId?: string;
   invoiceNumber?: string;
   invoiceUrl?: string;
+  invoiceStatus?: string;
+  paymentTransactionIds?: string[];
+  paymentVerifiedAt?: string;
   paidAt?: string;
 }
 
@@ -67,6 +70,14 @@ export interface AgentLog {
 }
 
 export interface Deal {
+  payout?: {
+    senderBatchId: string; createdAt: string; batchId?: string; batchStatus?: string; lastCheckedAt?: string; error?: string;
+    items: Array<{ splitId: string; senderItemId: string; contractEmail: string; receiverEmail: string; amount: number; status: string; payoutItemId?: string; transactionId?: string }>;
+  };
+  deliverableReviews?: import('./deliverable-review').DeliverableReview[];
+  ownerSession?: string;
+  demo?: boolean;
+  contractExtraction?: import('./contract').ContractExtraction;
   id: string;
   brandName: string;
   brandEmail: string;
@@ -111,7 +122,7 @@ export interface AuditLedgerEntry {
   type: 'contractor_payout' | 'creator_retention';
   amount: number;
   currency: string;
-  status: 'COMPLETED' | 'PENDING';
+  status: 'COMPLETED' | 'PENDING' | 'RETURNED' | 'FAILED';
   taxDeductible: boolean;
   category: string;
 }
