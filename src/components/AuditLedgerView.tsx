@@ -1,155 +1,16 @@
 'use client';
-
-import React from 'react';
-import { AuditLedgerEntry } from '@/lib/types';
-import { ShieldCheck, Download, FileText, CheckCircle2, ArrowUpRight, DollarSign } from 'lucide-react';
-
-interface AuditLedgerViewProps {
-  ledger: AuditLedgerEntry[];
+import { useState } from 'react';
+import { Download } from 'lucide-react';
+import type { AuditLedgerEntry } from '@/lib/types';
+import { money } from '@/lib/workspace-summary';
+import { ledgerCsv,payoutTotal } from '@/lib/finance-views';
+import { card,field,SearchField,Status,Empty } from './FinanceUI';
+export function AuditLedgerView({ledger}:{ledger:AuditLedgerEntry[]}) {
+ const [query,setQuery]=useState(''),[status,setStatus]=useState('all'),[currency,setCurrency]=useState('USD');
+ const currencies=Array.from(new Set(ledger.map(e=>e.currency))).sort(),current=currencies.includes(currency)?currency:currencies[0]||'USD';
+ const visible=[...ledger].filter(e=>(status==='all'||e.status===status)&&`${e.recipientName} ${e.recipientEmail} ${e.dealTitle} ${e.batchId}`.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>b.timestamp.localeCompare(a.timestamp));
+ const download=()=>{const url=URL.createObjectURL(new Blob([ledgerCsv(visible)],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download=`CreatorPay-payouts-${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+ return <div className="space-y-6"><section className={`${card} flex flex-wrap items-center justify-between gap-4 p-5`}><div><p className="text-xs text-slate-500">Completed collaborator payouts · {current}</p><p className="mt-2 text-2xl font-semibold tabular-nums">{money(payoutTotal(ledger,current),current)}</p><p className="mt-2 text-xs text-slate-500">Sandbox records. Creator retention is an estimate, not a transfer.</p></div><select aria-label="Payout summary currency" className={field} value={current} onChange={e=>setCurrency(e.target.value)}>{(currencies.length?currencies:['USD']).map(c=><option key={c}>{c}</option>)}</select></section>
+ <section className={card}><div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-5"><div className="flex flex-wrap gap-3"><SearchField value={query} onChange={setQuery} label="Search recipient, deal or batch"/><select aria-label="Payout status" className={field} value={status} onChange={e=>setStatus(e.target.value)}><option value="all">All statuses</option>{['COMPLETED','PENDING','FAILED','RETURNED'].map(s=><option key={s}>{s}</option>)}</select></div><button disabled={!visible.length} onClick={download} className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold disabled:opacity-50"><Download className="h-4 w-4"/>Export {visible.length} records</button></div>
+ {!visible.length?<Empty title={ledger.length?'No matching records':'No payout activity yet'} description={ledger.length?'Try a different search or status.':'Verified collaborator payouts will appear here after settlement.'}/>:<div className="overflow-x-auto"><table className="w-full min-w-[800px] text-left text-sm"><thead className="bg-slate-50 text-xs text-slate-500"><tr>{['Recipient','Deal','Amount','Status','Date','Reference'].map(h=><th key={h} className="px-5 py-3 font-medium">{h}</th>)}</tr></thead><tbody>{visible.map(e=><tr key={e.id} className="border-t border-slate-100 hover:bg-slate-50"><td className="px-5 py-4"><p className="font-medium">{e.recipientName}</p><p className="mt-1 text-xs text-slate-500">{e.recipientEmail}</p></td><td className="px-5 py-4"><p>{e.dealTitle}</p><p className="mt-1 text-xs text-slate-500">{e.type==='creator_retention'?'Estimated retention':'Collaborator payout'}</p></td><td className="whitespace-nowrap px-5 py-4 tabular-nums">{money(e.amount,e.currency)}</td><td className="px-5 py-4"><Status value={e.status}/></td><td className="whitespace-nowrap px-5 py-4 text-xs text-slate-500">{new Date(e.timestamp).toLocaleString()}</td><td className="px-5 py-4 font-mono text-xs text-slate-500">{e.batchId}</td></tr>)}</tbody></table></div>}</section></div>;
 }
-
-export const AuditLedgerView: React.FC<AuditLedgerViewProps> = ({ ledger }) => {
-  const totalDisbursed = ledger
-    .filter((e) => e.type === 'contractor_payout')
-    .reduce((sum, e) => sum + e.amount, 0);
-
-  const totalCreatorNet = ledger
-    .filter((e) => e.type === 'creator_retention')
-    .reduce((sum, e) => sum + e.amount, 0);
-
-  const handleExportCSV = () => {
-    const headers = ['ID', 'Timestamp', 'Batch ID', 'Deal', 'Recipient', 'Role', 'Email', 'Type', 'Amount', 'Currency', 'Tax Deductible', 'Category'];
-    const rows = ledger.map((e) => [
-      e.id,
-      e.timestamp,
-      e.batchId,
-      e.dealTitle,
-      e.recipientName,
-      e.recipientRole,
-      e.recipientEmail,
-      e.type,
-      e.amount,
-      e.currency,
-      e.taxDeductible ? 'YES' : 'NO',
-      e.category,
-    ]);
-
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `CreatorPay_Audit_Ledger_${Date.now()}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Treasury & Tax Highlights */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-brand-100 rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            Total Multi-Party Splits Executed
-          </p>
-          <p className="text-2xl font-black text-brand-700 mt-1 tabular-nums font-mono">
-            \${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-slate-400 mt-1">Disbursed via PayPal Payouts API v1</p>
-        </div>
-
-        <div className="bg-white border border-emerald-100 rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wider">
-            1099 Deductible Contractor Expenses
-          </p>
-          <p className="text-2xl font-black text-emerald-700 mt-1 tabular-nums font-mono">
-            \${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-slate-400 mt-1">Legitimate IRS Schedule C business deductions</p>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            Net Studio Operating Retained
-          </p>
-          <p className="text-2xl font-black text-slate-900 mt-1 tabular-nums font-mono">
-            \${totalCreatorNet.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-slate-400 mt-1">Cleared into Creator PayPal Business Wallet</p>
-        </div>
-      </div>
-
-      {/* Audit Table Card */}
-      <div className="bg-white border border-brand-100 rounded-2xl p-5 shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
-            <div className="flex items-center space-x-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
-              <h2 className="font-extrabold text-slate-900 text-base">
-                Treasury & Payout Audit Ledger
-              </h2>
-            </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Immutable cryptographic transaction records with official PayPal Payout Batch IDs
-            </p>
-          </div>
-
-          <button
-            onClick={handleExportCSV}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Export Ledger CSV</span>
-          </button>
-        </div>
-
-        {/* Ledger Table */}
-        <div className="border border-slate-200 rounded-2xl overflow-hidden">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[10px]">
-              <tr>
-                <th className="py-3 px-4">Date / Time</th>
-                <th className="py-3 px-4">PayPal Batch ID</th>
-                <th className="py-3 px-4">Deal / Context</th>
-                <th className="py-3 px-4">Recipient</th>
-                <th className="py-3 px-4">Tax Category</th>
-                <th className="py-3 px-4 text-right">Amount</th>
-                <th className="py-3 px-4 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-800">
-              {ledger.map((entry) => (
-                <tr key={entry.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 font-mono text-[11px] text-slate-500">{entry.timestamp}</td>
-                  <td className="py-3 px-4 font-mono font-bold text-brand-700">{entry.batchId}</td>
-                  <td className="py-3 px-4 font-semibold text-slate-900">{entry.dealTitle}</td>
-                  <td className="py-3 px-4">
-                    <p className="font-bold text-slate-900">{entry.recipientName}</p>
-                    <p className="text-[10px] text-slate-400 font-mono">{entry.recipientEmail}</p>
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded ${
-                      entry.taxDeductible
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-slate-100 text-slate-700'
-                    }`}>
-                      {entry.category}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-right font-mono font-bold tabular-nums text-slate-900">
-                    \${entry.amount.toFixed(2)}
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase">
-                      {entry.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-};

@@ -1,0 +1,6 @@
+import { Search } from 'lucide-react';
+export const card='overflow-hidden rounded-xl border border-slate-200 bg-white';
+export const field='rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm';
+export function SearchField({value,onChange,label}:{value:string;onChange:(v:string)=>void;label:string}) {return <label className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5"><Search className="h-4 w-4 shrink-0 text-slate-400"/><input aria-label={label} placeholder={label} value={value} onChange={e=>onChange(e.target.value)} className="w-full min-w-0 bg-transparent text-sm outline-none sm:w-56"/></label>;}
+export function Status({value}:{value:string}) {return <span className={`inline-block rounded-md px-2 py-1 text-[11px] font-medium ${['PAID','COMPLETED'].includes(value)?'bg-emerald-50 text-emerald-700':['FAILED','RETURNED','CANCELLED'].includes(value)?'bg-red-50 text-red-700':'bg-slate-100 text-slate-600'}`}>{value.toLowerCase().replaceAll('_',' ')}</span>;}
+export function Empty({title,description}:{title:string;description:string}) {return <div className="px-6 py-14 text-center"><h3 className="text-sm font-semibold">{title}</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">{description}</p></div>;}

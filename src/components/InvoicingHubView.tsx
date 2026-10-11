@@ -1,153 +1,19 @@
 'use client';
-
-import React, { useState } from 'react';
-import { PayPalInvoiceSummary } from '@/lib/types';
-import { PayPalInvoiceModal } from './PayPalInvoiceModal';
-import { FileText, Search, ExternalLink, Eye, ArrowUpRight, CheckCircle2, Clock } from 'lucide-react';
-
-interface InvoicingHubViewProps {
-  invoices: PayPalInvoiceSummary[];
+import { useState } from 'react';
+import { ExternalLink } from 'lucide-react';
+import type { PayPalInvoiceSummary } from '@/lib/types';
+import { money } from '@/lib/workspace-summary';
+import { invoiceTotals } from '@/lib/finance-views';
+import { card,field,SearchField,Status,Empty } from './FinanceUI';
+export function InvoicingHubView({invoices}:{invoices:PayPalInvoiceSummary[]}) {
+ const [query,setQuery]=useState(''),[status,setStatus]=useState('all'),[selected,setSelected]=useState<string|null>(null),[currency,setCurrency]=useState('USD');
+ const currencies=Array.from(new Set(invoices.map(i=>i.currency))).sort(), current=currencies.includes(currency)?currency:currencies[0]||'USD';
+ const totals=invoiceTotals(invoices,current);
+ const visible=[...invoices].filter(i=>(status==='all'||i.status===status)&&`${i.invoiceNumber} ${i.brandName} ${i.milestoneTitle} ${i.brandEmail}`.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>b.issueDate.localeCompare(a.issueDate));
+ const detail=invoices.find(i=>i.id===selected);
+ return <div className="space-y-6"><div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500"><span>Sandbox invoice totals</span><label>Summary currency <select aria-label="Invoice summary currency" className={field} value={current} onChange={e=>setCurrency(e.target.value)}>{(currencies.length?currencies:['USD']).map(c=><option key={c}>{c}</option>)}</select></label></div>
+ <div className="grid gap-4 sm:grid-cols-3">{[['Paid invoices',totals.paid],['Sent · awaiting payment',totals.outstanding],['Draft invoices',totals.draft]].map(([label,value])=><div className={`${card} p-5`} key={label}><p className="text-xs text-slate-500">{label}</p><p className="mt-3 text-2xl font-semibold tabular-nums">{money(Number(value),current)}</p></div>)}</div>
+ <section className={card}><div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-5"><h2 className="text-sm font-semibold">Invoices · {visible.length}</h2><div className="flex flex-wrap gap-3"><SearchField value={query} onChange={setQuery} label="Search invoice or brand"/><select aria-label="Invoice status" className={field} value={status} onChange={e=>setStatus(e.target.value)}><option value="all">All statuses</option>{['DRAFT','SENT','PAID','CANCELLED'].map(s=><option key={s}>{s}</option>)}</select></div></div>
+ {!visible.length?<Empty title={invoices.length?'No matching invoices':'No invoices yet'} description={invoices.length?'Try another search or status.':'Open a confirmed deal and create its first milestone invoice.'}/>:<div className="overflow-x-auto"><table className="w-full min-w-[720px] text-left text-sm"><thead className="bg-slate-50 text-xs text-slate-500"><tr>{['Invoice / Brand','Milestone','Amount','Status','Due',''].map((h,i)=><th className="px-5 py-3 font-medium" key={i}>{h}</th>)}</tr></thead><tbody>{visible.map(i=><tr key={i.id} className="border-t border-slate-100 hover:bg-slate-50"><td className="px-5 py-4"><button onClick={()=>setSelected(i.id)} className="font-medium hover:text-brand-600">{i.invoiceNumber||i.id}</button><p className="mt-1 text-xs text-slate-500">{i.brandName}</p></td><td className="px-5 py-4 text-slate-600">{i.milestoneTitle}</td><td className="whitespace-nowrap px-5 py-4 tabular-nums">{money(i.amount,i.currency)}</td><td className="px-5 py-4"><Status value={i.status}/></td><td className="whitespace-nowrap px-5 py-4 text-xs text-slate-500">{i.dueDate||'Not set'}</td><td className="px-5 py-4"><button onClick={()=>setSelected(i.id)} className="text-xs font-medium text-brand-700">Details</button></td></tr>)}</tbody></table></div>}</section>
+ {detail&&<section className={`${card} p-5`} aria-label="Invoice details"><div className="flex justify-between gap-4"><h2 className="text-sm font-semibold">Invoice {detail.invoiceNumber}</h2><button onClick={()=>setSelected(null)} className="text-xs text-slate-500">Close details</button></div><dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2">{[['Deal',detail.dealTitle],['Billing contact',detail.brandEmail],['Issued',detail.issueDate],['PayPal invoice ID',detail.id]].map(([k,v])=><div key={k}><dt className="text-xs text-slate-500">{k}</dt><dd className="mt-1 break-all">{v||'Not recorded'}</dd></div>)}</dl>{detail.terms&&<p className="mt-5 whitespace-pre-wrap text-sm leading-6 text-slate-500">{detail.terms}</p>}{detail.paymentUrl&&<a href={detail.paymentUrl} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold">View on PayPal<ExternalLink className="h-3.5 w-3.5"/></a>}</section>}</div>;
 }
-
-export const InvoicingHubView: React.FC<InvoicingHubViewProps> = ({ invoices }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedInvoice, setSelectedInvoice] = useState<PayPalInvoiceSummary | null>(null);
-
-  const filteredInvoices = invoices.filter(
-    (inv) =>
-      inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.brandName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.milestoneTitle.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalInvoiced = invoices.reduce((sum, inv) => sum + inv.amount, 0);
-  const totalPaid = invoices
-    .filter((inv) => inv.status === 'PAID')
-    .reduce((sum, inv) => sum + inv.amount, 0);
-
-  return (
-    <div className="space-y-6">
-      {/* Top Invoice Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-brand-100 rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Gross Receivables</p>
-          <p className="text-2xl font-black text-slate-900 mt-1 tabular-nums font-mono">
-            \${totalInvoiced.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-slate-400 mt-1">{invoices.length} Total Invoices Issued</p>
-        </div>
-
-        <div className="bg-white border border-emerald-100 rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wider">Cleared & Settled</p>
-          <p className="text-2xl font-black text-emerald-700 mt-1 tabular-nums font-mono">
-            \${totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-slate-400 mt-1">Directly credited to Creator PayPal Wallet</p>
-        </div>
-
-        <div className="bg-white border border-amber-100 rounded-2xl p-4 shadow-sm">
-          <p className="text-xs font-semibold text-amber-800 uppercase tracking-wider">Pending Settlement</p>
-          <p className="text-2xl font-black text-amber-800 mt-1 tabular-nums font-mono">
-            \${(totalInvoiced - totalPaid).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-slate-400 mt-1">Awaiting brand review & webhook trigger</p>
-        </div>
-      </div>
-
-      {/* Invoice Data Table Card */}
-      <div className="bg-white border border-brand-100 rounded-2xl p-5 shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
-            <h2 className="font-extrabold text-slate-900 text-base">PayPal Invoicing Hub</h2>
-            <p className="text-xs text-slate-500">Live registry of milestone invoices generated via PayPal Invoicing API v2</p>
-          </div>
-
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by invoice # or brand..."
-              className="bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3.5 py-1.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
-            />
-          </div>
-        </div>
-
-        {/* Invoices Table */}
-        <div className="border border-slate-200 rounded-2xl overflow-hidden">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[10px]">
-              <tr>
-                <th className="py-3 px-4">Invoice #</th>
-                <th className="py-3 px-4">Sponsor Brand</th>
-                <th className="py-3 px-4">Milestone Tranche</th>
-                <th className="py-3 px-4 text-right">Amount</th>
-                <th className="py-3 px-4 text-center">Status</th>
-                <th className="py-3 px-4">Due Date</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-800">
-              {filteredInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-brand-700">
-                    #{inv.invoiceNumber}
-                  </td>
-                  <td className="py-3 px-4">
-                    <p className="font-bold text-slate-900">{inv.brandName}</p>
-                    <p className="text-[10px] text-slate-400 font-mono">{inv.brandEmail}</p>
-                  </td>
-                  <td className="py-3 px-4">
-                    <p className="font-semibold text-slate-800">{inv.milestoneTitle}</p>
-                    <p className="text-[10px] text-slate-400">{inv.dealTitle}</p>
-                  </td>
-                  <td className="py-3 px-4 text-right font-mono font-bold text-slate-900 tabular-nums">
-                    \${inv.amount.toFixed(2)}
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    <span className={`inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase border ${
-                      inv.status === 'PAID'
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                        : 'bg-amber-50 text-amber-700 border-amber-200'
-                    }`}>
-                      {inv.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">{inv.dueDate}</td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end space-x-2">
-                      <button
-                        onClick={() => setSelectedInvoice(inv)}
-                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-brand-50 text-slate-600 hover:text-brand-700 border border-slate-200 transition-colors cursor-pointer"
-                        title="View PayPal Digital Invoice"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                      </button>
-                      <a
-                        href={inv.paymentUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 rounded-lg bg-[#0079C1]/10 hover:bg-[#0079C1]/20 text-[#003087] border border-blue-200 transition-colors cursor-pointer"
-                        title="Open in PayPal Sandbox"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Invoice Modal */}
-      <PayPalInvoiceModal
-        isOpen={Boolean(selectedInvoice)}
-        onClose={() => setSelectedInvoice(null)}
-        invoice={selectedInvoice}
-      />
-    </div>
-  );
-};

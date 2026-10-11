@@ -125,8 +125,10 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not save team changes.');
       setRoster(data.teamRoster || updatedRoster);
+      return true;
     } catch (err) {
       setPortfolioError(err instanceof Error ? err.message : 'Could not save team changes.');
+      return false;
     } finally { setActionLoading(false); }
   };
 
