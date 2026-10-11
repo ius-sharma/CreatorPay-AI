@@ -10,6 +10,7 @@ interface ExecutiveKpiStripProps {
 }
 
 export const ExecutiveKpiStrip: React.FC<ExecutiveKpiStripProps> = ({ deals, activeDeal }) => {
+  deals = deals.filter((deal) => !deal.demo && deal.currency === 'USD');
   const totalVolume = deals.reduce((acc, d) => acc + d.totalAmount, 0);
   
   // Calculate cleared revenue
@@ -17,7 +18,7 @@ export const ExecutiveKpiStrip: React.FC<ExecutiveKpiStripProps> = ({ deals, act
   let inFlightEscrow = 0;
   deals.forEach((d) => {
     d.milestones.forEach((m) => {
-      if (m.status === 'paid') {
+      if (m.status === 'paid' && m.paymentVerifiedAt) {
         clearedRevenue += m.amount;
       } else {
         inFlightEscrow += m.amount;
@@ -25,19 +26,14 @@ export const ExecutiveKpiStrip: React.FC<ExecutiveKpiStripProps> = ({ deals, act
     });
   });
 
-  const totalTeamDisbursed = deals.reduce((acc, d) => {
-    if (d.status === 'deal_closed') {
-      return acc + d.teamSplits.reduce((sum, s) => sum + (s.calculatedAmount || 0), 0);
-    }
-    return acc;
-  }, 343.75); // Including seeded historic payouts
+  const totalTeamDisbursed = deals.reduce((sum, d) => sum + (d.payout?.items.filter(i => i.status === 'SUCCESS' && i.transactionId).reduce((total, i) => total + i.amount, 0) || 0), 0);
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
       {/* KPI 1: Gross Sponsorship Volume */}
       <div className="bg-white border border-brand-100 rounded-2xl p-4 shadow-sm hover:border-brand-200 transition-all">
         <div className="flex items-center justify-between text-slate-500 mb-1">
-          <span className="text-xs font-semibold uppercase tracking-wider">Active Pipeline Volume</span>
+          <span className="text-xs font-semibold uppercase tracking-wider">Confirmed Pipeline (USD)</span>
           <div className="p-1.5 rounded-lg bg-brand-50 text-brand-600">
             <Briefcase className="w-3.5 h-3.5" />
           </div>
@@ -47,7 +43,7 @@ export const ExecutiveKpiStrip: React.FC<ExecutiveKpiStripProps> = ({ deals, act
         </p>
         <div className="flex items-center space-x-1 text-[11px] text-emerald-700 font-medium mt-1">
           <ArrowUpRight className="w-3 h-3" />
-          <span>{deals.length} Active Brand Contracts</span>
+          <span>{deals.length} Confirmed USD Contracts</span>
         </div>
       </div>
 
@@ -95,7 +91,7 @@ export const ExecutiveKpiStrip: React.FC<ExecutiveKpiStripProps> = ({ deals, act
           \${totalTeamDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}
         </p>
         <p className="text-[11px] text-slate-500 mt-1">
-          PayPal Payouts API v1 Batch Transfer
+          Verified PayPal payout item transactions
         </p>
       </div>
     </div>
