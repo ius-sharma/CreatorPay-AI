@@ -18,6 +18,7 @@ export default function Home() {
   const selectedDeal = useRef<string | null>(null);
   const dealsCache = useRef<Deal[]>([]);
   const requestVersion = useRef(0);
+  const navigationVersion = useRef(0);
   const actionBusy = useRef(false);
   const [draftPrompt, setDraftPrompt] = useState('');
   const [draftTeamRules, setDraftTeamRules] = useState(false);
@@ -64,6 +65,7 @@ export default function Home() {
 
   useEffect(() => {
     const restore = () => {
+      navigationVersion.current++;
       const route = readWorkspaceLocation(window.location.search);
       selectedDeal.current = route.dealId;
       setActiveTab(route.view);
@@ -78,6 +80,7 @@ export default function Home() {
   }, []);
 
   const navigate = (view: WorkspaceView, dealId?: string) => {
+    navigationVersion.current++;
     const url = workspaceUrl(view, dealId);
     if (window.location.pathname + window.location.search !== url) window.history.pushState(null, '', url);
     selectedDeal.current = view === 'detail' ? dealId || null : null;
@@ -94,6 +97,7 @@ export default function Home() {
   };
 
   const handleSelectDeal = async (dealId: string) => {
+    const navigationAtStart = navigationVersion.current;
     actionBusy.current = true;
     requestVersion.current++;
     setActionLoading(true);
@@ -107,7 +111,8 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not open this deal.');
       if (data.allDeals) { dealsCache.current = data.allDeals; setAllDeals(data.allDeals); }
-      if (data.activeDeal) navigate('detail', data.activeDeal.id);
+      // A slow response must not undo a browser Back/Forward action.
+      if (data.activeDeal && navigationVersion.current === navigationAtStart) navigate('detail', data.activeDeal.id);
     } catch (err) {
       setPortfolioError(err instanceof Error ? err.message : 'Could not open this deal.');
     } finally {
@@ -208,7 +213,7 @@ export default function Home() {
 
 
   const titles: Record<WorkspaceView, [string, string]> = {
-    overview: ['Your workspace, at a glance.', 'Keep track of your deals, payments and what needs your attention.'],
+    overview: ['Your studio, in focus.', 'Your next steps, in one place.'],
     deals: ['Deals', 'Every partnership, from agreed terms to final settlement.'],
     detail: [deal?.brandName || 'Deal details', deal?.dealTitle || 'Milestones, deliverables and payments.'],
     new: ['Start a new deal', 'Add your contract. Review the extracted terms before confirming the deal.'],
@@ -220,7 +225,7 @@ export default function Home() {
   return <WorkspaceShell view={activeTab} onNavigate={navigate} title={titles[activeTab][0]} description={titles[activeTab][1]} merchant={sandboxAccount} busy={actionLoading}>
     {portfolioError && <div role="alert" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>{portfolioError}</span><button onClick={fetchPortfolioData} className="font-semibold underline">Retry</button></div>}
     {loading ? <div role="status" aria-label="Loading workspace" className="space-y-5"><p className="text-sm text-slate-500">Loading your workspace…</p><div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[1,2,3,4].map(i => <div key={i} className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white" />)}</div><div className="h-64 animate-pulse rounded-xl border border-slate-200 bg-white" /></div> : <>
-      {(activeTab === 'overview' || activeTab === 'deals') && <WorkspaceHome deals={allDeals} overview={activeTab === 'overview'} busy={actionLoading} onOpen={handleSelectDeal} onNew={() => navigate('new')} />}
+      {(activeTab === 'overview' || activeTab === 'deals') && <WorkspaceHome deals={allDeals} overview={activeTab === 'overview'} busy={actionLoading} onOpen={handleSelectDeal} onNew={() => navigate('new')} onViewAll={() => navigate('deals')} />}
       {analysisError && <p role="alert" className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{analysisError}</p>}
       {activeTab === 'new' && <div className="max-w-3xl space-y-5"><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} prompt={draftPrompt} onPromptChange={setDraftPrompt} useTeamRules={draftTeamRules} onTeamRulesChange={setDraftTeamRules} isLoading={actionLoading} />{contractReview && <ContractReview review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
       {activeTab === 'detail' && !deal && <div className="rounded-xl border border-slate-200 bg-white p-8 text-center"><h2 className="font-semibold">Deal unavailable</h2><p className="mt-2 text-sm text-slate-500">This deal could not be found in your workspace.</p><button onClick={() => navigate('deals')} className="mt-4 text-sm font-medium text-brand-700">Return to deals</button></div>}
