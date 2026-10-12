@@ -31,6 +31,7 @@ window.fetch = async (input, init) => {
     return response(portfolio());
   }
   if (url === '/api/paypal/status') return response({ environment: 'Synthetic QA', credentialsConfigured: true, webhookConfigured: true, lastPaymentVerifiedAt: stamp, storage: 'Synthetic in-memory fixtures', aiConfigured: true });
+  if (url === '/api/agent/analyze' && new URLSearchParams(window.location.search).get('scenario') === 'clarification') return response({ success: true, token: 'QA-NOT-A-REAL-SIGNATURE', review: { extraction: { ...settled.contractExtraction, brandEmail: { value: null, evidence: null } }, issues: ['Missing brandEmail: add the billing email to the contract, then analyze again.'], calculatedMilestones: [], calculatedSplits: [], creatorNet: 2000 } });
   return response({ error: 'Synthetic API failure. No external request was sent.' }, 503);
 };
 createRoot(document.getElementById('root')!).render(<><div style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 100, background: '#fef3c7', color: '#111', fontSize: 11, padding: 4, pointerEvents: 'none' }}>UI QA · Synthetic data · External requests blocked</div><Home /></>);

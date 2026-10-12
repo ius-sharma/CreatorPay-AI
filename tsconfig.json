@@ -35,7 +35,8 @@
     ".next-phase2-check/types/**/*.ts",
     ".next-phase3-check/types/**/*.ts",
     ".next-phase4-check/types/**/*.ts",
-    ".next-auth-check/types/**/*.ts"
+    ".next-auth-check/types/**/*.ts",
+    ".next-phase3-evidence/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
