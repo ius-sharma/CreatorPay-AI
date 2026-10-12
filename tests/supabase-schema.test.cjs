@@ -15,6 +15,7 @@ test('PostgreSQL schema enforces owner isolation, server-only writes, durable qu
       insert into auth.users values ('${A}'), ('${B}');`);
     await db.exec(fs.readFileSync(require('node:path').join(__dirname, '../supabase/migrations/202610110001_workspace.sql'), 'utf8'));
     await db.exec(fs.readFileSync(require('node:path').join(__dirname, '../supabase/migrations/202610110002_atomic_deal_updates.sql'), 'utf8'));
+    await db.exec(fs.readFileSync(require('node:path').join(__dirname, '../supabase/migrations/202610120001_contract_drafts.sql'), 'utf8'));
     await db.exec(`insert into public.creatorpay_workspaces(owner_id) values ('${A}'), ('${B}');
       insert into public.creatorpay_deals(id,owner_id,body) values ('deal-a','${A}','{"id":"deal-a"}'),('deal-b','${B}','{"id":"deal-b"}');
       set role authenticated; set request.jwt.claim.sub = '${A}';`);
@@ -22,6 +23,7 @@ test('PostgreSQL schema enforces owner isolation, server-only writes, durable qu
     assert.equal((await db.query(`select * from public.creatorpay_workspaces where owner_id='${B}'`)).rows.length, 0);
     await assert.rejects(db.exec(`update public.creatorpay_deals set body='{"id":"deal-a","status":"payouts_completed"}' where id='deal-a'`), /permission denied/);
     await assert.rejects(db.exec(`select public.creatorpay_reserve_analysis('${A}')`), /permission denied/);
+    await assert.rejects(db.query('select public.creatorpay_save_draft($1,0,$2)',[A,JSON.stringify({prompt:'forbidden',useTeamRules:false})]), /permission denied/);
     await db.exec('reset role; set role anon;');
     await assert.rejects(db.query('select * from public.creatorpay_deals'), /permission denied/);
     await db.exec('reset role; set role service_role;');

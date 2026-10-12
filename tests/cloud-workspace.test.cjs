@@ -44,12 +44,15 @@ const admin={from:table=>new Query(table),rpc:async(name,args)=>{try{const keys=
 const load=Module._load;
 Module._load=function(request,parent,...args){
   if(request==='server-only')return {};
+  if(request==='@/lib/supabase/admin')return {createAdminClient:()=>admin};
+  if(request.startsWith('@/'))return load.call(this,path.join(__dirname,'../src',request.slice(2)),parent,...args);
   if(request==='./admin'&&parent?.filename.includes('supabase'))return {createAdminClient:()=>admin};
   if(request==='./server'&&parent?.filename.includes('supabase'))return {createClient:()=>({auth:{getUser:async()=>({data:{user:owner?{id:owner}:null},error:null})}})};
   return load.call(this,request,parent,...args);
 };
 const {NextRequest}=require('next/server');
 const routes=require('../src/lib/supabase/routes.ts');
+const drafts=require('../src/app/api/draft/route.ts');
 const request=(input,path='/api/deals')=>new NextRequest('http://localhost'+path,{method:'POST',headers:{origin:'http://localhost','content-type':'application/json'},body:JSON.stringify(input)});
 const {seal}=require('../src/lib/analysis-session.ts');
 const source='Acme offers USD 2,000. Bill finance@acme.example. 30% advance and 70% after approval. Deliver a 60-second sponsor segment by 2026-11-01.';
@@ -60,8 +63,18 @@ test('cloud handlers isolate accounts, enforce signed ownership and preserve dur
   db=new PGlite();const originalFetch=global.fetch;global.fetch=async()=>{providerCalls++;throw Error('Provider must not be called');};
   try{
     await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select null::uuid$$;insert into auth.users values('${A}'),('${B}');`);
-    for(const file of ['202610110001_workspace.sql','202610110002_atomic_deal_updates.sql'])await db.exec(fs.readFileSync(path.join(__dirname,'../supabase/migrations',file),'utf8'));
-    owner=A;
+    for(const file of ['202610110001_workspace.sql','202610110002_atomic_deal_updates.sql','202610120001_contract_drafts.sql'])await db.exec(fs.readFileSync(path.join(__dirname,'../supabase/migrations',file),'utf8'));
+    owner=A;process.env.CREATORPAY_BACKEND='supabase';
+    const putDraft=(revision,prompt,origin='http://localhost')=>drafts.PUT(new NextRequest('http://localhost/api/draft',{method:'PUT',headers:{origin,'content-type':'application/json'},body:JSON.stringify({revision,draft:{prompt,useTeamRules:false},owner:B})}));
+    assert.equal((await (await drafts.GET()).json()).revision,0);
+    assert.equal((await putDraft(0,'Saved contract A')).status,200);
+    assert.equal((await putDraft(0,'Stale edit')).status,409,'stale tab cannot overwrite');
+    assert.equal((await (await drafts.GET()).json()).draft.prompt,'Saved contract A');
+    assert.equal((await putDraft(1,'x'.repeat(12001))).status,400);
+    assert.equal((await putDraft(1,'cross origin','https://evil.example')).status,403);
+    owner=B;assert.equal((await (await drafts.GET()).json()).draft.prompt,'','owner comes from Auth, not request body');
+    owner=null;assert.equal((await drafts.GET()).status,401);assert.equal((await putDraft(0,'anonymous')).status,401);
+    owner=A;assert.equal((await putDraft(1,'')).status,200);assert.equal((await (await drafts.GET()).json()).draft.prompt,'');
     const empty=await routes.dealsGet();assert.equal(empty.status,200);assert.equal((await empty.json()).activeDeal,null);
     const token=seal({extraction,prompt:source,splits:[],session:A,expires:Date.now()+60000,id:'deal-cloud-a'});
     assert.equal((await routes.dealsPost(request({action:'confirm_analysis',token}))).status,200);

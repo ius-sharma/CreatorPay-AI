@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { TeamSplit } from '@/lib/types';
 import { card,field,SearchField,Empty } from './FinanceUI';
 const blank={name:'',role:'',email:'',type:'percentage' as 'percentage'|'fixed',value:10};
 export function ContractsManagerView({roster,onUpdateRoster}:{roster:TeamSplit[];onUpdateRoster:(roster:TeamSplit[])=>Promise<boolean>}) {
  const [query,setQuery]=useState(''),[editing,setEditing]=useState<string|null>(null),[form,setForm]=useState(blank),[open,setOpen]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[remove,setRemove]=useState<string|null>(null);
+ useEffect(()=>{if(!open)return;const warn=(event:BeforeUnloadEvent)=>{event.preventDefault();event.returnValue='';};window.addEventListener('beforeunload',warn);return()=>window.removeEventListener('beforeunload',warn);},[open]);
  const visible=roster.filter(m=>`${m.name} ${m.email} ${m.role}`.toLowerCase().includes(query.toLowerCase()));
  const save=async(e:React.FormEvent)=>{e.preventDefault();setError('');const member={...form,name:form.name.trim(),role:form.role.trim(),email:form.email.trim()};if(!member.name||!member.role||!member.email||!Number.isFinite(member.value)||member.value<=0||(member.type==='percentage'&&member.value>100)){setError('Enter valid details and a positive split. Percentage shares cannot exceed 100%.');return;}if(roster.some(m=>m.id!==editing&&m.email.toLowerCase()===member.email.toLowerCase())){setError('This email is already in your team.');return;}if(!editing&&roster.length>=20){setError('You can save up to 20 collaborators.');return;}
  const next=editing?roster.map(m=>m.id===editing?{...m,...member}:m):[...roster,{...member,id:crypto.randomUUID(),status:'pending' as const}];setBusy(true);try{if(await onUpdateRoster(next)){setOpen(false);setForm(blank);setEditing(null);}else setError('Could not save. Your entered details are still here; please retry.');}catch{setError('Could not save. Please retry.');}finally{setBusy(false);}};

@@ -21,6 +21,17 @@ const portfolio = () => ({ allDeals: deals, activeDeal, teamRoster: roster, sand
 window.fetch = async (input, init) => {
   const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
   const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
+  if (url === '/api/draft') {
+    const key='creatorpay.synthetic.qa.draft';
+    const stored=JSON.parse(localStorage.getItem(key)||'null')||{draft:{prompt:'',useTeamRules:false},revision:0,savedAt:null};
+    if(init?.method==='PUT') {
+      const body=JSON.parse(String(init.body));
+      if(body.revision!==stored.revision)return response({error:'Draft changed in another tab. Load the saved draft.'},409);
+      const next={draft:body.draft,revision:stored.revision+1,savedAt:new Date().toISOString()};
+      localStorage.setItem(key,JSON.stringify(next));return response(next);
+    }
+    return response(stored);
+  }
   if (url === '/api/deals') {
     if (init?.method === 'POST') {
       const body = JSON.parse(String(init.body));

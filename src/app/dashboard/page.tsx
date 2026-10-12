@@ -11,6 +11,8 @@ import { DealWorkspace } from '@/components/DealWorkspace';
 import { WorkspaceShell, type WorkspaceView } from '@/components/WorkspaceShell';
 import { WorkspaceHome } from '@/components/WorkspaceHome';
 import { ContractReview } from '@/components/ContractReview';
+import { useContractDraft } from '@/components/useContractDraft';
+import { DraftToolbar } from '@/components/DraftToolbar';
 import type { ContractReview as Review } from '@/lib/contract';
 import { readWorkspaceLocation, workspaceUrl } from '@/lib/workspace-navigation';
 
@@ -20,8 +22,10 @@ export default function Home() {
   const requestVersion = useRef(0);
   const navigationVersion = useRef(0);
   const actionBusy = useRef(false);
-  const [draftPrompt, setDraftPrompt] = useState('');
-  const [draftTeamRules, setDraftTeamRules] = useState(false);
+  const contractDraft = useContractDraft();
+  const { prompt: draftPrompt, useTeamRules: draftTeamRules } = contractDraft.draft;
+  const setDraftPrompt = (prompt: string) => contractDraft.change({ prompt });
+  const setDraftTeamRules = (useTeamRules: boolean) => contractDraft.change({ useTeamRules });
   const [activeTab, setActiveTab] = useState<WorkspaceView>('overview');
   const [deal, setDeal] = useState<Deal | null>(null);
   const [allDeals, setAllDeals] = useState<Deal[]>([]);
@@ -36,6 +40,7 @@ export default function Home() {
   const [contractReview, setContractReview] = useState<{ review: Review; token: string } | null>(null);
   const [analysisError, setAnalysisError] = useState('');
   const [portfolioError, setPortfolioError] = useState('');
+  const [notice, setNotice] = useState('');
 
 
   const fetchPortfolioData = async () => {
@@ -157,8 +162,10 @@ export default function Home() {
       dealsCache.current = data.allDeals;
       setAllDeals(data.allDeals);
       setContractReview(null);
-      setDraftPrompt('');
-      setDraftTeamRules(false);
+      contractDraft.change({ prompt: '', useTeamRules: false });
+      // Clear only this revision. Another tab's newer draft must survive.
+      const cleared = await contractDraft.save({ prompt: '', useTeamRules: false });
+      setNotice(cleared ? 'Deal created. Your saved draft has been cleared.' : 'Deal created. The saved draft could not be cleared. Check it in New deal before starting another contract.');
       navigate('detail', data.activeDeal.id);
     } catch (err) {
       setAnalysisError(err instanceof Error ? err.message : 'Could not confirm this review.');
@@ -167,6 +174,7 @@ export default function Home() {
   };
 
   const handleUpdateRoster = async (updatedRoster: TeamSplit[]) => {
+    setAnalysisError('');
     actionBusy.current = true;
     requestVersion.current++;
     setActionLoading(true);
@@ -181,7 +189,7 @@ export default function Home() {
       setRoster(data.teamRoster || updatedRoster);
       return true;
     } catch (err) {
-      setPortfolioError(err instanceof Error ? err.message : 'Could not save team changes.');
+      setAnalysisError(err instanceof Error ? err.message : 'Could not save team changes.');
       return false;
     } finally { actionBusy.current = false; setActionLoading(false);
       void fetchPortfolioData(); }
@@ -223,15 +231,16 @@ export default function Home() {
     diagnostics: ['Connections', 'Check your workspace storage and PayPal sandbox configuration.'],
   };
   return <WorkspaceShell view={activeTab} onNavigate={navigate} title={titles[activeTab][0]} description={titles[activeTab][1]} merchant={sandboxAccount} busy={actionLoading}>
+    {notice && <div role="status" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-4 text-sm"><span>{notice}</span><button onClick={() => setNotice('')} className="font-semibold underline">Dismiss</button></div>}
     {portfolioError && <div role="alert" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>{portfolioError}</span><button onClick={fetchPortfolioData} className="font-semibold underline">Retry</button></div>}
     {loading ? <div role="status" aria-label="Loading workspace" className="space-y-5"><p className="text-sm text-slate-500">Loading your workspace…</p><div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[1,2,3,4].map(i => <div key={i} className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white" />)}</div><div className="h-64 animate-pulse rounded-xl border border-slate-200 bg-white" /></div> : <>
       {(activeTab === 'overview' || activeTab === 'deals') && <WorkspaceHome deals={allDeals} overview={activeTab === 'overview'} busy={actionLoading} onOpen={handleSelectDeal} onNew={() => navigate('new')} onViewAll={() => navigate('deals')} />}
       {analysisError && <p role="alert" className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{analysisError}</p>}
-      {activeTab === 'new' && <div className="space-y-6"><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} prompt={draftPrompt} onPromptChange={setDraftPrompt} useTeamRules={draftTeamRules} onTeamRulesChange={setDraftTeamRules} isLoading={actionLoading} />{contractReview && <ContractReview source={draftPrompt} review={contractReview.review} busy={actionLoading} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
+      {activeTab === 'new' && <div className="space-y-6"><DraftToolbar draft={contractDraft} disabled={actionLoading} onReload={() => { setContractReview(null); setAnalysisError(''); }} /><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} prompt={draftPrompt} onPromptChange={setDraftPrompt} useTeamRules={draftTeamRules} onTeamRulesChange={setDraftTeamRules} isLoading={actionLoading || contractDraft.busy} />{contractReview && <ContractReview source={draftPrompt} review={contractReview.review} busy={actionLoading || contractDraft.busy} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
       {activeTab === 'detail' && !deal && <div className="rounded-xl border border-slate-200 bg-white p-8 text-center"><h2 className="font-semibold">Deal unavailable</h2><p className="mt-2 text-sm text-slate-500">This deal could not be found in your workspace.</p><button onClick={() => navigate('deals')} className="mt-4 text-sm font-medium text-brand-700">Return to deals</button></div>}
       {activeTab === 'detail' && deal && <DealWorkspace key={deal.id} deal={deal} busy={actionLoading} onBack={() => navigate('deals')} onInvoice={handleGenerateInvoice} onChange={updated => { applyDealUpdate(updated); fetchPortfolioData(); }} />}
       {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
-      {activeTab === 'splits' && <ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} />}
+      <div hidden={activeTab !== 'splits'}><ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} /></div>
       {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}
       {activeTab === 'diagnostics' && <DiagnosticsView />}
     </>}
