@@ -361,17 +361,17 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('ingest')}
-                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
                         simStep >= 1 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Direct origin for S-line 1) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
+                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
@@ -473,22 +473,22 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('invoice')}
-                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
                         simStep >= 2 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 1) */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for S-line 2) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: LEFT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
+                      <div className="hidden sm:flex absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
@@ -564,22 +564,22 @@ export default function LandingPage() {
                   <div className="flex justify-center">
                     <div 
                       onClick={() => openInspector('verify')}
-                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
+                      className={`w-full max-w-[340px] sm:max-w-[360px] min-h-[200px] rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] border transition-all duration-300 shadow-md hover:shadow-2xl relative group cursor-pointer flex flex-col justify-between p-5 sm:p-6 hover:border-brand-500 ${
                         simStep >= 3 ? 'border-brand-500/80 dark:border-brand-500/80 ring-2 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR (Receiver from S-line 2) */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: BOTTOM CONNECTOR (Origin for Branching Lines) */}
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500 flex items-center justify-center shadow-md z-20">
                         <div className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse" />
                       </div>
 
                       {/* BORDER SOCKET CIRCLE: RIGHT BORDER PIN */}
-                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
+                      <div className="hidden sm:flex absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500/70 items-center justify-center shadow-xs z-10">
                         <div className="w-1.5 h-1.5 rounded-full bg-brand-500" />
                       </div>
 
@@ -680,12 +680,12 @@ export default function LandingPage() {
                     {/* Branch 1: Video Editor */}
                     <div 
                       onClick={() => openInspector('editor')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-brand-400 hover:shadow-xl ${
+                      className={`p-5 rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-brand-400 hover:shadow-xl ${
                         simStep >= 4 ? 'border-brand-500/80 dark:border-brand-500/80 ring-1 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
                         <div className="w-2 h-2 rounded-full bg-brand-500" />
                       </div>
 
@@ -712,12 +712,12 @@ export default function LandingPage() {
                     {/* Branch 2: Thumbnail Designer */}
                     <div 
                       onClick={() => openInspector('designer')}
-                      className={`p-5 rounded-3xl bg-white dark:bg-[#1A1310] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-brand-400 hover:shadow-xl ${
+                      className={`p-5 rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] border transition-all duration-300 shadow-md relative group cursor-pointer hover:border-brand-400 hover:shadow-xl ${
                         simStep >= 4 ? 'border-brand-500/80 dark:border-brand-500/80 ring-1 ring-brand-500/20' : 'border-espresso-200 dark:border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white dark:bg-[#1A1310] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#FFFDFB] dark:bg-[#201511] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
                         <div className="w-2 h-2 rounded-full bg-brand-500" />
                       </div>
 
@@ -744,12 +744,12 @@ export default function LandingPage() {
                     {/* Branch 3: Creator / Studio Treasury */}
                     <div 
                       onClick={() => openInspector('creator')}
-                      className={`p-5 rounded-3xl bg-[#2B1D19] dark:bg-[#150F0D] text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-2xl ${
+                      className={`p-5 rounded-3xl bg-gradient-to-br from-[#38231D] via-[#261612] to-[#160B08] dark:bg-gradient-to-br dark:from-[#2A1712] dark:via-[#190D0A] dark:to-[#0D0604] text-white border transition-all duration-300 shadow-lg relative group cursor-pointer hover:border-brand-400 hover:shadow-2xl ${
                         simStep >= 4 ? 'border-brand-500/80 ring-1 ring-brand-500/30' : 'border-espresso-800'
                       }`}
                     >
                       {/* BORDER SOCKET CIRCLE: TOP CONNECTOR */}
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#2B1D19] dark:bg-[#150F0D] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#38231D] dark:bg-[#2A1712] border-2 border-brand-500 flex items-center justify-center shadow-xs z-10">
                         <div className="w-2 h-2 rounded-full bg-brand-500" />
                       </div>
 
@@ -796,7 +796,7 @@ export default function LandingPage() {
                 onClick={closeInspector}
               >
                 <div 
-                  className="bg-white dark:bg-[#1A1310] border border-espresso-200 dark:border-espresso-800 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative animate-in zoom-in-95 duration-200 text-left"
+                  className="bg-gradient-to-br from-white via-[#FFFDFB] to-[#FAF5F2] dark:bg-gradient-to-br dark:from-[#221612] dark:via-[#1A1310] dark:to-[#120B09] border border-espresso-200 dark:border-espresso-800 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative animate-in zoom-in-95 duration-200 text-left"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Close Button */}
@@ -1031,7 +1031,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           
           {/* Card: The Old Way */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-red-50/40 dark:bg-red-950/20 border border-red-200/70 dark:border-red-900/40 flex flex-col justify-between transition-colors duration-500">
+          <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-red-50/70 via-white to-red-50/30 dark:bg-gradient-to-br dark:from-red-950/30 dark:via-[#1A1310] dark:to-[#140D0B] border border-red-200/70 dark:border-red-900/40 flex flex-col justify-between transition-colors duration-500 shadow-md">
             <div>
               <div className="inline-flex items-center space-x-2 text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider mb-6 bg-red-100/60 dark:bg-red-900/30 px-3 py-1 rounded-full border border-red-200 dark:border-red-800">
                 <AlertCircle className="w-3.5 h-3.5" />
@@ -1062,7 +1062,7 @@ export default function LandingPage() {
           </div>
 
           {/* Card: The CreatorPay Autonomous Standard */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#1A1310] dark:bg-[#150F0D] text-white flex flex-col justify-between shadow-xl border border-espresso-800 transition-colors duration-500">
+          <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#2E1A14] via-[#1E110D] to-[#120907] dark:bg-gradient-to-br dark:from-[#26140F] dark:via-[#160B08] dark:to-[#0D0504] text-white flex flex-col justify-between shadow-2xl border border-brand-500/30 dark:border-brand-500/40 transition-colors duration-500">
             <div>
               <div className="inline-flex items-center space-x-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mb-6 bg-espresso-900 dark:bg-espresso-900/80 px-3 py-1 rounded-full border border-espresso-700">
                 <Sparkles className="w-3.5 h-3.5 text-brand-400" />
@@ -1107,7 +1107,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-[#1A1310] border border-espresso-200/90 dark:border-espresso-800/90 rounded-3xl p-6 sm:p-10 shadow-lg transition-colors duration-500">
+          <div className="bg-gradient-to-br from-white via-[#FFFDFB] to-[#FAF5F2] dark:bg-gradient-to-br dark:from-[#201511] dark:via-[#1A1310] dark:to-[#120B09] border border-espresso-200/90 dark:border-espresso-800/90 rounded-3xl p-6 sm:p-10 shadow-xl transition-colors duration-500">
             
             {/* Slider Control */}
             <div className="mb-8">
@@ -1138,7 +1138,7 @@ export default function LandingPage() {
             {/* Live Calculation Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               
-              <div className="p-4 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-espresso-50/90 via-white to-emerald-50/30 dark:bg-gradient-to-br dark:from-espresso-950/70 dark:via-[#1A1310] dark:to-emerald-950/25 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500 shadow-xs">
                 <span className="text-[10px] font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">Lead Video Editor (15%)</span>
                 <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-sans tabular-nums mt-1">
                   ${calcEditor.toLocaleString()}
@@ -1146,7 +1146,7 @@ export default function LandingPage() {
                 <p className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] mt-0.5">Instant PayPal Payout</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-espresso-50 dark:bg-espresso-950/60 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-espresso-50/90 via-white to-blue-50/30 dark:bg-gradient-to-br dark:from-espresso-950/70 dark:via-[#1A1310] dark:to-sky-950/25 border border-espresso-200 dark:border-espresso-800/60 text-center transition-colors duration-500 shadow-xs">
                 <span className="text-[10px] font-bold text-[#75645E] dark:text-[#B8A9A2] uppercase tracking-wider">Thumbnail Designer (5%)</span>
                 <p className="text-2xl font-black text-blue-600 dark:text-sky-400 font-sans tabular-nums mt-1">
                   ${calcDesigner.toLocaleString()}
@@ -1154,7 +1154,7 @@ export default function LandingPage() {
                 <p className="text-[10px] text-[#9E8D86] dark:text-[#8C7A72] mt-0.5">Instant PayPal Payout</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#2B1D19] dark:bg-[#120D0B] text-white border border-espresso-800 text-center transition-colors duration-500">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-[#38231D] via-[#261612] to-[#160B08] dark:bg-gradient-to-br dark:from-[#2A1712] dark:via-[#190D0A] dark:to-[#0D0604] text-white border border-espresso-800 text-center transition-colors duration-500 shadow-md">
                 <span className="text-[10px] font-bold text-espresso-300 uppercase tracking-wider">Creator Net Retained (80%)</span>
                 <p className="text-2xl font-black text-white font-sans tabular-nums mt-1">
                   ${calcCreator.toLocaleString()}
@@ -1194,7 +1194,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800/80 shadow-xs hover:border-espresso-300 dark:hover:border-espresso-700 transition-all duration-500">
+          <div className="p-6 rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-blue-50/25 dark:bg-gradient-to-br dark:from-[#1D171E] dark:via-[#1A1310] dark:to-[#0F1420] border border-espresso-200/80 dark:border-espresso-800/80 shadow-sm hover:border-blue-400 dark:hover:border-blue-500/60 transition-all duration-500">
             <div className="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#003087] dark:text-sky-300 flex items-center justify-center font-bold text-sm mb-4 border border-blue-200 dark:border-blue-800">
               <ShieldCheck className="w-5 h-5" />
             </div>
@@ -1204,7 +1204,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800/80 shadow-xs hover:border-espresso-300 dark:hover:border-espresso-700 transition-all duration-500">
+          <div className="p-6 rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-emerald-50/25 dark:bg-gradient-to-br dark:from-[#171E1A] dark:via-[#1A1310] dark:to-[#0B1713] border border-espresso-200/80 dark:border-espresso-800/80 shadow-sm hover:border-emerald-400 dark:hover:border-emerald-500/60 transition-all duration-500">
             <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm mb-4 border border-emerald-200 dark:border-emerald-800">
               <Zap className="w-5 h-5" />
             </div>
@@ -1214,7 +1214,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#1A1310] border border-espresso-200/80 dark:border-espresso-800/80 shadow-xs hover:border-espresso-300 dark:hover:border-espresso-700 transition-all duration-500">
+          <div className="p-6 rounded-3xl bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] border border-espresso-200/80 dark:border-espresso-800/80 shadow-sm hover:border-brand-400 dark:hover:border-brand-500/60 transition-all duration-500">
             <div className="w-10 h-10 rounded-2xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-300 flex items-center justify-center font-bold text-sm mb-4 border border-brand-200 dark:border-brand-800">
               <FileText className="w-5 h-5" />
             </div>
