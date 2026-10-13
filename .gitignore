@@ -27,8 +27,23 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
-.env
+.env*
+!.env.example
+
+# database & SQLite files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.sqlite-journal
+
+# logs
+*.log
+
+# IDE & OS
+.vscode/
+.idea/
+Thumbs.db
 
 # vercel
 .vercel
