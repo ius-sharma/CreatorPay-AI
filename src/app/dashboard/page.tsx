@@ -28,6 +28,8 @@ export default function Home() {
   const setDraftPrompt = (prompt: string) => contractDraft.change({ prompt });
   const setDraftTeamRules = (useTeamRules: boolean) => contractDraft.change({ useTeamRules });
   const [activeTab, setActiveTab] = useState<WorkspaceView>('overview');
+  const [openedSettings, setOpenedSettings] = useState(false);
+  useEffect(() => { if (activeTab === 'diagnostics') setOpenedSettings(true); }, [activeTab]);
   const [deal, setDeal] = useState<Deal | null>(null);
   const [allDeals, setAllDeals] = useState<Deal[]>([]);
   const [roster, setRoster] = useState<TeamSplit[]>([]);
@@ -246,7 +248,7 @@ export default function Home() {
       {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
       <div hidden={activeTab !== 'splits'}><ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} /></div>
       {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}
-      {activeTab === 'diagnostics' && <DiagnosticsView onName={setWorkspaceName} />}
+      {(activeTab === 'diagnostics' || openedSettings) && <div hidden={activeTab !== 'diagnostics'}><DiagnosticsView onName={setWorkspaceName} /></div>}
     </>}
   </WorkspaceShell>;
 }
