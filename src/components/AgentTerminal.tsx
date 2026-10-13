@@ -46,7 +46,7 @@ export const AgentTerminal: React.FC<AgentTerminalProps> = ({ logs }) => {
   };
 
   return (
-    <div className="bg-white border border-brand-100 rounded-2xl overflow-hidden shadow-sm flex flex-col h-[520px]">
+    <div className="rounded-2xl border border-espresso-200/80 dark:border-espresso-800/80 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] overflow-hidden shadow-sm flex flex-col h-[520px]">
       {/* Terminal Top Bar */}
       <div className="bg-slate-50 px-4 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 select-none">
         <div className="flex items-center space-x-2">

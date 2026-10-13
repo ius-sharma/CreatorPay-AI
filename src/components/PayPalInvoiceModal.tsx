@@ -19,7 +19,7 @@ export const PayPalInvoiceModal: React.FC<PayPalInvoiceModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div className="rounded-3xl border border-espresso-200/80 dark:border-espresso-800/80 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-1.5 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
@@ -78,7 +78,7 @@ export const PayPalInvoiceModal: React.FC<PayPalInvoiceModalProps> = ({
 
         {/* Billing Contacts */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 text-xs">
-          <div className="p-4 rounded-xl border border-slate-100 bg-white">
+          <div className="p-4 rounded-2xl border border-espresso-200/70 dark:border-espresso-800/70 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FBF2EC] dark:bg-gradient-to-br dark:from-[#261A15] dark:via-[#1C1410] dark:to-[#140D0B] shadow-xs">
             <p className="font-bold text-slate-400 uppercase tracking-wider text-[10px] mb-1">
               Billed From (Creator Merchant)
             </p>
@@ -89,7 +89,7 @@ export const PayPalInvoiceModal: React.FC<PayPalInvoiceModalProps> = ({
             </span>
           </div>
 
-          <div className="p-4 rounded-xl border border-slate-100 bg-white">
+          <div className="p-4 rounded-2xl border border-espresso-200/70 dark:border-espresso-800/70 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FBF2EC] dark:bg-gradient-to-br dark:from-[#261A15] dark:via-[#1C1410] dark:to-[#140D0B] shadow-xs">
             <p className="font-bold text-slate-400 uppercase tracking-wider text-[10px] mb-1">
               Billed To (Sponsor Brand)
             </p>

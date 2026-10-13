@@ -19,7 +19,7 @@ export function DeliverableReviewPanel({ deal, onChange }: { deal: Deal; onChang
     finally { setBusy(false); }
   };
   if (!deal.contractExtraction || deal.demo) return null;
-  return <section className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 space-y-4">
+  return <section className="rounded-2xl border border-espresso-200/80 dark:border-espresso-800/80 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] p-5 sm:p-6 space-y-4 shadow-sm">
     <h2 className="text-sm font-semibold">Deliverable evidence review</h2>
     <p className="text-sm text-slate-600">Groq checks your pasted transcript and description against the contract. The video URL is a reference only: AI does not watch the video or verify its duration, visuals, publication or authenticity. Actual video checks require human approval.</p>
     {!deal.milestones[0]?.paymentVerifiedAt ? <p className="text-sm">Unlocks after a verified advance payment.</p> : <>

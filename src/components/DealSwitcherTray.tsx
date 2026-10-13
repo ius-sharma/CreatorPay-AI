@@ -49,7 +49,7 @@ export const DealSwitcherTray: React.FC<DealSwitcherTrayProps> = ({
   };
 
   return (
-    <div className="bg-white border border-brand-100 rounded-2xl p-3 sm:p-4 shadow-sm">
+    <div className="rounded-2xl border border-espresso-200/80 dark:border-espresso-800/80 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] p-3 sm:p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center space-x-2">
           <Briefcase className="w-4 h-4 text-brand-600" />

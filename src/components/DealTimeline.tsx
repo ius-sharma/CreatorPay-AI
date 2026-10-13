@@ -43,7 +43,7 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
   const isPayoutSettled = deal.status === 'deal_closed';
 
   if (deal.contractExtraction) return (
-    <section className="bg-white border border-brand-200 rounded-2xl p-5 space-y-4">
+    <section className="rounded-2xl border border-espresso-200/80 dark:border-espresso-800/80 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] p-5 space-y-4 shadow-sm">
       <h2 className="font-bold text-slate-900">{deal.dealTitle}</h2>
       <p className="text-sm text-slate-600">Contract terms reviewed and confirmed. Create the advance invoice, then pay through PayPal Sandbox. Verified payment updates appear automatically. Invoice email notifications are disabled; use the payment link.</p>
       <p className="font-semibold">{deal.currency} {deal.totalAmount.toFixed(2)} · {deal.brandEmail}</p>
@@ -53,10 +53,10 @@ export const DealTimeline: React.FC<DealTimelineProps> = ({
     </section>
   );
 
-  if (deal.demo) return <section className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3"><h2 className="font-bold">{deal.dealTitle}</h2><p className="text-sm text-amber-800">Sample data. These statuses are illustrative; no real payment is verified. Analyse and confirm a new contract to test PayPal Sandbox.</p>{deal.milestones.map(m => <p className="text-sm" key={m.id}>{m.name}: {deal.currency} {m.amount.toFixed(2)} — sample {m.status}</p>)}</section>;
+  if (deal.demo) return <section className="rounded-2xl border border-amber-200/80 dark:border-amber-900/50 bg-gradient-to-br from-white via-[#FCFBF8] to-[#FDF8EE] dark:bg-gradient-to-br dark:from-[#261E14] dark:via-[#1D170E] dark:to-[#141009] p-5 space-y-3 shadow-sm"><h2 className="font-bold">{deal.dealTitle}</h2><p className="text-sm text-amber-800">Sample data. These statuses are illustrative; no real payment is verified. Analyse and confirm a new contract to test PayPal Sandbox.</p>{deal.milestones.map(m => <p className="text-sm" key={m.id}>{m.name}: {deal.currency} {m.amount.toFixed(2)} — sample {m.status}</p>)}</section>;
 
   return (
-    <div className="bg-white border border-brand-100 rounded-3xl p-5 sm:p-6 shadow-sm">
+    <div className="rounded-3xl border border-espresso-200/80 dark:border-espresso-800/80 bg-gradient-to-br from-white via-[#FFFDFB] to-[#FDF4EF] dark:bg-gradient-to-br dark:from-[#231814] dark:via-[#1A1310] dark:to-[#120B09] p-5 sm:p-6 shadow-sm">
       {/* Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-6">
         <div>
