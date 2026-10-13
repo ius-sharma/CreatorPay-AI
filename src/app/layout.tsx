@@ -10,9 +10,9 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'CreatorPay AI — Autonomous Dealmaker & PayPal Payout Agent',
+  title: 'CreatorPay — Contracts, Evidence & Creator Payments',
   description:
-    'Autonomous AI dealmaker that turns creator contracts into milestone PayPal invoices, monitors payments via webhooks, and auto-settles multi-party team payouts.',
+    'Review creator contract terms, check deliverable evidence, and track verified PayPal sandbox invoices and collaborator payouts in one workspace.',
 };
 
 export default function RootLayout({
