@@ -53,6 +53,7 @@ Module._load=function(request,parent,...args){
 const {NextRequest}=require('next/server');
 const routes=require('../src/lib/supabase/routes.ts');
 const drafts=require('../src/app/api/draft/route.ts');
+const settings=require('../src/app/api/workspace/route.ts');
 const request=(input,path='/api/deals')=>new NextRequest('http://localhost'+path,{method:'POST',headers:{origin:'http://localhost','content-type':'application/json'},body:JSON.stringify(input)});
 const {seal}=require('../src/lib/analysis-session.ts');
 const source='Acme offers USD 2,000. Bill finance@acme.example. 30% advance and 70% after approval. Deliver a 60-second sponsor segment by 2026-11-01.';
@@ -63,7 +64,7 @@ test('cloud handlers isolate accounts, enforce signed ownership and preserve dur
   db=new PGlite();const originalFetch=global.fetch;global.fetch=async()=>{providerCalls++;throw Error('Provider must not be called');};
   try{
     await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as $$select null::uuid$$;insert into auth.users values('${A}'),('${B}');`);
-    for(const file of ['202610110001_workspace.sql','202610110002_atomic_deal_updates.sql','202610120001_contract_drafts.sql'])await db.exec(fs.readFileSync(path.join(__dirname,'../supabase/migrations',file),'utf8'));
+    for(const file of ['202610110001_workspace.sql','202610110002_atomic_deal_updates.sql','202610120001_contract_drafts.sql','202610120002_workspace_profile.sql'])await db.exec(fs.readFileSync(path.join(__dirname,'../supabase/migrations',file),'utf8'));
     owner=A;process.env.CREATORPAY_BACKEND='supabase';
     const putDraft=(revision,prompt,origin='http://localhost')=>drafts.PUT(new NextRequest('http://localhost/api/draft',{method:'PUT',headers:{origin,'content-type':'application/json'},body:JSON.stringify({revision,draft:{prompt,useTeamRules:false},owner:B})}));
     assert.equal((await (await drafts.GET()).json()).revision,0);
@@ -75,6 +76,15 @@ test('cloud handlers isolate accounts, enforce signed ownership and preserve dur
     owner=B;assert.equal((await (await drafts.GET()).json()).draft.prompt,'','owner comes from Auth, not request body');
     owner=null;assert.equal((await drafts.GET()).status,401);assert.equal((await putDraft(0,'anonymous')).status,401);
     owner=A;assert.equal((await putDraft(1,'')).status,200);assert.equal((await (await drafts.GET()).json()).draft.prompt,'');
+    const putSettings=(name,origin='http://localhost')=>settings.PUT(new NextRequest('http://localhost/api/workspace',{method:'PUT',headers:{origin,'content-type':'application/json'},body:JSON.stringify({name,owner:B})}));
+    assert.equal((await putSettings('A Studio')).status,200);
+    assert.equal((await (await settings.GET()).json()).name,'A Studio');
+    assert.equal((await putSettings('  ')).status,400);
+    assert.equal((await putSettings('x'.repeat(81))).status,400);
+    assert.equal((await putSettings('Bad','https://evil.example')).status,403);
+    owner=B;assert.equal((await (await settings.GET()).json()).name,'Creator workspace');
+    owner=null;assert.equal((await settings.GET()).status,401);assert.equal((await putSettings('Anonymous')).status,401);
+    owner=A;
     const empty=await routes.dealsGet();assert.equal(empty.status,200);assert.equal((await empty.json()).activeDeal,null);
     const token=seal({extraction,prompt:source,splits:[],session:A,expires:Date.now()+60000,id:'deal-cloud-a'});
     assert.equal((await routes.dealsPost(request({action:'confirm_analysis',token}))).status,200);
@@ -93,6 +103,7 @@ test('cloud handlers isolate accounts, enforce signed ownership and preserve dur
     assert.equal((await routes.webhook(new Request('http://localhost/api/paypal/webhook',{method:'POST',body:'{}'}))).status,401);
     owner=A;process.env.GROQ_API_KEY='test-key';
     await db.exec(`insert into public.creatorpay_usage(bucket,day,owner_id,count,last_at) values('user:${A}',(now() at time zone 'UTC')::date,'${A}',10,now()-interval '1 minute')`);
+    const usage=(await (await settings.GET()).json()).usage;assert.equal(usage.used,10);assert.equal(usage.remaining,0);assert.ok(new Date(usage.resetsAt)>new Date());
     const limited=await routes.analyze(request({prompt:source}));assert.equal(limited.status,429);assert.equal(providerCalls,0);
     assert.equal((await db.query('select count from public.creatorpay_usage where owner_id=$1',[A])).rows[0].count,10);
     assert.equal((await routes.dealsDelete(new NextRequest('http://localhost/api/deals',{method:'DELETE',headers:{origin:'http://evil.example'}}))).status,403);

@@ -39,7 +39,7 @@ export async function portfolio(owner: string) {
     ownedRows('creatorpay_deals', owner), ownedRows('creatorpay_invoice_links', owner), ownedRows('creatorpay_audit', owner),
   ]);
   const deals: Deal[] = rows.map(r => r.body).sort((a,b) => b.createdAt.localeCompare(a.createdAt));
-  return { activeDeal: deals.find(d => d.id === workspace.active_deal_id) || deals[0] || null, allDeals: deals, teamRoster: workspace.team_roster as TeamSplit[], invoices: invoices.map(r => r.body) as PayPalInvoiceSummary[], auditLedger: audit.map(r => r.body) as AuditLedgerEntry[], sandboxAccount: process.env.PAYPAL_BUSINESS_EMAIL || '', environment: process.env.PAYPAL_ENVIRONMENT || 'sandbox' };
+  return { workspaceName: workspace.workspace_name || 'Creator workspace', activeDeal: deals.find(d => d.id === workspace.active_deal_id) || deals[0] || null, allDeals: deals, teamRoster: workspace.team_roster as TeamSplit[], invoices: invoices.map(r => r.body) as PayPalInvoiceSummary[], auditLedger: audit.map(r => r.body) as AuditLedgerEntry[], sandboxAccount: process.env.PAYPAL_BUSINESS_EMAIL || '', environment: process.env.PAYPAL_ENVIRONMENT || 'sandbox' };
 }
 export async function ownedDeal(owner: string, id: string) {
   const { data, error } = await createAdminClient().from('creatorpay_deals').select('*').eq('owner_id', owner).eq('id', id).maybeSingle();
