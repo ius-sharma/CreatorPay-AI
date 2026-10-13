@@ -9,6 +9,7 @@ import { DiagnosticsView } from '@/components/DiagnosticsView';
 import { Deal, TeamSplit, PayPalInvoiceSummary, AuditLedgerEntry } from '@/lib/types';
 import { DealWorkspace } from '@/components/DealWorkspace';
 import { WorkspaceShell, type WorkspaceView } from '@/components/WorkspaceShell';
+import { WorkspaceSetup } from '@/components/WorkspaceSetup';
 import { WorkspaceHome } from '@/components/WorkspaceHome';
 import { ContractReview } from '@/components/ContractReview';
 import { useContractDraft } from '@/components/useContractDraft';
@@ -32,6 +33,7 @@ export default function Home() {
   const [roster, setRoster] = useState<TeamSplit[]>([]);
   const [invoices, setInvoices] = useState<PayPalInvoiceSummary[]>([]);
   const [auditLedger, setAuditLedger] = useState<AuditLedgerEntry[]>([]);
+  const [workspaceName, setWorkspaceName] = useState('Creator workspace');
   const [sandboxAccount, setSandboxAccount] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
@@ -60,6 +62,7 @@ export default function Home() {
       if (data.teamRoster) setRoster(data.teamRoster);
       if (data.invoices) setInvoices(data.invoices);
       if (data.auditLedger) setAuditLedger(data.auditLedger);
+      if (data.workspaceName) setWorkspaceName(data.workspaceName);
       if (data.sandboxAccount) setSandboxAccount(data.sandboxAccount);
     } catch (err) {
       if (version === requestVersion.current) setPortfolioError(err instanceof Error ? err.message : 'Could not load your workspace.');
@@ -230,10 +233,11 @@ export default function Home() {
     audit: ['Payout activity', 'Recorded collaborator payouts and settlement history.'],
     diagnostics: ['Connections', 'Check your workspace storage and PayPal sandbox configuration.'],
   };
-  return <WorkspaceShell view={activeTab} onNavigate={navigate} title={titles[activeTab][0]} description={titles[activeTab][1]} merchant={sandboxAccount} busy={actionLoading}>
+  return <WorkspaceShell view={activeTab} onNavigate={navigate} title={titles[activeTab][0]} description={titles[activeTab][1]} merchant={sandboxAccount} workspaceName={workspaceName} busy={actionLoading}>
     {notice && <div role="status" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-4 text-sm"><span>{notice}</span><button onClick={() => setNotice('')} className="font-semibold underline">Dismiss</button></div>}
     {portfolioError && <div role="alert" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>{portfolioError}</span><button onClick={fetchPortfolioData} className="font-semibold underline">Retry</button></div>}
     {loading ? <div role="status" aria-label="Loading workspace" className="space-y-5"><p className="text-sm text-slate-500">Loading your workspace…</p><div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[1,2,3,4].map(i => <div key={i} className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white" />)}</div><div className="h-64 animate-pulse rounded-xl border border-slate-200 bg-white" /></div> : <>
+      {activeTab === 'overview' && <WorkspaceSetup deals={allDeals} name={workspaceName} onNavigate={navigate} busy={actionLoading} />}
       {(activeTab === 'overview' || activeTab === 'deals') && <WorkspaceHome deals={allDeals} overview={activeTab === 'overview'} busy={actionLoading} onOpen={handleSelectDeal} onNew={() => navigate('new')} onViewAll={() => navigate('deals')} />}
       {analysisError && <p role="alert" className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{analysisError}</p>}
       {activeTab === 'new' && <div className="space-y-6"><DraftToolbar draft={contractDraft} disabled={actionLoading} onReload={() => { setContractReview(null); setAnalysisError(''); }} /><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} prompt={draftPrompt} onPromptChange={setDraftPrompt} useTeamRules={draftTeamRules} onTeamRulesChange={setDraftTeamRules} isLoading={actionLoading || contractDraft.busy} />{contractReview && <ContractReview source={draftPrompt} review={contractReview.review} busy={actionLoading || contractDraft.busy} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
@@ -242,7 +246,7 @@ export default function Home() {
       {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
       <div hidden={activeTab !== 'splits'}><ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} /></div>
       {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}
-      {activeTab === 'diagnostics' && <DiagnosticsView />}
+      {activeTab === 'diagnostics' && <DiagnosticsView onName={setWorkspaceName} />}
     </>}
   </WorkspaceShell>;
 }

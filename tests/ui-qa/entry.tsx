@@ -15,12 +15,17 @@ const settled: Deal = {
 const pending: Deal = { ...settled, id: 'qa-pending', brandName: 'QA Northwind', dealTitle: 'Pending synthetic campaign', status: 'analyzed', payout: undefined, deliverableReviews: [], teamSplits: [], creatorNetPayout: 2000, milestones: settled.milestones.map(m => ({ id: m.id, name: m.name, amount: m.amount, percentage: m.percentage, status: 'pending' })) };
 const deals = [settled, pending];
 let activeDeal = settled;
+let workspaceName = 'Creator workspace';
 let roster = [split];
 let failSave = true;
-const portfolio = () => ({ allDeals: deals, activeDeal, teamRoster: roster, sandboxAccount: 'qa-merchant@example.test', invoices: settled.milestones.map((m,i) => ({ id: m.invoiceId, invoiceNumber: m.invoiceId, dealTitle: settled.dealTitle, brandName: settled.brandName, brandEmail: settled.brandEmail, milestoneTitle: m.name, amount: m.amount, currency: 'USD', status: 'PAID', issueDate: stamp, dueDate: '2026-11-01', paymentUrl: '', terms: 'Synthetic fixture' })), auditLedger: [{ id: 'qa-ledger', timestamp: stamp, batchId: 'QA-BATCH', dealTitle: settled.dealTitle, recipientName: split.name, recipientRole: split.role, recipientEmail: split.email, type: 'contractor_payout', amount: 300, currency: 'USD', status: 'COMPLETED', taxDeductible: false, category: 'Synthetic fixture' }] });
+const portfolio = () => ({ workspaceName, allDeals: deals, activeDeal, teamRoster: roster, sandboxAccount: 'qa-merchant@example.test', invoices: settled.milestones.map((m,i) => ({ id: m.invoiceId, invoiceNumber: m.invoiceId, dealTitle: settled.dealTitle, brandName: settled.brandName, brandEmail: settled.brandEmail, milestoneTitle: m.name, amount: m.amount, currency: 'USD', status: 'PAID', issueDate: stamp, dueDate: '2026-11-01', paymentUrl: '', terms: 'Synthetic fixture' })), auditLedger: [{ id: 'qa-ledger', timestamp: stamp, batchId: 'QA-BATCH', dealTitle: settled.dealTitle, recipientName: split.name, recipientRole: split.role, recipientEmail: split.email, type: 'contractor_payout', amount: 300, currency: 'USD', status: 'COMPLETED', taxDeductible: false, category: 'Synthetic fixture' }] });
 window.fetch = async (input, init) => {
   const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
   const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
+  if (url === '/api/workspace') {
+    if(init?.method==='PUT'){workspaceName=JSON.parse(String(init.body)).name.trim();return response({name:workspaceName});}
+    return response({name:workspaceName,editable:true,usage:{used:3,limit:10,remaining:7,resetsAt:'2026-10-13T00:00:00Z'}});
+  }
   if (url === '/api/draft') {
     const key='creatorpay.synthetic.qa.draft';
     const stored=JSON.parse(localStorage.getItem(key)||'null')||{draft:{prompt:'',useTeamRules:false},revision:0,savedAt:null};

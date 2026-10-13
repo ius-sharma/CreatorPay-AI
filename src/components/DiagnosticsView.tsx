@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { RefreshCw, CreditCard, Database, Workflow, Sparkles } from 'lucide-react';
+import { WorkspaceSettings } from './WorkspaceSettings';
 import { card } from './FinanceUI';
 interface ConnectionStatus { environment:string; credentialsConfigured:boolean; webhookConfigured:boolean; lastPaymentVerifiedAt:string|null; storage:string; aiConfigured?:boolean; checkedAt?:string }
-export function DiagnosticsView() {
+export function DiagnosticsView({onName}:{onName?:(name:string)=>void}) {
  const [status,setStatus]=useState<ConnectionStatus|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(true),[checked,setChecked]=useState('');
  const load=async(signal?:AbortSignal)=>{setBusy(true);setError('');try{const response=await fetch('/api/paypal/status',{cache:'no-store',signal});if(response.status===401){window.location.assign('/login');return;}if(!response.ok)throw Error('Could not read your connection settings. Retry in a moment.');const data=await response.json();setStatus(data);setChecked(new Date().toLocaleTimeString());}catch(e){if(!signal?.aborted)setError(e instanceof Error?e.message:'Could not load connections.');}finally{if(!signal?.aborted)setBusy(false);}};
  useEffect(()=>{const controller=new AbortController();load(controller.signal);return()=>controller.abort();},[]);
@@ -14,7 +15,7 @@ export function DiagnosticsView() {
  {title:'Workspace storage',icon:Database,ready:true,label:'Read succeeded',description:status.storage,note:'This check successfully read your workspace records. It does not run a database write test.'},
  {title:'Contract AI',icon:Sparkles,ready:Boolean(status.aiConfigured),label:status.aiConfigured?'Configured':'Setup needed',description:status.aiConfigured?'Groq credentials are configured on the server.':'Add the Groq API key in the private server configuration.',note:'Availability is confirmed when an analysis succeeds. No AI request is made by this check.'},
  ]:[];
- return <div className="space-y-6"><div className="flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-slate-500">{checked?`Last checked ${checked}${error?' · refresh failed; showing previous result':''}`:'Check the services used by this workspace.'}</p><button onClick={()=>load()} disabled={busy} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold disabled:opacity-50"><RefreshCw className={`h-4 w-4 ${busy?'animate-spin motion-reduce:animate-none':''}`}/>{busy?'Checking…':'Refresh status'}</button></div>
+ return <div className="space-y-6"><WorkspaceSettings onName={onName}/><div className="flex flex-wrap items-center justify-between gap-3"><p className="text-xs text-slate-500">{checked?`Last checked ${checked}${error?' · refresh failed; showing previous result':''}`:'Check the services used by this workspace.'}</p><button onClick={()=>load()} disabled={busy} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold disabled:opacity-50"><RefreshCw className={`h-4 w-4 ${busy?'animate-spin motion-reduce:animate-none':''}`}/>{busy?'Checking…':'Refresh status'}</button></div>
  {error&&<p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
  {busy&&!status&&<p role="status" className="text-sm text-slate-500">Reading connection settings…</p>}
  <div className="grid gap-5 lg:grid-cols-2">{entries.map(({title,icon:Icon,ready,label,description,note})=><section key={title} className={`${card} p-6`}><div className="flex items-center justify-between gap-3"><div className="flex items-center gap-3"><Icon className="h-5 w-5 text-slate-400"/><h2 className="text-sm font-semibold">{title}</h2></div><span className={`rounded-md px-2 py-1 text-[11px] font-medium ${ready?'bg-slate-100 text-slate-600':'bg-amber-50 text-amber-800'}`}>{label}</span></div><p className="mt-5 text-sm leading-6 text-slate-600">{description}</p><p className="mt-3 border-t border-slate-100 pt-3 text-xs leading-6 text-slate-500">{note}</p></section>)}</div>

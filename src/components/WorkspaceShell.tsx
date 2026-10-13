@@ -15,7 +15,7 @@ const navigation = [
   { id: 'audit', label: 'Payout activity', icon: History },
   { id: 'diagnostics', label: 'Connections', icon: Settings2 },
 ] as const;
-export function WorkspaceShell({ view, onNavigate, title, description, merchant, children, busy }: { view: WorkspaceView | 'account'; onNavigate: (view: WorkspaceView) => void; title: string; description: string; merchant: string; children: ReactNode; busy: boolean }) {
+export function WorkspaceShell({ view, onNavigate, title, description, merchant, children, busy, workspaceName = 'Creator workspace' }: { view: WorkspaceView | 'account'; onNavigate: (view: WorkspaceView) => void; title: string; description: string; merchant: string; children: ReactNode; busy: boolean; workspaceName?: string }) {
   const [dark, setDark] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
@@ -53,7 +53,7 @@ export function WorkspaceShell({ view, onNavigate, title, description, merchant,
       </div>
       <div className="mx-3 mb-5 flex h-16 shrink-0 items-center gap-2 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 px-2">
         <button type="button" onClick={toggleSidebar} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} aria-expanded={!collapsed} aria-controls="workspace-sidebar" title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} className="shrink-0 rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900">{collapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}</button>
-        <div className="sidebar-label whitespace-nowrap"><p className="text-xs font-semibold">Creator workspace</p><p className="mt-1 text-[10px] text-slate-500">Contracts & payments</p></div>
+        <div className="sidebar-label whitespace-nowrap"><p title={workspaceName} className="max-w-[145px] truncate text-xs font-semibold">{workspaceName}</p><p className="mt-1 text-[10px] text-slate-500">Contracts & payments</p></div>
       </div>
       <p aria-hidden={collapsed} className="sidebar-caption h-7 whitespace-nowrap px-7 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-400">Workspace</p>
       <nav aria-label="Workspace navigation" className="min-h-0 space-y-1 overflow-y-auto overflow-x-hidden px-3">{navigation.map(({id,label,icon: Icon}) => <button key={id} disabled={busy} aria-label={label} title={collapsed ? label : undefined} aria-current={(view === id || (id === 'deals' && ['new','detail'].includes(view))) ? 'page' : undefined} onClick={() => onNavigate(id)} className={`flex w-full items-center overflow-hidden rounded-lg px-[18px] py-3 text-sm disabled:opacity-50 ${view === id || (id === 'deals' && ['new','detail'].includes(view)) ? 'bg-[#FDF0E9] font-semibold text-[#B94420]' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}><Icon className="h-[18px] w-[18px] shrink-0" /><span className="sidebar-label whitespace-nowrap pl-3">{label}</span></button>)}</nav>
