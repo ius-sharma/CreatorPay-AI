@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import type { DeliverableDraft } from '@/lib/deliverable-draft';
+import type { DealSection } from '@/lib/workspace-navigation';
 import { ArrowLeft, ArrowRight, Check, ExternalLink, FileText } from 'lucide-react';
 import type { Deal } from '@/lib/types';
 import { money, summarize } from '@/lib/workspace-summary';
@@ -8,17 +10,19 @@ import { DeliverableReviewPanel } from './DeliverableReviewPanel';
 import { PayoutControl } from './PayoutControl';
 import { ContractEvidence } from './ContractEvidence';
 
-type Section = 'contract' | 'invoices' | 'deliverable' | 'settlement' | 'activity';
+type Section = DealSection;
 const sections: { id: Section; label: string }[] = [{ id: 'contract', label: 'Contract' }, { id: 'invoices', label: 'Invoices' }, { id: 'deliverable', label: 'Deliverable' }, { id: 'settlement', label: 'Settlement' }, { id: 'activity', label: 'Activity' }];
 const panel = 'ui-panel p-5 sm:p-6 ';
 
-export function DealWorkspace({ deal, busy, onBack, onInvoice, onChange }: { deal: Deal; busy: boolean; onBack: () => void; onInvoice: (index: number) => void; onChange: (deal: Deal) => void }) {
+export function DealWorkspace({ deal, busy, onBack, onInvoice, onChange, sectionOverride, onSection, draft, onDraft }: { sectionOverride: Section | null; onSection: (section: Section) => void; draft: DeliverableDraft; onDraft: (draft: DeliverableDraft) => void; deal: Deal; busy: boolean; onBack: () => void; onInvoice: (index: number) => void; onChange: (deal: Deal) => void }) {
   const approved = Boolean(deal.deliverableReviews?.[0]?.approvedAt);
   const advancePaid = Boolean(deal.milestones[0]?.status === 'paid' && deal.milestones[0]?.paymentVerifiedAt);
   const allPaid = deal.milestones.length > 0 && deal.milestones.every(m => m.status === 'paid' && m.paymentVerifiedAt);
   const settled = Boolean(deal.payout?.items.length && deal.payout.items.every(i => i.status === 'SUCCESS' && i.transactionId));
   const recommended: Section = deal.demo ? 'contract' : !advancePaid ? 'invoices' : !approved ? 'deliverable' : !allPaid ? 'invoices' : 'settlement';
-  const [section, setSection] = useState<Section>(recommended);
+  const [initialSection] = useState<Section>(recommended);
+  const section = sectionOverride || initialSection;
+  const setSection = onSection;
   const summary = summarize([deal], deal.currency);
   const stages = [Boolean(deal.contractExtraction && !deal.demo), advancePaid && !deal.demo, approved && !deal.demo, allPaid && !deal.demo, settled && !deal.demo];
   const stepLabels = ['Terms confirmed', 'Advance received', 'Deliverable approved', 'Final payment', 'Team settlement'];
@@ -46,7 +50,7 @@ export function DealWorkspace({ deal, busy, onBack, onInvoice, onChange }: { dea
         </section>;
       })}
     </div>
-    <div hidden={section !== 'deliverable'}>{deal.demo || !deal.contractExtraction ? <p className={panel}>Create and confirm a contract to review a deliverable.</p> : <DeliverableReviewPanel deal={deal} onChange={onChange} />}</div>
+    <div hidden={section !== 'deliverable'}>{deal.demo || !deal.contractExtraction ? <p className={panel}>Create and confirm a contract to review a deliverable.</p> : <DeliverableReviewPanel deal={deal} onChange={onChange} draft={draft} onDraft={onDraft} />}</div>
     <div hidden={section !== 'settlement'} className="space-y-5">
       <section className={panel}><h2 className="text-sm font-semibold">Contract split breakdown</h2><p className="mt-1 text-xs text-slate-500">Agreed shares and verified transfers are shown separately.</p><div className="mt-5 divide-y divide-slate-100">{deal.teamSplits.map(s => { const item = deal.payout?.items.find(i => i.splitId === s.id); const paid = !deal.demo && item?.status === 'SUCCESS' && item.transactionId; return <div key={s.id} className="flex flex-wrap items-center justify-between gap-3 py-4"><div><p className="text-sm font-medium">{s.name} <span className="ml-2 text-xs font-normal text-slate-400">{s.role}</span></p><p className="mt-1 break-all text-xs text-slate-500">{s.email}</p></div><div className="text-right"><p className="text-sm font-semibold tabular-nums">{money(s.calculatedAmount ?? (s.type === 'percentage' ? deal.totalAmount*s.value/100 : s.value),deal.currency)}</p><p className={`mt-1 text-xs ${paid ? 'text-emerald-700' : 'text-slate-500'}`}>{paid ? 'Transfer verified' : item?.status || 'Planned share'}</p></div></div>; })}{!deal.teamSplits.length && <p className="py-4 text-sm text-slate-500">No collaborator splits recorded.</p>}</div><div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5"><div><p className="text-sm font-semibold">Creator share</p><p className="mt-1 text-xs text-slate-500">Estimate before PayPal fees; not a separate transfer.</p></div><p className="text-xl font-semibold tabular-nums">{money(deal.creatorNetPayout,deal.currency)}</p></div></section>
       <PayoutControl deal={deal} onChange={onChange} />

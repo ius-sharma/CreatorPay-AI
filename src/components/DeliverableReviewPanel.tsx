@@ -1,11 +1,13 @@
 'use client';
 import { useState } from 'react';
+import type { DeliverableDraft } from '@/lib/deliverable-draft';
 import type { Deal } from '@/lib/types';
-export function DeliverableReviewPanel({ deal, onChange }: { deal: Deal; onChange: (deal: Deal) => void }) {
+export function DeliverableReviewPanel({ deal, onChange, draft, onDraft }: { draft: DeliverableDraft; onDraft: (draft: DeliverableDraft) => void; deal: Deal; onChange: (deal: Deal) => void }) {
   const latest = deal.deliverableReviews?.[0];
-  const [transcript, setTranscript] = useState('');
-  const [description, setDescription] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
+  const { transcript, description, videoUrl } = draft;
+  const setTranscript = (transcript: string) => onDraft({ ...draft, transcript });
+  const setDescription = (description: string) => onDraft({ ...draft, description });
+  const setVideoUrl = (videoUrl: string) => onDraft({ ...draft, videoUrl });
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -24,7 +26,7 @@ export function DeliverableReviewPanel({ deal, onChange }: { deal: Deal; onChang
     <p className="text-sm text-slate-600">Groq checks your pasted transcript and description against the contract. The video URL is a reference only: AI does not watch the video or verify its duration, visuals, publication or authenticity. Actual video checks require human approval.</p>
     {!deal.milestones[0]?.paymentVerifiedAt ? <p className="text-sm">Unlocks after a verified advance payment.</p> : <>
       {!latest?.approvedAt && <form className="space-y-3" onSubmit={e => { e.preventDefault(); request('review'); }}>
-        <label className="block text-sm">Video reference URL (optional)<input type="url" value={videoUrl} onChange={e => setVideoUrl(e.target.value)} maxLength={2000} className="ui-field mt-2 block w-full" placeholder="https://..." /></label>
+        <p className="text-xs text-slate-500">Unsubmitted text stays here when switching workspace views. Submit a review to save it to your account; refreshing or leaving this workspace discards unsubmitted text.</p><label className="block text-sm">Video reference URL (optional)<input type="url" value={videoUrl} onChange={e => setVideoUrl(e.target.value)} maxLength={2000} className="ui-field mt-2 block w-full" placeholder="https://..." /></label>
         <label className="block text-sm">Actual video transcript<textarea required minLength={20} maxLength={20000} rows={7} value={transcript} onChange={e => setTranscript(e.target.value)} className="ui-field mt-2 block w-full" /></label>
         <label className="block text-sm">Published description / links<textarea maxLength={5000} rows={3} value={description} onChange={e => setDescription(e.target.value)} className="ui-field mt-2 block w-full" /></label>
         <p className="text-xs text-slate-500">Text is sent to Groq. Reviews share the contract analysis usage limits. Previous reviews are retained; only the latest can be approved.</p>

@@ -13,7 +13,8 @@ const settled: Deal = {
   payout: { senderBatchId: 'QA-BATCH', batchId: 'QA-BATCH', batchStatus: 'SUCCESS', createdAt: stamp, items: [{ splitId: split.id, senderItemId: 'QA-ITEM', contractEmail: split.email, receiverEmail: split.email, amount: 300, status: 'SUCCESS', transactionId: 'QA-TRANSACTION' }] },
 };
 const pending: Deal = { ...settled, id: 'qa-pending', brandName: 'QA Northwind', dealTitle: 'Pending synthetic campaign', status: 'analyzed', payout: undefined, deliverableReviews: [], teamSplits: [], creatorNetPayout: 2000, milestones: settled.milestones.map(m => ({ id: m.id, name: m.name, amount: m.amount, percentage: m.percentage, status: 'pending' })) };
-const deals = [settled, pending];
+const reviewReady: Deal = { ...pending, id: 'qa-reviewable', brandName: 'QA Review', status: 'advance_paid', milestones: [settled.milestones[0], pending.milestones[1]], logs: [] };
+const deals = [settled, pending, reviewReady];
 let activeDeal = settled;
 let workspaceName = 'Creator workspace';
 let roster = [split];

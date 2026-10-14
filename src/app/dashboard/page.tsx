@@ -15,9 +15,13 @@ import { ContractReview } from '@/components/ContractReview';
 import { useContractDraft } from '@/components/useContractDraft';
 import { DraftToolbar } from '@/components/DraftToolbar';
 import type { ContractReview as Review } from '@/lib/contract';
-import { readWorkspaceLocation, workspaceUrl } from '@/lib/workspace-navigation';
+import { readWorkspaceLocation, workspaceUrl, readDealSection, type DealSection } from '@/lib/workspace-navigation';
+
+import { emptyDeliverableDraft, hasUnreviewedDraft, type DeliverableDraft } from '@/lib/deliverable-draft';
 
 export default function Home() {
+  const [dealSection, setDealSection] = useState<DealSection | null>(null);
+  const [evidenceDrafts, setEvidenceDrafts] = useState<Record<string, DeliverableDraft>>({});
   const selectedDeal = useRef<string | null>(null);
   const dealsCache = useRef<Deal[]>([]);
   const requestVersion = useRef(0);
@@ -45,6 +49,21 @@ export default function Home() {
   const [analysisError, setAnalysisError] = useState('');
   const [portfolioError, setPortfolioError] = useState('');
   const [notice, setNotice] = useState('');
+  const hasUnsavedEvidence = Object.entries(evidenceDrafts).some(([id, draft]) => hasUnreviewedDraft(draft, allDeals.find(d => d.id === id)?.deliverableReviews?.[0]));
+  useEffect(() => {
+    if (!hasUnsavedEvidence) return;
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ''; };
+    const guardLink = (event: MouseEvent) => {
+      const link = (event.target as Element)?.closest?.('a');
+      if (!link || link.target === '_blank' || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.origin === window.location.origin && url.pathname === '/dashboard') return;
+      if (!window.confirm('Your unsubmitted deliverable text is kept only while this workspace is open. Leave and discard it?')) { event.preventDefault(); event.stopPropagation(); }
+    };
+    window.addEventListener('beforeunload', warn);
+    document.addEventListener('click', guardLink, true);
+    return () => { window.removeEventListener('beforeunload', warn); document.removeEventListener('click', guardLink, true); };
+  }, [hasUnsavedEvidence]);
 
 
   const fetchPortfolioData = async () => {
@@ -79,6 +98,7 @@ export default function Home() {
       const route = readWorkspaceLocation(window.location.search);
       selectedDeal.current = route.dealId;
       setActiveTab(route.view);
+      setDealSection(readDealSection(window.location.search));
       if (route.view === 'detail') setDeal(dealsCache.current.find(d => d.id === route.dealId) || null);
       setAnalysisError('');
     };
@@ -89,9 +109,10 @@ export default function Home() {
     return () => { clearInterval(timer); window.removeEventListener('popstate', restore); requestVersion.current++; };
   }, []);
 
-  const navigate = (view: WorkspaceView, dealId?: string) => {
+  const navigate = (view: WorkspaceView, dealId?: string, section?: DealSection) => {
     navigationVersion.current++;
-    const url = workspaceUrl(view, dealId);
+    const url = workspaceUrl(view, dealId, section);
+    setDealSection(section || null);
     if (window.location.pathname + window.location.search !== url) window.history.pushState(null, '', url);
     selectedDeal.current = view === 'detail' ? dealId || null : null;
     setActiveTab(view);
@@ -106,29 +127,10 @@ export default function Home() {
     if (selectedDeal.current === updated.id) setDeal(updated);
   };
 
-  const handleSelectDeal = async (dealId: string) => {
-    const navigationAtStart = navigationVersion.current;
-    actionBusy.current = true;
-    requestVersion.current++;
-    setActionLoading(true);
-    setPortfolioError('');
-    try {
-      const res = await fetch('/api/deals', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'switch_deal', dealId }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Could not open this deal.');
-      if (data.allDeals) { dealsCache.current = data.allDeals; setAllDeals(data.allDeals); }
-      // A slow response must not undo a browser Back/Forward action.
-      if (data.activeDeal && navigationVersion.current === navigationAtStart) navigate('detail', data.activeDeal.id);
-    } catch (err) {
-      setPortfolioError(err instanceof Error ? err.message : 'Could not open this deal.');
-    } finally {
-      actionBusy.current = false; setActionLoading(false);
-      void fetchPortfolioData();
-    }
+  const handleSelectDeal = (dealId: string) => {
+    if (actionBusy.current) return;
+    // Reading a cached, account-owned deal does not need a server-side selection write.
+    navigate('detail', dealId);
   };
 
   const handlePromptSubmit = async (prompt: string, updatedSplits: TeamSplit[]) => {
@@ -244,7 +246,7 @@ export default function Home() {
       {analysisError && <p role="alert" className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{analysisError}</p>}
       {activeTab === 'new' && <div className="space-y-6"><DraftToolbar draft={contractDraft} disabled={actionLoading} onReload={() => { setContractReview(null); setAnalysisError(''); }} /><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} prompt={draftPrompt} onPromptChange={setDraftPrompt} useTeamRules={draftTeamRules} onTeamRulesChange={setDraftTeamRules} isLoading={actionLoading || contractDraft.busy} />{contractReview && <ContractReview source={draftPrompt} review={contractReview.review} busy={actionLoading || contractDraft.busy} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
       {activeTab === 'detail' && !deal && <div className="rounded-xl border border-slate-200 bg-white p-8 text-center"><h2 className="font-semibold">Deal unavailable</h2><p className="mt-2 text-sm text-slate-500">This deal could not be found in your workspace.</p><button onClick={() => navigate('deals')} className="mt-4 text-sm font-medium text-brand-700">Return to deals</button></div>}
-      {activeTab === 'detail' && deal && <DealWorkspace key={deal.id} deal={deal} busy={actionLoading} onBack={() => navigate('deals')} onInvoice={handleGenerateInvoice} onChange={updated => { applyDealUpdate(updated); fetchPortfolioData(); }} />}
+      {activeTab === 'detail' && deal && <DealWorkspace key={deal.id} deal={deal} sectionOverride={dealSection} onSection={section => navigate('detail', deal.id, section)} draft={evidenceDrafts[deal.id] || emptyDeliverableDraft} onDraft={draft => setEvidenceDrafts(current => ({ ...current, [deal.id]: draft }))} busy={actionLoading} onBack={() => navigate('deals')} onInvoice={handleGenerateInvoice} onChange={updated => { applyDealUpdate(updated); fetchPortfolioData(); }} />}
       {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
       <div hidden={activeTab !== 'splits'}><ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} /></div>
       {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}
