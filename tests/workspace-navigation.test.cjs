@@ -28,3 +28,14 @@ test('invalid views and missing deal links resolve safely without selecting anot
  assert.deepEqual(readWorkspaceLocation('?view=splits&deal=unrelated'),{view:'splits',dealId:null});
  assert.equal(workspaceUrl('detail'),'/dashboard?view=deals');
 });
+
+test('filter context survives navigation without copying auth or unrelated URL data',()=>{
+ const {preserveWorkspaceContext}=require('../src/lib/workspace-navigation.ts');
+ const url=new URL(preserveWorkspaceContext(workspaceUrl('detail','a'),'?deals_q=Acme%20%26%20Co&deals_stage=active&invoices_status=PAID&token=secret&next=evil'),'http://localhost');
+ assert.equal(url.searchParams.get('deals_q'),'Acme & Co');
+ assert.equal(url.searchParams.get('deals_stage'),'active');
+ assert.equal(url.searchParams.get('invoices_status'),'PAID');
+ assert.equal(url.searchParams.has('token'),false);
+ assert.equal(url.searchParams.has('next'),false);
+ assert.equal(readWorkspaceLocation(url.search).dealId,'a');
+});

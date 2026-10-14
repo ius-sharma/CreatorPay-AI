@@ -21,6 +21,7 @@ export function LoginForm({ signup = false }: { signup?: boolean }) {
       {state.message && <p role="status" className="text-sm text-emerald-700">{state.message}</p>}
       <Submit signup={signup} />
     </form>
+    <div className="mt-5 flex flex-wrap gap-4 text-sm text-brand-700"><Link href="/login?mode=recover">Forgot password?</Link><Link href="/login?mode=resend">Resend confirmation</Link></div>
     <Link href={signup ? '/login' : '/login?mode=signup'} className="mt-5 inline-block text-sm font-medium text-brand-700">{signup ? 'Already have an account? Log in' : 'New to CreatorPay? Create an account'}</Link>
   </>;
 }

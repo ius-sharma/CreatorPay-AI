@@ -21,3 +21,14 @@ export function workspaceUrl(view: WorkspaceView, dealId?: string | null, sectio
   if (view === 'detail' && dealId && section) params.set('section', section);
   return `/dashboard?${params.toString()}`;
 }
+
+const contextKeys = ['deals_q', 'deals_stage', 'invoices_q', 'invoices_status'] as const;
+export function preserveWorkspaceContext(target: string, search: string) {
+  const source = new URLSearchParams(search);
+  const destination = new URL(target, 'https://workspace.invalid');
+  for (const key of contextKeys) {
+    const value = source.get(key);
+    if (value) destination.searchParams.set(key, value.slice(0, 200));
+  }
+  return destination.pathname + destination.search;
+}

@@ -14,6 +14,9 @@ const client = { auth: {
   getUser: async () => ({ data: { user }, error }),
   signInWithPassword: async (credentials) => { calls.push(['login', credentials]); return { error }; },
   signUp: async (credentials) => { calls.push(['signup', credentials]); return { data: { session: signupSession }, error }; },
+  resetPasswordForEmail: async (...args) => { calls.push(['recover', ...args]); return { error }; },
+  resend: async (...args) => { calls.push(['resend', ...args]); return { error }; },
+  updateUser: async (...args) => { calls.push(['update', ...args]); return { error }; },
   signOut: async () => ({ error }),
   exchangeCodeForSession: async (code) => { if (verificationThrows) throw new Error('private diagnostics'); calls.push(['exchange', code]); return { error }; },
   verifyOtp: async (details) => { if (verificationThrows) throw new Error('private diagnostics'); calls.push(['verify', details]); return { error }; },
@@ -26,7 +29,7 @@ Module._load = function(request, parent, ...args) {
   return load.call(this, request, parent, ...args);
 };
 const { NextRequest } = require('next/server');
-const { authenticate } = require('../src/app/login/actions.ts');
+const { authenticate, requestAccountEmail, updatePassword } = require('../src/app/login/actions.ts');
 const { middleware } = require('../src/middleware.ts');
 const { GET } = require('../src/app/auth/callback/route.ts');
 const { GET: confirm } = require('../src/app/auth/confirm/route.ts');
@@ -73,7 +76,7 @@ test('callback verifies code and ignores external redirect targets', async () =>
 test('confirmation failures and unavailable Auth recover to login without exposing diagnostics', async () => {
   error = null;
   assert.equal((await confirm(new NextRequest('http://localhost/auth/confirm?token_hash=test&type=email'))).headers.get('location'), 'http://localhost/account');
-  assert.equal((await confirm(new NextRequest('http://localhost/auth/confirm?token_hash=test&type=recovery'))).headers.get('location'), 'http://localhost/login?error=confirmation');
+  assert.equal((await confirm(new NextRequest('http://localhost/auth/confirm?token_hash=test&type=recovery'))).headers.get('location'), 'http://localhost/auth/reset-password');
   verificationThrows = true;
   for (const [handler, url] of [[GET, '/auth/callback?code=test'], [confirm, '/auth/confirm?token_hash=test&type=email']]) {
     assert.equal((await handler(new NextRequest('http://localhost'+url))).headers.get('location'), 'http://localhost/login?error=confirmation');
@@ -91,4 +94,33 @@ test('cloud dashboard and all application APIs require Auth; PayPal webhook rema
   }
   assert.equal((await middleware(new NextRequest('http://localhost/api/paypal/webhook'))).status, 200);
   delete process.env.CREATORPAY_BACKEND;
+});
+
+test('recovery redirects stay on configured origin and email responses do not expose membership', async () => {
+  process.env.NEXT_PUBLIC_APP_URL = 'https://creator.example'; error = null; calls = [];
+  const sent = await requestAccountEmail({}, form('recover','a@example.com',''));
+  assert.equal(calls[0][2].redirectTo, 'https://creator.example/auth/callback?flow=recovery');
+  error = {message:'unknown account'};
+  assert.deepEqual(await requestAccountEmail({}, form('recover','unknown@example.com','')),sent);
+  await requestAccountEmail({}, form('resend','a@example.com',''));
+  assert.equal(calls.at(-1)[1].options.emailRedirectTo,'https://creator.example/auth/callback');
+  calls = [];
+  assert.ok((await requestAccountEmail({}, form('recover','invalid',''))).error);
+  process.env.NEXT_PUBLIC_APP_URL = 'javascript:alert(1)';
+  assert.ok((await requestAccountEmail({}, form('recover','a@example.com',''))).error);
+  assert.equal(calls.length,0); error = null;
+  const result = await GET(new NextRequest('http://localhost/auth/callback?code=test&flow=recovery&next=https://evil.example'));
+  assert.equal(result.headers.get('location'),'http://localhost/auth/reset-password');
+});
+test('password changes require a verified identity and matching strong passwords', async () => {
+  calls=[]; user=null; error=null;
+  const f=form('recover','a@example.com','new-long-password'); f.set('confirmation','new-long-password');
+  assert.ok((await updatePassword({},f)).error); assert.equal(calls.length,0);
+  user={id:'verified'}; f.set('confirmation','wrong');
+  assert.ok((await updatePassword({},f)).error); assert.equal(calls.length,0);
+  f.set('confirmation','new-long-password');
+  assert.ok((await updatePassword({},f)).message); assert.equal(calls[0][0],'update');
+  error={message:'private diagnostics'};
+  assert.ok(!(await updatePassword({},f)).error.includes('private diagnostics'));
+  error=null; user=null;
 });

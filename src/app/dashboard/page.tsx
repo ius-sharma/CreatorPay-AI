@@ -15,7 +15,7 @@ import { ContractReview } from '@/components/ContractReview';
 import { useContractDraft } from '@/components/useContractDraft';
 import { DraftToolbar } from '@/components/DraftToolbar';
 import type { ContractReview as Review } from '@/lib/contract';
-import { readWorkspaceLocation, workspaceUrl, readDealSection, type DealSection } from '@/lib/workspace-navigation';
+import { readWorkspaceLocation, workspaceUrl, preserveWorkspaceContext, readDealSection, type DealSection } from '@/lib/workspace-navigation';
 
 import { emptyDeliverableDraft, hasUnreviewedDraft, type DeliverableDraft } from '@/lib/deliverable-draft';
 
@@ -111,7 +111,7 @@ export default function Home() {
 
   const navigate = (view: WorkspaceView, dealId?: string, section?: DealSection) => {
     navigationVersion.current++;
-    const url = workspaceUrl(view, dealId, section);
+    const url = preserveWorkspaceContext(workspaceUrl(view, dealId, section), window.location.search);
     setDealSection(section || null);
     if (window.location.pathname + window.location.search !== url) window.history.pushState(null, '', url);
     selectedDeal.current = view === 'detail' ? dealId || null : null;
@@ -247,7 +247,7 @@ export default function Home() {
       {activeTab === 'new' && <div className="space-y-6"><DraftToolbar draft={contractDraft} disabled={actionLoading} onReload={() => { setContractReview(null); setAnalysisError(''); }} /><DealInput onEdit={() => { setContractReview(null); setAnalysisError(''); }} onSubmit={handlePromptSubmit} splits={roster} prompt={draftPrompt} onPromptChange={setDraftPrompt} useTeamRules={draftTeamRules} onTeamRulesChange={setDraftTeamRules} isLoading={actionLoading || contractDraft.busy} />{contractReview && <ContractReview source={draftPrompt} review={contractReview.review} busy={actionLoading || contractDraft.busy} onConfirm={handleConfirmContract} onDismiss={() => setContractReview(null)} />}</div>}
       {activeTab === 'detail' && !deal && <div className="rounded-xl border border-slate-200 bg-white p-8 text-center"><h2 className="font-semibold">Deal unavailable</h2><p className="mt-2 text-sm text-slate-500">This deal could not be found in your workspace.</p><button onClick={() => navigate('deals')} className="mt-4 text-sm font-medium text-brand-700">Return to deals</button></div>}
       {activeTab === 'detail' && deal && <DealWorkspace key={deal.id} deal={deal} sectionOverride={dealSection} onSection={section => navigate('detail', deal.id, section)} draft={evidenceDrafts[deal.id] || emptyDeliverableDraft} onDraft={draft => setEvidenceDrafts(current => ({ ...current, [deal.id]: draft }))} busy={actionLoading} onBack={() => navigate('deals')} onInvoice={handleGenerateInvoice} onChange={updated => { applyDealUpdate(updated); fetchPortfolioData(); }} />}
-      {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} />}
+      {activeTab === 'invoicing' && <InvoicingHubView invoices={invoices} onOpenDeals={() => navigate('deals')} />}
       <div hidden={activeTab !== 'splits'}><ContractsManagerView roster={roster} onUpdateRoster={handleUpdateRoster} /></div>
       {activeTab === 'audit' && <AuditLedgerView ledger={auditLedger} />}
       {(activeTab === 'diagnostics' || openedSettings) && <div hidden={activeTab !== 'diagnostics'}><DiagnosticsView onName={setWorkspaceName} /></div>}
