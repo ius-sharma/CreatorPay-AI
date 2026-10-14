@@ -5,7 +5,7 @@ import { signOut, type AuthState } from '@/app/login/actions';
 
 function Button() {
   const { pending } = useFormStatus();
-  return <button disabled={pending} className="rounded-xl border border-slate-300 px-4 py-2 disabled:opacity-50">{pending ? 'Signing out…' : 'Sign out'}</button>;
+  return <button disabled={pending} className="ui-button ui-button-secondary">{pending ? 'Signing out…' : 'Sign out'}</button>;
 }
 export function SignOutButton() {
   const [state, action] = useFormState<AuthState>(signOut, {});

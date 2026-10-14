@@ -5,7 +5,7 @@ export function BrandMark({ name }: { name: string }) {
   return <span aria-hidden="true" className={`studio-brand studio-brand-${tone}`}>{initials}</span>;
 }
 export function WorkspaceBadge({ children, tone = 'neutral' }: { children: ReactNode; tone?: 'neutral' | 'success' | 'attention' }) {
-  return <span className={`studio-badge studio-badge-${tone}`}>{children}</span>;
+  return <span className="ui-status" data-tone={tone}>{children}</span>;
 }
 export function SectionHeading({ title, count, children }: { title: string; count?: number; children?: ReactNode }) {
   return <div className="studio-section-heading"><h2>{title}{count !== undefined && <span className="studio-count">{count}</span>}</h2>{children}</div>;

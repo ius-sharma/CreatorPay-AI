@@ -39,7 +39,8 @@
     ".next-phase3-evidence/types/**/*.ts",
     ".next-phase4-interactions/types/**/*.ts",
     ".next-phase5-foundation/types/**/*.ts",
-    ".next-phase6-landing/types/**/*.ts"
+    ".next-phase6-landing/types/**/*.ts",
+    ".next-elite-phase2/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
