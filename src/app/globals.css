@@ -1,15 +1,16 @@
+@import "../components/palette.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #FFFDFC;
-  --foreground: #2B1D19;
+  --background: var(--cp-bg);
+  --foreground: var(--cp-ink);
 }
 
 html.dark {
-  --background: #120D0B;
-  --foreground: #FDF8F6;
+  --background: var(--cp-bg);
+  --foreground: var(--cp-ink);
 }
 
 html {
@@ -35,20 +36,20 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e8d8d0;
+  background: var(--cp-line);
   border-radius: 9999px;
 }
 
 html.dark ::-webkit-scrollbar-thumb {
-  background: #352721;
+  background: var(--cp-line);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #bda093;
+  background: var(--cp-muted);
 }
 
 html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #5e483e;
+  background: var(--cp-muted);
 }
 
 /* N8N Marquee Data-Stream Connector Thread */

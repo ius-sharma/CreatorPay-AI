@@ -1,0 +1,41 @@
+/* CreatorPay: Ink + Cobalt. PayPal trademarks retain their own colours. */
+:root, .workspace[data-theme="light"], .landing[data-theme="light"] {
+  --cp-bg: #F5F7FA;
+  --cp-surface: #FFFFFF;
+  --cp-ink: #17243B;
+  --cp-muted: #5D6B80;
+  --cp-line: #DCE3EC;
+  --cp-control-line: #7C8BA0;
+  --cp-hover: #EDF1F7;
+  --cp-accent: #2457D6;
+  --cp-accent-soft: #EAF0FF;
+  --cp-primary: #2457D6;
+  --cp-primary-hover: #1B43AD;
+  --cp-on-primary: #FFFFFF;
+  --cp-success: #216345;
+  --cp-success-soft: #E8F4ED;
+  --cp-amber: #805610;
+  --cp-amber-soft: #FFF3D6;
+  --cp-danger: #AD3346;
+  --cp-danger-soft: #FDECF0;
+}
+html.dark, .workspace[data-theme="dark"], .landing[data-theme="dark"] {
+  --cp-bg: #101722;
+  --cp-surface: #172130;
+  --cp-ink: #EDF2FA;
+  --cp-muted: #A9B7CC;
+  --cp-line: #344258;
+  --cp-control-line: #6D829D;
+  --cp-hover: #202D40;
+  --cp-accent: #9AB8FF;
+  --cp-accent-soft: #233653;
+  --cp-primary: #9AB8FF;
+  --cp-primary-hover: #B6CCFF;
+  --cp-on-primary: #14233E;
+  --cp-success: #94DDB2;
+  --cp-success-soft: #193B2E;
+  --cp-amber: #F0CB7C;
+  --cp-amber-soft: #3C321F;
+  --cp-danger: #FFABB9;
+  --cp-danger-soft: #432735;
+}

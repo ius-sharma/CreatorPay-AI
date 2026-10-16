@@ -1,22 +1,22 @@
 /* CreatorPay product tokens. Keep financial status colours semantic. */
 .workspace, .auth-surface {
-  --studio-bg: #f7f7f2;
-  --studio-surface: #ffffff;
-  --studio-ink: #262a25;
-  --studio-muted: #62695f;
-  --studio-line: #dfe3da;
-  --studio-hover: #f0f2ec;
-  --studio-accent: #a53d24;
-  --studio-accent-soft: #fbece6;
-  --studio-success: #286144;
-  --studio-success-soft: #e8f3eb;
-  --studio-amber: #79530c;
-  --studio-amber-soft: #fbf1d9;
-  --studio-danger: #a52e36;
-  --studio-danger-soft: #fcebed;
-  --ui-primary: #a53d24;
-  --ui-primary-hover: #85301c;
-  --ui-on-primary: #ffffff;
+  --studio-bg: var(--cp-bg);
+  --studio-surface: var(--cp-surface);
+  --studio-ink: var(--cp-ink);
+  --studio-muted: var(--cp-muted);
+  --studio-line: var(--cp-line);
+  --studio-hover: var(--cp-hover);
+  --studio-accent: var(--cp-accent);
+  --studio-accent-soft: var(--cp-accent-soft);
+  --studio-success: var(--cp-success);
+  --studio-success-soft: var(--cp-success-soft);
+  --studio-amber: var(--cp-amber);
+  --studio-amber-soft: var(--cp-amber-soft);
+  --studio-danger: var(--cp-danger);
+  --studio-danger-soft: var(--cp-danger-soft);
+  --ui-primary: var(--cp-primary);
+  --ui-primary-hover: var(--cp-primary-hover);
+  --ui-on-primary: var(--cp-on-primary);
   --ui-radius: 12px;
   --ui-control-radius: 8px;
   --ui-shadow: 0 1px 2px rgb(28 35 25 / 4%);
@@ -32,23 +32,23 @@
   line-height: 1.6;
 }
 .workspace[data-theme="dark"], html.dark .auth-surface {
-  --studio-bg: #151814;
-  --studio-surface: #1d211c;
-  --studio-ink: #edf0e7;
-  --studio-muted: #adb5a6;
-  --studio-line: #373f32;
-  --studio-hover: #282e24;
-  --studio-accent: #f3a187;
-  --studio-accent-soft: #3c2921;
-  --studio-success: #a5d9b7;
-  --studio-success-soft: #213b2b;
-  --studio-amber: #edcd88;
-  --studio-amber-soft: #3b3220;
-  --studio-danger: #ffb0b6;
-  --studio-danger-soft: #40262b;
-  --ui-primary: #ed9b7f;
-  --ui-primary-hover: #ffb499;
-  --ui-on-primary: #29180f;
+  --studio-bg: var(--cp-bg);
+  --studio-surface: var(--cp-surface);
+  --studio-ink: var(--cp-ink);
+  --studio-muted: var(--cp-muted);
+  --studio-line: var(--cp-line);
+  --studio-hover: var(--cp-hover);
+  --studio-accent: var(--cp-accent);
+  --studio-accent-soft: var(--cp-accent-soft);
+  --studio-success: var(--cp-success);
+  --studio-success-soft: var(--cp-success-soft);
+  --studio-amber: var(--cp-amber);
+  --studio-amber-soft: var(--cp-amber-soft);
+  --studio-danger: var(--cp-danger);
+  --studio-danger-soft: var(--cp-danger-soft);
+  --ui-primary: var(--cp-primary);
+  --ui-primary-hover: var(--cp-primary-hover);
+  --ui-on-primary: var(--cp-on-primary);
   --ui-shadow: none;
   color-scheme: dark;
 }
@@ -133,3 +133,5 @@
   .workspace button, .workspace summary { min-height: 44px; min-width: 44px; }
 }
 [data-deal-section], #workspace-heading, #contract-review-heading { scroll-margin-top: 24px; }
+
+:is(.workspace.workspace,.auth-surface.auth-surface) :is(.ui-field,.ui-search,.studio-search), .workspace .studio-overview select { border-color:var(--cp-control-line); }

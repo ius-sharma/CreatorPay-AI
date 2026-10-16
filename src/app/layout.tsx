@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={jakarta.variable}>
-      <body className="bg-[#FFFDFC] dark:bg-[#120D0B] text-[#2B1D19] dark:text-[#FDF8F6] font-sans min-h-screen selection:bg-brand-100 selection:text-brand-900 antialiased">
+      <body className="bg-background text-foreground font-sans min-h-screen selection:bg-brand-100 selection:text-brand-900 antialiased">
         {children}
       </body>
     </html>

@@ -1,5 +1,5 @@
 @import "./design-system.css";
-/* Scoped dashboard theme; landing page retains its own palette. */
+/* Dashboard mappings share the product palette with landing and auth. */
 
 
 .workspace-sidebar { transition: width 360ms cubic-bezier(.22,1,.36,1); }
@@ -74,3 +74,7 @@
 .workspace[data-theme="dark"] [class~="hover:bg-slate-50"]:hover, .workspace[data-theme="dark"] [class~="hover:bg-slate-100"]:hover, .workspace[data-theme="dark"] [class~="hover:bg-slate-50/70"]:hover { background-color: var(--studio-hover); }
 .workspace[data-theme="dark"] [class~="hover:text-slate-900"]:hover { color: #ffffff; }
 .workspace[data-theme="dark"] [class~="bg-gradient-to-r"] { background-image: none; }
+
+.workspace nav button[aria-current="page"] { background:var(--studio-accent-soft); color:var(--studio-accent); }
+.workspace :is(.text-brand-600,.text-brand-700,.text-brand-800) { color:var(--studio-accent); }
+.workspace ::selection, .auth-surface ::selection { background:var(--studio-accent-soft); color:var(--studio-ink); }
