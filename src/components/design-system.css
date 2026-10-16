@@ -128,3 +128,8 @@
 .workspace :is(.studio-empty p,.studio-caption,.studio-attention-copy p,.studio-deal-link small) { font-size:12px; }
 @media (pointer:coarse) { :is(.workspace,.auth-surface) .ui-button { min-height:44px; } }
 @media (prefers-reduced-motion:reduce) { :is(.workspace,.auth-surface) *, :is(.workspace,.auth-surface) *::before, :is(.workspace,.auth-surface) *::after { transition:none!important; animation:none!important; scroll-behavior:auto!important; } }
+
+@media (pointer: coarse) {
+  .workspace button, .workspace summary { min-height: 44px; min-width: 44px; }
+}
+[data-deal-section], #workspace-heading, #contract-review-heading { scroll-margin-top: 24px; }

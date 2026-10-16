@@ -22,7 +22,7 @@ export function workspaceUrl(view: WorkspaceView, dealId?: string | null, sectio
   return `/dashboard?${params.toString()}`;
 }
 
-const contextKeys = ['deals_q', 'deals_stage', 'invoices_q', 'invoices_status'] as const;
+const contextKeys = ['deals_q', 'deals_stage', 'invoices_q', 'invoices_status', 'payouts_q', 'payouts_status', 'payouts_currency'] as const;
 export function preserveWorkspaceContext(target: string, search: string) {
   const source = new URLSearchParams(search);
   const destination = new URL(target, 'https://workspace.invalid');

@@ -20,6 +20,13 @@ import { readWorkspaceLocation, workspaceUrl, preserveWorkspaceContext, readDeal
 import { emptyDeliverableDraft, hasUnreviewedDraft, type DeliverableDraft } from '@/lib/deliverable-draft';
 
 export default function Home() {
+  const [focusRequest, setFocusRequest] = useState(0);
+  useEffect(() => {
+    if (!focusRequest) return;
+    const destination = document.querySelector<HTMLElement>('[data-deal-section]:not([hidden])') || document.getElementById('workspace-heading');
+    destination?.focus({ preventScroll: true });
+    destination?.scrollIntoView({ block: 'start', behavior: 'instant' });
+  }, [focusRequest]);
   const [dealSection, setDealSection] = useState<DealSection | null>(null);
   const [evidenceDrafts, setEvidenceDrafts] = useState<Record<string, DeliverableDraft>>({});
   const selectedDeal = useRef<string | null>(null);
@@ -46,6 +53,13 @@ export default function Home() {
 
 
   const [contractReview, setContractReview] = useState<{ review: Review; token: string } | null>(null);
+  useEffect(() => {
+    if (contractReview && activeTab === 'new') {
+      const heading = document.getElementById('contract-review-heading');
+      heading?.focus({ preventScroll: true });
+      heading?.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
+  }, [contractReview]);
   const [analysisError, setAnalysisError] = useState('');
   const [portfolioError, setPortfolioError] = useState('');
   const [notice, setNotice] = useState('');
@@ -102,15 +116,17 @@ export default function Home() {
       if (route.view === 'detail') setDeal(dealsCache.current.find(d => d.id === route.dealId) || null);
       setAnalysisError('');
     };
+    const restoreWithFocus = () => { restore(); setFocusRequest(value => value + 1); };
     restore();
     fetchPortfolioData();
     const timer = setInterval(fetchPortfolioData, 5000);
-    window.addEventListener('popstate', restore);
-    return () => { clearInterval(timer); window.removeEventListener('popstate', restore); requestVersion.current++; };
+    window.addEventListener('popstate', restoreWithFocus);
+    return () => { clearInterval(timer); window.removeEventListener('popstate', restoreWithFocus); requestVersion.current++; };
   }, []);
 
   const navigate = (view: WorkspaceView, dealId?: string, section?: DealSection) => {
     navigationVersion.current++;
+    setFocusRequest(value => value + 1);
     const url = preserveWorkspaceContext(workspaceUrl(view, dealId, section), window.location.search);
     setDealSection(section || null);
     if (window.location.pathname + window.location.search !== url) window.history.pushState(null, '', url);

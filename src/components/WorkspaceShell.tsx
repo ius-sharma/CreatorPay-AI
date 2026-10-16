@@ -67,7 +67,7 @@ export function WorkspaceShell({ view, onNavigate, title, description, merchant,
         <nav aria-label="Mobile workspace navigation" className="-mb-1 mt-4 flex gap-1 overflow-x-auto pb-1 lg:hidden">{navigation.map(n => <button key={n.id} disabled={busy} aria-current={(view === n.id || (n.id === 'deals' && ['new','detail'].includes(view))) ? 'page' : undefined} onClick={() => onNavigate(n.id)} className={`whitespace-nowrap rounded-md px-3 py-2 text-xs ${(view === n.id || (n.id === 'deals' && ['new','detail'].includes(view))) ? 'bg-orange-50 font-semibold text-brand-700' : 'text-slate-500'}`}>{n.label}</button>)}</nav>
       </header>
       <main id="workspace-content" className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
-        <div className="mb-8 flex flex-wrap items-start justify-between gap-5"><div><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1><p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">{description}</p></div>{view !== 'new' && <button disabled={busy} onClick={() => onNavigate('new')} className="ui-button"><Plus className="h-4 w-4" />New deal</button>}</div>
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-5"><div><h1 id="workspace-heading" tabIndex={-1} className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1><p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">{description}</p></div>{view !== 'new' && <button disabled={busy} onClick={() => onNavigate('new')} className="ui-button"><Plus className="h-4 w-4" />New deal</button>}</div>
         {children}
       </main>
     </div>

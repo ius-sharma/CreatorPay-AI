@@ -5,6 +5,7 @@ import type { DeliverableDraft } from '@/lib/deliverable-draft';
 import type { DealSection } from '@/lib/workspace-navigation';
 import { ArrowLeft, ArrowRight, Check, ExternalLink, FileText } from 'lucide-react';
 import type { Deal } from '@/lib/types';
+import { isSoloComplete } from '@/lib/deal-completion';
 import { money, summarize } from '@/lib/workspace-summary';
 import { DeliverableReviewPanel } from './DeliverableReviewPanel';
 import { PayoutControl } from './PayoutControl';
@@ -18,14 +19,15 @@ export function DealWorkspace({ deal, busy, onBack, onInvoice, onChange, section
   const approved = Boolean(deal.deliverableReviews?.[0]?.approvedAt);
   const advancePaid = Boolean(deal.milestones[0]?.status === 'paid' && deal.milestones[0]?.paymentVerifiedAt);
   const allPaid = deal.milestones.length > 0 && deal.milestones.every(m => m.status === 'paid' && m.paymentVerifiedAt);
-  const settled = Boolean(deal.payout?.items.length && deal.payout.items.every(i => i.status === 'SUCCESS' && i.transactionId));
+  const soloComplete = isSoloComplete(deal);
+  const settled = soloComplete || Boolean(deal.payout?.items.length && deal.payout.items.every(i => i.status === 'SUCCESS' && i.transactionId));
   const recommended: Section = deal.demo ? 'contract' : !advancePaid ? 'invoices' : !approved ? 'deliverable' : !allPaid ? 'invoices' : 'settlement';
   const [initialSection] = useState<Section>(recommended);
   const section = sectionOverride || initialSection;
   const setSection = onSection;
   const summary = summarize([deal], deal.currency);
   const stages = [Boolean(deal.contractExtraction && !deal.demo), advancePaid && !deal.demo, approved && !deal.demo, allPaid && !deal.demo, settled && !deal.demo];
-  const stepLabels = ['Terms confirmed', 'Advance received', 'Deliverable approved', 'Final payment', 'Team settlement'];
+  const stepLabels = ['Terms confirmed', 'Advance received', 'Deliverable approved', 'Final payment', deal.teamSplits.length ? 'Team settlement' : 'Deal complete'];
   const nextLabel = settled ? 'Review settlement' : !advancePaid ? 'Manage advance invoice' : !approved ? 'Review deliverable' : !allPaid ? 'Manage final invoice' : 'Manage team payout';
   return <div className="space-y-6">
     <button disabled={busy} onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 disabled:opacity-50"><ArrowLeft className="h-4 w-4" />All deals</button>
@@ -34,12 +36,12 @@ export function DealWorkspace({ deal, busy, onBack, onInvoice, onChange, section
       <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">{[['Contract value',money(deal.totalAmount,deal.currency)],['Payments received',money(summary.received,deal.currency)],['Still to collect',money(summary.outstanding,deal.currency)],['Contract deadline',deal.contractExtraction?.deadline.value || 'Not recorded']].map(([label,value]) => <div key={label}><p className="text-xs text-slate-500">{label}</p><p className="mt-2 break-words text-lg font-semibold tracking-tight tabular-nums">{value}</p></div>)}</div>
       <ol aria-label="Deal progress" className="mt-7 grid grid-cols-1 gap-3 border-t border-slate-100 pt-5 sm:grid-cols-5">{stepLabels.map((label,i) => <li key={label} className="flex items-center gap-2 text-xs"><span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${stages[i] ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>{stages[i] ? <Check className="h-3.5 w-3.5" aria-label="Complete" /> : i+1}</span><span className={stages[i] ? 'text-slate-700' : 'text-slate-400'}>{label}</span></li>)}</ol>
     </section>
-    <div className="flex flex-wrap items-center justify-between gap-4 ui-panel px-5 py-4"><div><p className="text-sm font-semibold">{settled ? 'Settlement recorded' : 'Next step'}</p><p className="mt-1 text-xs text-slate-500">{settled ? 'Successful collaborator transactions are available in Settlement.' : deal.demo ? 'Explore the sample contract, then create a deal to start.' : nextLabel}</p></div><button disabled={busy} onClick={() => setSection(recommended)} className="ui-button ui-button-secondary">{deal.demo ? 'View contract' : nextLabel}<ArrowRight className="h-3.5 w-3.5" /></button></div>
+    <div className="flex flex-wrap items-center justify-between gap-4 ui-panel px-5 py-4"><div><p className="text-sm font-semibold">{settled ? soloComplete ? 'Deal complete' : 'Settlement recorded' : 'Next step'}</p><p className="mt-1 text-xs text-slate-500">{soloComplete ? 'All payments verified and deliverable approved. No team payout required.' : settled ? 'Successful collaborator transactions are available in Settlement.' : deal.demo ? 'Explore the sample contract, then create a deal to start.' : nextLabel}</p></div><button disabled={busy} onClick={() => setSection(recommended)} className="ui-button ui-button-secondary">{deal.demo ? 'View contract' : nextLabel}<ArrowRight className="h-3.5 w-3.5" /></button></div>
     <nav aria-label="Deal sections" className="flex gap-6 overflow-x-auto border-b border-slate-200">{sections.map(tab => <button key={tab.id} aria-current={section === tab.id ? 'page' : undefined} onClick={() => setSection(tab.id)} className={`whitespace-nowrap border-b-2 pb-3 text-sm font-medium ${section === tab.id ? 'border-brand-600 text-brand-700' : 'border-transparent text-slate-500 hover:text-slate-900'}`}>{tab.label}</button>)}</nav>
-    <div hidden={section !== 'contract'} className="space-y-5">
+    <div data-deal-section aria-label={`${section} section`} tabIndex={-1} hidden={section !== 'contract'} className="space-y-5">
       {deal.contractExtraction ? <ContractEvidence source={deal.prompt} extraction={deal.contractExtraction}/> : <section className={panel}><h2 className="text-sm font-semibold">Original contract</h2><p className="mt-4 whitespace-pre-wrap break-words text-sm leading-7">{deal.prompt || 'No contract text recorded.'}</p><p className="mt-4 text-xs text-slate-500">No extracted terms recorded for this deal.</p></section>}
     </div>
-    <div hidden={section !== 'invoices'} className="space-y-5">
+    <div data-deal-section aria-label={`${section} section`} tabIndex={-1} hidden={section !== 'invoices'} className="space-y-5">
       <p className="text-xs leading-6 text-slate-500">PayPal sandbox invoices. Share the payment link with your test buyer; email notifications are disabled. Payments appear after verification.</p>
       {deal.milestones.map((m,index) => {
         const verified = !deal.demo && m.status === 'paid' && Boolean(m.paymentVerifiedAt);
@@ -50,11 +52,11 @@ export function DealWorkspace({ deal, busy, onBack, onInvoice, onChange, section
         </section>;
       })}
     </div>
-    <div hidden={section !== 'deliverable'}>{deal.demo || !deal.contractExtraction ? <p className={panel}>Create and confirm a contract to review a deliverable.</p> : <DeliverableReviewPanel deal={deal} onChange={onChange} draft={draft} onDraft={onDraft} />}</div>
-    <div hidden={section !== 'settlement'} className="space-y-5">
+    <div data-deal-section aria-label={`${section} section`} tabIndex={-1} hidden={section !== 'deliverable'}>{deal.demo || !deal.contractExtraction ? <p className={panel}>Create and confirm a contract to review a deliverable.</p> : <DeliverableReviewPanel deal={deal} onChange={onChange} draft={draft} onDraft={onDraft} />}</div>
+    <div data-deal-section aria-label={`${section} section`} tabIndex={-1} hidden={section !== 'settlement'} className="space-y-5">
       <section className={panel}><h2 className="text-sm font-semibold">Contract split breakdown</h2><p className="mt-1 text-xs text-slate-500">Agreed shares and verified transfers are shown separately.</p><div className="mt-5 divide-y divide-slate-100">{deal.teamSplits.map(s => { const item = deal.payout?.items.find(i => i.splitId === s.id); const paid = !deal.demo && item?.status === 'SUCCESS' && item.transactionId; return <div key={s.id} className="flex flex-wrap items-center justify-between gap-3 py-4"><div><p className="text-sm font-medium">{s.name} <span className="ml-2 text-xs font-normal text-slate-400">{s.role}</span></p><p className="mt-1 break-all text-xs text-slate-500">{s.email}</p></div><div className="text-right"><p className="text-sm font-semibold tabular-nums">{money(s.calculatedAmount ?? (s.type === 'percentage' ? deal.totalAmount*s.value/100 : s.value),deal.currency)}</p><p className={`mt-1 text-xs ${paid ? 'text-emerald-700' : 'text-slate-500'}`}>{paid ? 'Transfer verified' : item?.status || 'Planned share'}</p></div></div>; })}{!deal.teamSplits.length && <p className="py-4 text-sm text-slate-500">No collaborator splits recorded.</p>}</div><div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5"><div><p className="text-sm font-semibold">Creator share</p><p className="mt-1 text-xs text-slate-500">Estimate before PayPal fees; not a separate transfer.</p></div><p className="text-xl font-semibold tabular-nums">{money(deal.creatorNetPayout,deal.currency)}</p></div></section>
       <PayoutControl deal={deal} onChange={onChange} />
     </div>
-    <section hidden={section !== 'activity'} className={panel}><h2 className="text-sm font-semibold">Deal activity</h2><p className="mt-1 text-xs text-slate-500">Recorded contract reviews, approvals and payment updates.</p><ol className="mt-5 divide-y divide-slate-100">{[...deal.logs].sort((a,b) => b.timestamp.localeCompare(a.timestamp)).map(log => <li key={log.id} className="py-4"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-medium">{log.title}</h3><time dateTime={log.timestamp} className="text-xs text-slate-400">{new Date(log.timestamp).toLocaleString()}</time></div><p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-500">{log.description}</p></li>)}</ol>{!deal.logs.length && <p className="py-6 text-sm text-slate-500">No activity recorded yet.</p>}</section>
+    <section data-deal-section aria-label={`${section} section`} tabIndex={-1} hidden={section !== 'activity'} className={panel}><h2 className="text-sm font-semibold">Deal activity</h2><p className="mt-1 text-xs text-slate-500">Recorded contract reviews, approvals and payment updates.</p><ol className="mt-5 divide-y divide-slate-100">{[...deal.logs].sort((a,b) => b.timestamp.localeCompare(a.timestamp)).map(log => <li key={log.id} className="py-4"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-medium">{log.title}</h3><time dateTime={log.timestamp} className="text-xs text-slate-400">{new Date(log.timestamp).toLocaleString()}</time></div><p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-500">{log.description}</p></li>)}</ol>{!deal.logs.length && <p className="py-6 text-sm text-slate-500">No activity recorded yet.</p>}</section>
   </div>;
 }

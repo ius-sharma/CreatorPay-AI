@@ -1,3 +1,4 @@
+import { completeSoloDeal } from '@/lib/deal-completion';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDeal, mutateStore } from '@/lib/store';
 import { getSession, reserveAnalysis } from '@/lib/analysis-session';
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
         if (latest.approvedAt) return current;
         latest.approvedAt = new Date().toISOString(); latest.approvedBy = session.id;
         current.deliverable = { ...current.deliverable!, verified: true, verifiedAt: latest.approvedAt, videoUrl: latest.videoUrl, notes: 'Human approved after AI text review; video checked by reviewer.' };
-        current.status = 'deliverable_verified'; current.updatedAt = latest.approvedAt;
+        current.status = 'deliverable_verified'; current.updatedAt = latest.approvedAt; completeSoloDeal(current);
         current.logs.unshift({ id: `approve-${latest.id}`, timestamp: new Date().toLocaleTimeString(), type: 'verification', title: 'Deliverable approved by reviewer', description: 'Reviewer confirmed the actual video and all contract requirements. Final invoice is unlocked.' });
         return current;
       });

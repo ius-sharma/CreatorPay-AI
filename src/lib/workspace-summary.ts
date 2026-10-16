@@ -1,6 +1,7 @@
 import type { Deal } from './types';
 
-export const isComplete = (deal: Deal) => ['payouts_completed', 'deal_closed'].includes(deal.status);
+import { isSoloComplete } from './deal-completion';
+export const isComplete = (deal: Deal) => isSoloComplete(deal) || ['payouts_completed', 'deal_closed'].includes(deal.status);
 export const money = (amount: number, currency = 'USD') => new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 export function nextAction(deal: Deal) {
   if (isComplete(deal)) return 'View settlement';

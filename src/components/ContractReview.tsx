@@ -4,7 +4,7 @@ import { ContractEvidence } from './ContractEvidence';
 
 export function ContractReview({ source, review, busy, onConfirm, onDismiss }: { source: string; review: Review; busy: boolean; onConfirm: () => void; onDismiss: () => void }) {
   const e = review.extraction;
-  return <section aria-label="Contract review">
+  return <section aria-label="Contract review"><h2 id="contract-review-heading" tabIndex={-1} className="mb-4 text-lg font-semibold">Review extracted terms</h2>
     <ContractEvidence source={source} extraction={e}/>
     <section className="contract-approval">
       <h3>Review the calculated payment plan</h3><p>Check every term before confirming. Creating a deal does not send invoices or payments.</p>

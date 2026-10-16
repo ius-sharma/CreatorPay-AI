@@ -42,7 +42,8 @@
     ".next-phase6-landing/types/**/*.ts",
     ".next-elite-phase2/types/**/*.ts",
     ".next-elite-phase3/types/**/*.ts",
-    ".next-elite-phase4/types/**/*.ts"
+    ".next-elite-phase4/types/**/*.ts",
+    ".next-ux-improvements/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

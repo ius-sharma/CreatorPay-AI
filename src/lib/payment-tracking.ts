@@ -1,3 +1,4 @@
+import { completeSoloDeal } from './deal-completion';
 import { database } from './database';
 import { mutateStore, getAllDeals } from './store';
 import { PayPalError, SandboxInvoice } from './paypal';
@@ -44,6 +45,7 @@ export function applyVerifiedPayment(invoice: SandboxInvoice, eventId: string): 
     const now = new Date().toISOString();
     match.milestones[index] = { ...match.milestones[index], status: 'paid', invoiceStatus: 'PAID', paidAt: now, paymentVerifiedAt: now, paymentTransactionIds: ids };
     match.status = index === 0 ? 'advance_paid' : match.milestones.every(m => m.status === 'paid') ? 'final_paid' : match.status;
+    completeSoloDeal(match);
     match.updatedAt = now;
     store.invoices.forEach(item => { if (item.id === invoice.id) item.status = 'PAID'; });
     match.logs.unshift({ id: `payment-${eventId}`, timestamp: new Date().toLocaleTimeString(), type: 'webhook', title: 'PayPal sandbox payment verified', description: `${match.currency} ${match.milestones[index].amount.toFixed(2)} paid against invoice ${invoice.id}; PayPal transaction IDs: ${ids.join(', ')}.` });

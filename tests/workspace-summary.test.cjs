@@ -17,3 +17,16 @@ test('next actions respect milestone payment, approval and payout stages', () =>
   assert.equal(nextAction({ ...deal, milestones: [{ amount: 600, status: 'invoiced', invoiceId: 'invoice' }] }), 'Check invoice');
   assert.equal(nextAction({ ...deal, status: 'payouts_completed' }), 'View settlement');
 });
+
+const {isSoloComplete,completeSoloDeal}=require('../src/lib/deal-completion.ts');
+const {isComplete}=require('../src/lib/workspace-summary.ts');
+test('solo completion requires real contract, approval and every verified payment without a payout',()=>{
+ const solo={...deal,teamSplits:[],payout:undefined,contractExtraction:{},deliverable:{verified:true},deliverableReviews:[{approvedAt:'verified'}],milestones:[{status:'paid',paymentVerifiedAt:'verified',amount:2000}]};
+ assert.equal(isSoloComplete(solo),true); assert.equal(isComplete(solo),true);
+ assert.equal(nextAction(solo),'View settlement');
+ completeSoloDeal(solo); assert.equal(solo.status,'deal_closed'); assert.equal(solo.payout,undefined);
+ for(const change of [{demo:true},{contractExtraction:null},{teamSplits:[{id:'team'}]},{deliverable:{verified:false}},{deliverableReviews:[]},{milestones:[]},{milestones:[{status:'paid'}]},{payout:{items:[]}}]){
+  const incomplete={...solo,status:'final_paid',...change};
+  assert.equal(isSoloComplete(incomplete),false);completeSoloDeal(incomplete);assert.equal(incomplete.status,'final_paid');
+ }
+});

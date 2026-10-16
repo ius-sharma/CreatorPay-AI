@@ -1,4 +1,5 @@
 import 'server-only';
+import { completeSoloDeal } from '../deal-completion';
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from './admin';
@@ -89,7 +90,7 @@ export async function verify(req: NextRequest) {
         if (latest.approvedAt) return;
         latest.approvedAt = new Date().toISOString(); latest.approvedBy = owner;
         current.deliverable = {...current.deliverable!,verified:true,verifiedAt:latest.approvedAt,videoUrl:latest.videoUrl,notes:'Human approved after AI text review; video checked by reviewer.'};
-        current.status='deliverable_verified';current.updatedAt=latest.approvedAt;
+        current.status='deliverable_verified';current.updatedAt=latest.approvedAt;completeSoloDeal(current);
         current.logs.unshift({id:`approve-${latest.id}`,timestamp:new Date().toLocaleTimeString(),type:'verification',title:'Deliverable approved by reviewer',description:'Reviewer confirmed the actual video and all requirements. Final invoice is unlocked.'});
       });
       return { success:true,deal:updated.body };
@@ -185,7 +186,7 @@ export async function webhook(req: Request) {
       const ids=validateInvoicePayment(actual,current,current.milestones[index]);
       if(current.milestones[index].status==='paid')return;
       const now=new Date().toISOString();current.milestones[index]={...current.milestones[index],status:'paid',invoiceStatus:'PAID',paidAt:now,paymentVerifiedAt:now,paymentTransactionIds:ids};
-      current.status=index===0?'advance_paid':current.milestones.every(m=>m.status==='paid')?'final_paid':current.status;
+      current.status=index===0?'advance_paid':current.milestones.every(m=>m.status==='paid')?'final_paid':current.status;completeSoloDeal(current);
       current.updatedAt=now;
       current.logs.unshift({id:`payment-${event.id}`,timestamp:new Date().toLocaleTimeString(),type:'webhook',title:'PayPal sandbox payment verified',description:`${current.currency} ${current.milestones[index].amount.toFixed(2)} paid against invoice ${id}; PayPal transaction IDs: ${ids.join(', ')}.`});
     },{event:event.id,eventInvoice:id});
