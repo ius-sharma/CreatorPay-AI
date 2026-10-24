@@ -64,7 +64,7 @@ export async function authenticate(_previous: AuthState, form: FormData): Promis
   } catch {
     return { error: 'Account service is unavailable. Please try again.' };
   }
-  redirect('/account');
+  redirect(mode === 'login' && form.get('destination') === 'workspace' ? '/dashboard' : '/account');
 }
 
 export async function signOut(): Promise<AuthState> {

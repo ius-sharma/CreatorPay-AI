@@ -1,3 +1,7 @@
+## Judge testing access
+
+A dedicated sandbox account can be prepared with `node scripts/setup-judge.cjs --create`. It uses normal password authentication, with a preconfirmed test identity and its own workspace. Share the generated credentials through private judging instructions; no password is published in this repository. See [judge access setup](docs/judge-access.md).
+
 ## Import a contract PDF
 
 In **New deal**, choose a text-based PDF, preview it, then select **Use extracted text**. Analyze and review the extracted terms before confirming. Evidence quotes show their imported PDF page labels. The PDF is read locally; only contract text enters the existing AI workflow. Limits: 5 MB, 20 pages, 12,000 imported characters. OCR and password-protected PDFs are not supported. See [PDF import details](docs/contract-pdf-import.md).

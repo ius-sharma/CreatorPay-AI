@@ -33,6 +33,7 @@ const { authenticate, requestAccountEmail, updatePassword } = require('../src/ap
 const { middleware } = require('../src/middleware.ts');
 const { GET } = require('../src/app/auth/callback/route.ts');
 const { GET: confirm } = require('../src/app/auth/confirm/route.ts');
+const { judgeLoginEmail } = require('../src/lib/judge-access.ts');
 const form = (mode, email, password) => { const f = new FormData(); f.set('mode', mode); f.set('email', email); f.set('password', password); return f; };
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
 process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_test';
@@ -43,6 +44,31 @@ test('malformed credentials and short signup password never call Auth', async ()
   assert.ok((await authenticate({}, form('signup', 'a@example.com', 'short'))).error);
   assert.ok((await authenticate({}, form('other', 'a@example.com', 'long-password'))).error);
   assert.equal(calls.length, 0);
+});
+
+test('judge shortcut requires sandbox configuration and never bypasses password login', async () => {
+  const names=['CREATORPAY_JUDGE_ACCESS','CREATORPAY_JUDGE_EMAIL','CREATORPAY_BACKEND','PAYPAL_ENVIRONMENT'];
+  const before=Object.fromEntries(names.map(name=>[name,process.env[name]]));
+  try {
+    Object.assign(process.env,{CREATORPAY_JUDGE_ACCESS:'true',CREATORPAY_JUDGE_EMAIL:'judge@creatorpay.example',CREATORPAY_BACKEND:'supabase',PAYPAL_ENVIRONMENT:'sandbox'});
+    assert.equal(judgeLoginEmail(),'judge@creatorpay.example');
+    for(const [key,value] of [['PAYPAL_ENVIRONMENT','live'],['CREATORPAY_BACKEND','sqlite'],['CREATORPAY_JUDGE_ACCESS','false'],['CREATORPAY_JUDGE_EMAIL','invalid']]){
+      const old=process.env[key];process.env[key]=value;assert.equal(judgeLoginEmail(),null);process.env[key]=old;
+    }
+    calls=[];error=null;
+    assert.ok((await authenticate({},form('judge','judge@creatorpay.example',''))).error);
+    assert.equal(calls.length,0);
+    const f=form('login','judge@creatorpay.example','test-password-only');f.set('destination','workspace');
+    error={message:'wrong password'};
+    assert.ok((await authenticate({},f)).error);
+    error=null;
+    await assert.rejects(authenticate({},f),/REDIRECT:\/dashboard/);
+    f.set('destination','https://evil.example');
+    await assert.rejects(authenticate({},f),/REDIRECT:\/account/);
+  } finally {
+    error=null;
+    for(const name of names) if(before[name]===undefined)delete process.env[name];else process.env[name]=before[name];
+  }
 });
 test('signup waits for email confirmation; login failure is safe; verified login redirects', async () => {
   error = null; signupSession = null;

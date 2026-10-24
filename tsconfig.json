@@ -45,7 +45,8 @@
     ".next-elite-phase4/types/**/*.ts",
     ".next-ux-improvements/types/**/*.ts",
     ".next-fintech-palette/types/**/*.ts",
-    ".next-contract-pdf/types/**/*.ts"
+    ".next-contract-pdf/types/**/*.ts",
+    ".next-judge-access/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
