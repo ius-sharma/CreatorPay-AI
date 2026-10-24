@@ -1,3 +1,9 @@
+## Import a contract PDF
+
+In **New deal**, choose a text-based PDF, preview it, then select **Use extracted text**. Analyze and review the extracted terms before confirming. Evidence quotes show their imported PDF page labels. The PDF is read locally; only contract text enters the existing AI workflow. Limits: 5 MB, 20 pages, 12,000 imported characters. OCR and password-protected PDFs are not supported. See [PDF import details](docs/contract-pdf-import.md).
+
+`npm ci`, `npm run dev` and `npm run build` prepare the matching local PDF.js worker automatically. No new environment keys or database migration are needed.
+
 ## Sandbox collaborator payouts (Phase 4)
 
 After every milestone has verified PayPal payment records and the latest deliverable has human approval, map each collaborator to a distinct owned generated Personal sandbox account (sb-…@personal.example.com). The original contract recipient remains unchanged; this is an explicit sandbox test mapping. Review the USD amounts before preparing: the persisted payout plan is immutable. Confirm the recipients and send from the local browser session that owns the deal. USD is the only enabled payout currency in this stage.

@@ -1,5 +1,6 @@
 'use client';
 
+import { evidencePages, pdfPageRanges } from '@/lib/pdf-contract';
 import { useId, useRef, useState } from 'react';
 import { FileText, Quote, ArrowUpLeft } from 'lucide-react';
 import type { ContractExtraction } from '@/lib/contract';
@@ -18,6 +19,9 @@ export function ContractEvidence({ source, extraction }: { source: string; extra
     { title: 'Deliverables', terms: extraction.deliverables.map((d, i) => ({ id: `deliverable-${i}`, label: `Requirement ${i + 1}`, value: d.requirement, evidence: d.evidence })) },
     { title: 'Contract splits', terms: extraction.teamSplits.map((s, i) => ({ id: `split-${i}`, label: `${s.name || 'Name missing'} · ${s.role}`, value: `${s.email || 'Email missing'} · ${s.value}${s.type === 'percentage' ? '%' : ` ${extraction.currency.value || 'Currency missing'}`}`, evidence: s.evidence })) },
   ];
+  const imported = pdfPageRanges(source).length > 0;
+  const selectedPages = evidencePages(source, selected?.evidence || '');
+  const pageLabel = (pages: number[]) => pages.length ? 'PDF page ' + pages.join(', ') : '';
   const quote = selected?.evidence || '';
   const start = quote.trim() ? source.indexOf(quote) : -1;
   const show = (term: Term) => {
@@ -32,11 +36,11 @@ export function ContractEvidence({ source, extraction }: { source: string; extra
   return <section className="evidence-review" aria-label="Contract evidence review">
     <header className="evidence-intro"><div><p className="evidence-eyebrow">CONTRACT EVIDENCE</p><h2>Every term, with its source.</h2><p>Select a term to find the exact wording in your agreement.</p></div><span className="evidence-count">{groups.reduce((sum,g)=>sum+g.terms.length,0)} extracted terms</span></header>
     <div className="evidence-layout">
-      <section className="evidence-paper"><div className="evidence-panel-heading"><h3><FileText size={16}/>Original agreement</h3><span>Read only</span></div><div id={documentId} ref={documentRef} tabIndex={0} role="region" aria-label="Original agreement text" className="evidence-document"><p>{start >= 0 ? <>{source.slice(0,start)}<mark>{quote}</mark>{source.slice(start+quote.length)}</> : source || 'No original contract text recorded.'}</p></div>
+      <section className="evidence-paper"><div className="evidence-panel-heading"><h3><FileText size={16}/>{imported ? 'Imported PDF text' : 'Original agreement'}</h3><span>Read only</span></div><p className="px-5 pt-3 text-xs text-slate-500">{imported ? 'Page labels refer to the imported text. Check extraction and layout against your PDF before confirming. The PDF file is not retained.' : ''}</p><div id={documentId} ref={documentRef} tabIndex={0} role="region" aria-label="Original agreement text" className="evidence-document"><p>{start >= 0 ? <>{source.slice(0,start)}<mark>{quote}</mark>{source.slice(start+quote.length)}</> : source || 'No original contract text recorded.'}</p></div>
         <div className="evidence-source-status" role="status">{!selected ? 'Choose a term on the right to inspect its source.' : start >= 0 ? `${selected.label}: exact source highlighted${source.indexOf(quote,start+quote.length)>=0?' (first occurrence)':''}.` : `${selected.label}: ${quote ? 'quoted text was not found in the original agreement.' : 'no supporting quote was recorded.'}`}</div>
       </section>
-      <section className="evidence-terms"><div className="evidence-panel-heading"><h3><Quote size={16}/>Extracted terms</h3><span>Check against source</span></div><div className="evidence-term-list">{groups.map(group=><section key={group.title} className="evidence-group"><h4>{group.title}</h4>{group.terms.length ? group.terms.map(term=><button type="button" key={term.id} aria-pressed={selected?.id===term.id} aria-controls={documentId} onClick={()=>show(term)} className="evidence-term"><span><small>{term.label}</small><strong>{term.value}</strong></span><ArrowUpLeft size={15} aria-hidden="true"/></button>) : <p className="evidence-none">None extracted from this contract.</p>}</section>)}</div></section>
+      <section className="evidence-terms"><div className="evidence-panel-heading"><h3><Quote size={16}/>Extracted terms</h3><span>Check against source</span></div><div className="evidence-term-list">{groups.map(group=><section key={group.title} className="evidence-group"><h4>{group.title}</h4>{group.terms.length ? group.terms.map(term=><button type="button" key={term.id} aria-pressed={selected?.id===term.id} aria-controls={documentId} onClick={()=>show(term)} className="evidence-term"><span><small>{term.label}</small><strong>{term.value}</strong>{term.evidence && evidencePages(source,term.evidence).length>0 && <small>{pageLabel(evidencePages(source,term.evidence))}</small>}</span><ArrowUpLeft size={15} aria-hidden="true"/></button>) : <p className="evidence-none">None extracted from this contract.</p>}</section>)}</div></section>
     </div>
-    {selected && <div className="evidence-selection"><div><span className="evidence-eyebrow">SELECTED SOURCE · {selected.label}</span><button onClick={()=>setSelected(null)} type="button">Clear selection</button></div><blockquote>{quote || 'No supporting quote was recorded. Clarify this term before confirming.'}</blockquote>{start<0 && quote && <p>This quote does not match the original text; it has not been highlighted.</p>}</div>}
+    {selected && <div className="evidence-selection"><div><span className="evidence-eyebrow">SELECTED SOURCE · {selected.label}{selectedPages.length>0 && ` · ${pageLabel(selectedPages)}`}</span><button onClick={()=>setSelected(null)} type="button">Clear selection</button></div><blockquote>{quote || 'No supporting quote was recorded. Clarify this term before confirming.'}</blockquote>{start<0 && quote && <p>This quote does not match the original text; it has not been highlighted.</p>}</div>}
   </section>;
 }
