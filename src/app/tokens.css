@@ -1,0 +1,40 @@
+/* CreatorPay scale, derived from Hallmark's brand scaffold. */
+:root {
+  --font-body: var(--font-jakarta, 'Plus Jakarta Sans'), system-ui, sans-serif;
+  --font-display: var(--font-body);
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --container: 1320px;
+  --gutter: 40px;
+  --gap-columns: 32px;
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --color-clear: transparent;
+  --shadow-panel: none;
+}
+
+:root {
+  --cp-inherited-1: #192e47;
+  --cp-inherited-2: #93c5fd;
+  --cp-inherited-3: #ffffff;
+  --cp-inherited-4: rgba(0,0,0,0.04);
+  --cp-inherited-5: rgba(0,0,0,0.03);
+  --cp-inherited-6: #e5edf2;
+  --cp-inherited-7: #365c75;
+  --cp-inherited-8: #ede8f5;
+  --cp-inherited-9: #65517e;
+  --cp-inherited-10: #e9efdf;
+  --cp-inherited-11: #52643e;
+  --cp-inherited-12: #293840;
+  --cp-inherited-13: #b9d5e6;
+  --cp-inherited-14: #363043;
+  --cp-inherited-15: #d4c1ed;
+  --cp-inherited-16: #303b27;
+  --cp-inherited-17: #c4d6b0;
+  --cp-inherited-18: rgb(28 35 25 / 4%);
+}

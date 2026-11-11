@@ -1,0 +1,22 @@
+{
+  "scanned": "2026-10-31",
+  "findings": {
+    "fonts": "Plus Jakarta Sans, src/app/layout.tsx:2",
+    "palette": "Ink + Cobalt, src/components/palette.css:1",
+    "framework": "Next.js 14, package.json",
+    "motion": "existing CSS transitions"
+  },
+  "preserve": [
+    "cobalt brand",
+    "all routes and handlers",
+    "financial copy and figures",
+    "light and dark themes"
+  ],
+  "introduce": [
+    "readable type scale",
+    "flat ledger summary",
+    "quiet navigation",
+    "surface hierarchy",
+    "focus and reduced-motion fixes"
+  ]
+}

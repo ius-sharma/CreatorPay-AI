@@ -1,3 +1,4 @@
+@import "./tokens.css";
 @import "../components/palette.css";
 @tailwind base;
 @tailwind components;
@@ -14,14 +15,15 @@ html.dark {
 }
 
 html {
+  overflow-x: clip;
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  overflow-x: hidden;
+  font-family: var(--font-body);
+  overflow-x: clip;
   transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -69,18 +71,28 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 
 @keyframes pulseDataPacket {
   0% {
-    top: 0%;
+    transform: translateY(0);
     opacity: 0.3;
   }
   50% {
     opacity: 1;
   }
   100% {
-    top: 100%;
+    transform: translateY(100%);
     opacity: 0.3;
   }
 }
 
 .animate-data-packet {
   animation: pulseDataPacket 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+html { scrollbar-color: var(--cp-control-line) var(--cp-bg); }
+body { caret-color: var(--cp-accent); }
+::selection { background: var(--cp-accent-soft); color: var(--cp-ink); }
+:is(button,a,input,textarea,select,summary):focus-visible { outline: 2px solid var(--cp-accent); outline-offset: 4px; }
+:is(h1,h2,h3) { min-width: 0; overflow-wrap: break-word; text-wrap: balance; }
+@media (prefers-reduced-motion: reduce) {
+  html, body { transition: none; scroll-behavior: auto; }
+  .animate-flow-thread, .animate-data-packet { animation: none; }
 }

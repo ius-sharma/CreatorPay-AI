@@ -1,0 +1,27 @@
+[
+  {
+    "mode": "redesign",
+    "depth": "full",
+    "scope": "site and app shell",
+    "theme": "brand",
+    "shape": "Feature Stack; existing app shell",
+    "axes": "light/geometric-sans/cool",
+    "hero": "Stage",
+    "nav": "product navigation",
+    "footer": "colophon",
+    "imagery": "existing illustrative agreement",
+    "signature": "agreement and evidence record",
+    "prompt": "Improve CreatorPay UI with Hallmark",
+    "validation": {
+      "tests": "58/58",
+      "typescript": "pass",
+      "production_build": "pass",
+      "responsive_interaction_checks": "16 combinations, 6 navigation destinations, workflow, FAQ, sidebar",
+      "hallmark_static": "0 FAIL, 0 REFLEX, 3 WARN; links 8/8 and handlers 7/7 preserved"
+    },
+    "waived": [
+      "39b: full-record clickable rows exceed standard button height"
+    ],
+    "review": "In-thread visual review: fixed dark table text, selector border contrast and small functional text. Existing card group remains for setup tasks; active workflow stripe and Tailwind compatibility mappings are deliberate."
+  }
+]

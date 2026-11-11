@@ -1,0 +1,12 @@
+shots/
+before/
+before.json
+before.txt
+compare.html
+after/
+scaffold/
+static-after.json
+render-after.json
+render-final.json
+verified.json
+interaction-check.json
