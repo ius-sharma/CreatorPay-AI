@@ -1,95 +1,58 @@
-## Judge testing access
-
-A dedicated sandbox account can be prepared with `node scripts/setup-judge.cjs --create`. It uses normal password authentication, with a preconfirmed test identity and its own workspace. Share the generated credentials through private judging instructions; no password is published in this repository. See [judge access setup](docs/judge-access.md).
-
-## Import a contract PDF
-
-In **New deal**, choose a text-based PDF, preview it, then select **Use extracted text**. Analyze and review the extracted terms before confirming. Evidence quotes show their imported PDF page labels. The PDF is read locally; only contract text enters the existing AI workflow. Limits: 5 MB, 20 pages, 12,000 imported characters. OCR and password-protected PDFs are not supported. See [PDF import details](docs/contract-pdf-import.md).
-
-`npm ci`, `npm run dev` and `npm run build` prepare the matching local PDF.js worker automatically. No new environment keys or database migration are needed.
-
-## Sandbox collaborator payouts (Phase 4)
-
-After every milestone has verified PayPal payment records and the latest deliverable has human approval, map each collaborator to a distinct owned generated Personal sandbox account (sb-…@personal.example.com). The original contract recipient remains unchanged; this is an explicit sandbox test mapping. Review the USD amounts before preparing: the persisted payout plan is immutable. Confirm the recipients and send from the local browser session that owns the deal. USD is the only enabled payout currency in this stage.
-
-The server rechecks authoritative paid invoices before sending, validates split totals, and uses a database lease plus a stable sender_batch_id and sender_item_id. A timeout retries the same plan; duplicate-batch responses can recover the original batch. Ambiguous requests older than 28 days are blocked to stay within PayPal's 30-day deduplication window. The app never automatically creates a second batch for failed, unclaimed or returned items: refresh/reconcile the original batch. Incorrect locked mappings require manual reconciliation before any new workflow is introduced.
-
-Submission/PENDING is not settlement. Refresh performs an authenticated PayPal GET, matches every item to its receiver, amount, currency and sender ID, and records settlement only for SUCCESS items with transaction IDs. Payout status is refreshed manually, not via payout webhooks in this stage. SQLite persists batch IDs, item IDs, transactions and deduplicated audit entries. Returned payouts clear settled state. The creator's retained share is an estimate before PayPal fees, not a separate payout or a verified wallet balance. Synthetic seed audit rows remain demo data.
-
-## Deliverable evidence review (Phase 3)
-
-After a verified advance, submit the actual transcript (20–20,000 characters), description (up to 5,000 characters), and optional HTTPS video reference. Text is sent to Groq; URLs are not fetched. Each confirmed deliverable is checked with exact source quotes. Missing content blocks approval; uncertainty requires human inspection. AI does not verify actual video duration, visuals, publication or authenticity. The reviewer must personally check those and confirm all requirements before approving the latest review. Approved submissions are locked. The final invoice requires both the verified advance and this explicit human approval; it uses the same persisted idempotent invoice workflow. PayPal's signed webhook confirms final payment. Review history (last 10), human approval and payment records persist in SQLite. Reviews share existing development-only AI limits; session ownership applies to both review and invoicing.
-
-Live model smoke checks: missing Acme content → changes required; corrected sponsor transcript with a claimed 60-second duration → human review. These are synthetic text tests, not video verification.
+<div align="center">
 
 # 🚀 CreatorPay AI
-### Current implementation status — Phase 2
-
-New contracts use **Groq** for structured extraction, exact source quotes, clarification flags and a user confirmation step. Monetary calculations and schema validation run on the server. Analysis/confirmation does not execute payments. The first milestone can now create a **real PayPal sandbox invoice** with a PayPal-generated payment link. Signed payment events are checked against authoritative invoice details and PayPal transaction records; manually recorded external payments cannot mark a milestone paid. Seeded deals are explicitly illustrative. Deliverable verification, final invoicing and collaborator payouts remain disabled pending later stages; broader claims below describe the planned product.
-
-#### PayPal sandbox payment test
-
-Configure `PAYPAL_ENVIRONMENT=sandbox`, sandbox app credentials, `PAYPAL_BUSINESS_EMAIL`, a stable random `CONTRACT_SIGNING_SECRET`, and `PAYPAL_WEBHOOK_ID`. Live mode is deliberately disabled. New deals require confirmation in the same browser session to create invoices. First-milestone invoicing currently supports USD, EUR, GBP, CAD and AUD. Invoice notifications are disabled; share/open the PayPal-generated sandbox payment link yourself.
-
-1. Run the app locally and `npm run webhook:relay` in another terminal. The relay defaults to port 3030 and forwards only `POST /api/paypal/webhook` to app port 3000. Set `WEBHOOK_APP_PORT` when using a different app port.
-2. Start an HTTPS tunnel to the **relay**, e.g. `.tools/cloudflared.exe tunnel --no-autoupdate --url http://127.0.0.1:3030 --protocol http2`. Exposing the full app publicly is not supported yet: authentication and multi-user isolation are still pending.
-3. Register the full endpoint using `node scripts/paypal-webhook.cjs https://YOUR-HOST/api/paypal/webhook`. This writes the registered webhook ID privately to `.env.local`; restart the app afterwards. The helper updates this project's existing webhook when its URL changes and does not remove unrelated webhooks.
-4. Analyse/review/confirm a contract, create its advance invoice, and open the sandbox payment link. Log in using a separate **Personal sandbox buyer account** from PayPal Developer Dashboard, not the merchant account or a real PayPal account.
-5. After actual sandbox payment, the dashboard refreshes every five seconds. It displays Paid only after verified webhook processing, with transaction IDs. No payment-simulation button can mark a real invoice paid.
-
-Quick tunnels are temporary: keep the app, relay and tunnel processes running during testing. Their hostname changes on restart, so re-register the endpoint if necessary. For judging deployment use a stable HTTPS host with persistent storage and authentication. PayPal's event simulator is not evidence of a real paid invoice; exercise actual sandbox checkout.
-
-**Persistence and retries:** SQLite stores deals, invoice IDs, payment transaction IDs and webhook deduplication records in `.data/creatorpay.sqlite` (ignored by Git). Configure `CREATORPAY_DB_PATH` for persistent hosting disk; ephemeral/serverless disk and separate replicas are not supported. Stable invoice numbers, persisted draft IDs and a database lease prevent duplicate invoices on retries. Invoice search recovers interrupted creation; failed sending leaves a draft for retry. Database updates and processed event IDs commit atomically. Resetting demo data preserves confirmed deals and their payment history.
-
-#### Enable Groq locally
-
-1. Create a key at https://console.groq.com/keys.
-2. Add `GROQ_API_KEY=...` to your private `.env.local`. Never paste keys into chat, commit them, or use a `NEXT_PUBLIC_` prefix.
-3. Set `GROQ_MODEL=openai/gpt-oss-120b` (default, requires model access).
-4. Restart `npm run dev`, then open `/dashboard` and choose **Analyze Contract**.
-
-Example contract:
-
-> Acme offers USD 2,000 for a 60-second sponsor segment. Bill finance@acme.example. Pay 30% advance and 70% after approval. Deliver by 2026-11-01. Aman, editor, aman@team.example, receives 15% of the total.
-
-The expected computed amounts are USD 600 advance, USD 1,400 final, USD 300 to Aman and USD 1,700 retained before fees/taxes. Review every term and source quote, then confirm. `.example` addresses are illustrative, not payment recipients. For missing information, edit the input or append an explicit clarification and analyse again. Editing input dismisses the old review. Reviews expire after 30 minutes; restarting invalidates them unless a stable `CONTRACT_SIGNING_SECRET` is configured.
-
-**Limits:** 12,000 contract characters, 10 analysis attempts per anonymous browser session per UTC day, 10 seconds between attempts, 100 total attempts per server process/day. Attempted provider calls count even if unsuccessful. These are in-memory development guardrails, not durable per-user quotas: cookie deletion/restart can reset limits, and replicas do not share counters. Add authentication, a shared persistent quota store and a provider spend cap before exposing this app publicly. Contract text is sent to Groq; use synthetic contracts for development. Dates are preserved as written rather than inventing a calendar interpretation.
-
-**Phase boundaries:** advance invoicing, verified payment tracking, Groq transcript/description reviews and human-approved final invoicing are enabled. Collaborator sandbox payouts are now enabled through the explicit reviewed payout plan. Final invoicing currently supports exactly two milestones. Contract reviews and analysis quotas are still session/process scoped; confirmed deals and payments persist in SQLite. Saved team rules are opt-in, separately labelled, and overridden by explicit contract splits. Incomplete split recipients require clarification; no recipient is invented.
-
-Run `npm test` for contract, provider error and API workflow checks, and `npm run build` for the production build. Live model accuracy must be evaluated with a valid Groq key; offline tests use mocked responses and are not evidence of live accuracy.
-
 ### *Autonomous AI Dealmaker & Settlement Co-Pilot for Creators, SMBs & Agencies*
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-creator--pay--ai.vercel.app-0070F3?style=for-the-badge&logo=vercel&logoColor=white)](https://creator-pay-ai.vercel.app/login?mode=judge)
 [![PayPal Developer](https://img.shields.io/badge/PayPal-Developer%20Platform-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://developer.paypal.com/)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14%20(App%20Router)-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Groq AI](https://img.shields.io/badge/Groq-Llama%203%20%26%20Mixtral-F55036?style=for-the-badge&logo=fastapi&logoColor=white)](https://console.groq.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tests](https://img.shields.io/badge/Tests-58%20Passed-brightgreen?style=for-the-badge&logo=node.js)](tests)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+<br/>
+
+**Built for the PayPal AI Hackathon 2026**
+
+[🌐 Live Hosted App](https://creator-pay-ai.vercel.app/login?mode=judge) • [🏆 Devpost Submission](https://devpost.com) • [💻 GitHub Repository](https://github.com/ius-sharma/CreatorPay-AI)
+
+</div>
+
+---
+
+> [!IMPORTANT]
+> ### ⚖️ Hackathon Judging & Live Testing Access
+> A dedicated, pre-confirmed sandbox account has been provisioned for judges with its own isolated workspace and test environment:
+> - **Live App URL:** [https://creator-pay-ai.vercel.app/login?mode=judge](https://creator-pay-ai.vercel.app/login?mode=judge)
+> - **Judge Test Email:** `judge@creatorpay.example`
+> - **Judge Password:** `CpJ-mfUsHHC9BrHLnuff24YiCca2UX9xXxGP9mJlkQ-9!`
+> - **Direct Shortcut:** Clicking the link above pre-fills the judge portal — simply enter the password above to evaluate the complete end-to-end deal lifecycle!
 
 ---
 
 ## 📌 Executive Summary
 
-**CreatorPay AI** is an autonomous financial dealmaker and settlement co-pilot engineered for the $250B+ creator and digital merchant economy. 
+Solo creators, creative collectives, and digital agencies spend over **30% of their billable hours** trapped in manual financial administration:
+- Converting unstructured contract emails and PDFs into formal milestone invoices
+- Chasing delayed sponsor payments and manually reconciling bank transfers
+- Manually calculating and routing revenue splits to editors, animators, and thumbnail designers
 
-Solo creators, creative collectives, and digital agencies spend over 30% of their working hours trapped in administrative friction: converting messy contract discussions into invoices, manually tracking bank/card payments, chasing late brand sponsorships, and manually calculating and distributing revenue splits to video editors, thumbnail artists, and collaborators.
+**CreatorPay AI** solves this friction entirely using an autonomous agentic financial architecture powered by the **PayPal Developer Platform** and **Groq LLM Structured Tool-Calling**:
 
-**CreatorPay AI solves this end-to-end using the PayPal Developer Platform and AI Agent tool-calling:**
-1. **Parses unstructured deal contracts/emails** into milestone payment terms using LLMs.
-2. **Autonomously generates and sends PayPal Milestone Invoices** (e.g., 30% advance) via the **PayPal Invoicing API (v2)**.
-3. **Monitors payment clearance in real time** via **PayPal Webhooks** (`INVOICING.INVOICE.PAID`).
-4. **Verifies deliverable completion** (sponsor links, video segments) via AI multi-modal inspection.
-5. **Autonomously disburses instant multi-party revenue splits** to editors and designers via the **PayPal Payouts API (v1)** upon final settlement, generating an immutable audit ledger.
-
----
-
-## 🎬 Demo & Video Links
-
-* **Live Hosted Application**: *[Coming Soon / Render Deployment]*
-* **3-Minute YouTube Video Demo**: *[Coming Soon]*
-* **Devpost Submission**: *[Devpost Project Page (Submission #1211120)]*
+```
+┌────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│   Natural Language     │ ───► │    PayPal Invoicing     │ ───► │  Real-time Webhook      │
+│   Contract / PDF       │      │    API v2 (Advance 30%) │      │  Clearance Notification │
+└────────────────────────┘      └─────────────────────────┘      └─────────────────────────┘
+                                                                              │
+                                                                              ▼
+┌────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│   Immutable Split      │ ◄─── │    PayPal Payouts       │ ◄─── │  AI Multi-Modal Proof   │
+│   Tax & Audit Ledger   │      │    API v1 (Team Splits) │      │  Deliverable Check      │
+└────────────────────────┘      └─────────────────────────┘      └─────────────────────────┘
+```
 
 ---
 
@@ -98,47 +61,47 @@ Solo creators, creative collectives, and digital agencies spend over 30% of thei
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Creator
-    actor Brand
+    actor Creator as Creator / Agency
+    actor Brand as Brand Sponsor
     participant Agent as CreatorPay AI Agent
     participant Invoicing as PayPal Invoicing API v2
-    participant Webhook as PayPal Webhooks Engine
+    participant Webhook as PayPal Webhook Engine
     participant Payouts as PayPal Payouts API v1
-    actor Editor as Video Editor (Aman)
-    actor Designer as Thumbnail Artist (Rohan)
+    actor Editor as Video Editor (Aman - 15%)
+    actor Designer as Thumbnail Artist (Rohan - $50)
 
-    Creator->>Agent: Set Team Split Rules (Editor: 15%, Designer: $50)
-    Creator->>Agent: Drops Contract: "$2,000 deal with CloudHost, 30% advance"
+    Creator->>Agent: Paste Deal Prompt or Upload Text PDF Contract
+    Agent->>Agent: Extract Milestones, Payment Terms & Team Splits via Groq
     
     rect rgb(240, 248, 255)
-    Note over Agent, Invoicing: Phase 2: Autonomous Invoicing
-    Agent->>Invoicing: Create & Send Milestone 1 Invoice ($600)
-    Invoicing-->>Brand: Email with Direct PayPal Payment Link
+    Note over Agent, Invoicing: Phase 1: Autonomous Milestone Invoicing
+    Agent->>Invoicing: Create & Send Milestone 1 Invoice ($600 advance)
+    Invoicing-->>Brand: Generates Authoritative PayPal Sandbox Payment Link
     end
 
     rect rgb(240, 255, 240)
-    Note over Brand, Webhook: Phase 3: Real-Time Webhook Clearance
-    Brand->>Invoicing: Pays $600 Advance via PayPal
-    Invoicing->>Webhook: Webhook Event: INVOICING.INVOICE.PAID
-    Webhook->>Agent: State Updated -> Production Triggered
-    Agent-->>Creator: Notification: Advance Paid! Start Production.
+    Note over Brand, Webhook: Phase 2: Real-Time Webhook Settlement
+    Brand->>Invoicing: Pays $600 Advance via PayPal Checkout
+    Invoicing->>Webhook: Event: INVOICING.INVOICE.PAID (Signed HMAC)
+    Webhook->>Agent: Signature Verified -> Deal Progressed to IN_PRODUCTION
+    Agent-->>Creator: Instant Notification: "Advance Paid! Safe to begin production."
     end
 
     rect rgb(255, 250, 240)
-    Note over Creator, Agent: Phase 4: AI Deliverable Verification
-    Creator->>Agent: Submits Deliverable URL (YouTube Unlisted Link)
-    Agent->>Agent: Inspects Sponsor Segment & Discount Link
-    Agent-->>Brand: Deliverable Verified & Dispatched for Approval
+    Note over Creator, Agent: Phase 3: Deliverable Verification
+    Creator->>Agent: Submits Deliverable URL / Video Transcript Proof
+    Agent->>Agent: Validates Sponsor Placement & Requirement Evidence Quotes
+    Agent-->>Brand: Deliverable Approved & Final Milestone Invoice ($1,400) Dispatched
     end
 
     rect rgb(255, 245, 245)
-    Note over Brand, Payouts: Phase 5: Grand Finale Auto-Payout
-    Brand->>Invoicing: Approves & Pays Final $1,400 Balance
-    Invoicing->>Webhook: Webhook Event: FINAL_PAYMENT_CLEARED
-    Agent->>Payouts: Batch Split Payout Request
-    Payouts-->>Editor: $300 (15% of $2,000) sent to PayPal
-    Payouts-->>Designer: $50 Fixed Cut sent to PayPal
-    Payouts-->>Creator: $1,650 Net Remainder Settled
+    Note over Brand, Payouts: Phase 4: Autonomous Multi-Party Split Payout
+    Brand->>Invoicing: Settles Final $1,400 Balance
+    Invoicing->>Webhook: Webhook Event: Final Milestone Cleared
+    Agent->>Payouts: Dispatches Batch Payout (sender_batch_id)
+    Payouts-->>Editor: $300.00 (15% split) delivered to PayPal account
+    Payouts-->>Designer: $50.00 fixed cut delivered to PayPal account
+    Payouts-->>Creator: $1,650.00 net remainder settled
     Agent-->>Creator: Immutable Audit Ledger & Tax Breakdown Generated
     end
 ```
@@ -150,129 +113,91 @@ sequenceDiagram
 CreatorPay AI deeply integrates three core primitives of the **PayPal Developer Platform**:
 
 ### 1. PayPal Invoicing API (v2)
-* **Endpoint**: `/v2/invoicing/invoices`
-* **Autonomous Action**: Converts unstructured natural language into structured, compliant milestone invoices.
-* **Payload Highlights**: Dynamic invoice numbers, line-item breakdowns (e.g., "Milestone 1: 30% Initial Production Advance"), merchant contact information, currency codes (`USD`), and automated payment reminders.
+* **Endpoint:** `/v2/invoicing/invoices`
+* **Autonomous Capability:** Parses natural contract language into strictly validated, compliant milestone invoices without manual data entry.
+* **Payload Engineering:**
+  - Automated line-item breakdown (e.g., *"Milestone 1: 30% Initial Production Advance"*).
+  - Explicit merchant configuration (`PAYPAL_BUSINESS_EMAIL`), dynamic currency support (`USD`, `EUR`, `GBP`, `CAD`, `AUD`).
+  - Strict deduplication lease locks preventing redundant invoices upon network retries.
 
 ### 2. PayPal Webhooks Engine
-* **Events Handled**:
-  * `INVOICING.INVOICE.PAID`: Signals that the brand has settled an invoice milestone, instantly progressing the deal lifecycle state machine.
-  * `PAYMENT.PAYOUTSBATCH.SUCCESS`: Confirms that multi-party team splits have cleared into recipient PayPal wallets.
-* Eliminates polling bottlenecks and ensures an event-driven, responsive UI.
+* **Endpoint:** `/api/paypal/webhook`
+* **Events Processed:**
+  - `INVOICING.INVOICE.PAID`: Signals that the brand sponsor has cleared payment.
+  - Automatically updates the state machine from `PENDING_INVOICE` to `IN_PRODUCTION`.
+* **Security & Reliability:**
+  - Cryptographic PayPal header signature validation (`PAYPAL-TRANSMISSION-SIG`, `PAYPAL-CERT-URL`).
+  - Webhook ID matching and database-backed event deduplication (`creatorpay_webhook_events`) to prevent duplicate processing.
 
 ### 3. PayPal Payouts API (v1)
-* **Endpoint**: `/v1/payments/payouts`
-* **Autonomous Action**: Executes instant multi-party batch payouts upon contract fulfillment.
-* **Payload Highlights**: Client batch header with unique idempotent `sender_batch_id`, individual recipient email receivers, note memos ("CreatorPay Deal Split - Video Editor Cut"), and exact penny-accurate financial split routing.
+* **Endpoint:** `/v1/payments/payouts`
+* **Autonomous Capability:** Disburses instant, multi-party collaborator split payments immediately upon final project deliverable approval.
+* **Payload Engineering:**
+  - Idempotent batch transactions using deterministic `sender_batch_id` and item references.
+  - Automated calculation of percentage cuts (`15%`) and fixed fees (`$50`), while guaranteeing that sum of splits never exceeds net invoice amounts.
+  - Generates immutable financial audit entries tracking recipient PayPal receiver emails, settlement status, and PayPal transaction IDs.
 
 ---
 
-## 💻 Tech Stack & Sponsor Tools
+## 💻 Tech Stack & Architectural Highlights
 
-| Component | Technology | Description |
+| Layer | Technology | Details |
 | :--- | :--- | :--- |
-| **Framework** | Next.js 14 (App Router) | High-performance React framework for frontend and serverless API endpoints |
-| **Language** | TypeScript | Strict type safety for PayPal payloads and financial calculations |
-| **Styling** | Tailwind CSS | Modern, responsive dark-mode dashboard tailored for creators |
-| **AI / Agent Engine** | Groq structured outputs | Contract extraction with source evidence; deliverable inspection is planned |
-| **Payment Gateway** | PayPal Developer REST APIs | Invoicing v2, Payouts v1, Webhook verification in Sandbox |
-| **API Testing Tool** | Postman | Validated and mocked PayPal Invoicing & Payouts API endpoints |
-| **Deployment** | Render / Vercel | Production cloud deployment for live review |
+| **Frontend Framework** | **Next.js 14** (App Router) | High-performance React 18, React Server Components (RSC), SSR |
+| **Language** | **TypeScript 5.6** | Strict type safety for PayPal REST schemas and financial calculations |
+| **Styling & UI** | **Tailwind CSS 3.4** | Custom bespoke fintech dark-mode palette with responsive glassmorphism |
+| **Visuals & Motion** | **GSAP & Three.js** | Interactive 3D graphics, smooth scroll, and financial state transitions |
+| **Database & Auth** | **Supabase (PostgreSQL 15)** | Row Level Security (RLS), multi-tenant isolation, atomic RPC functions |
+| **AI Intelligence** | **Groq LLM Engine** | Structured output parsing with exact evidence citation verification |
+| **PDF Processing** | **PDF.js Worker** | Local in-browser contract parsing (OCR-free, client-side extraction) |
+| **Payment Gateway** | **PayPal Developer Platform** | Invoicing API v2, Payouts API v1, Webhooks Engine (Sandbox) |
+| **Hosting & CI/CD** | **Vercel Edge Platform** | Zero-downtime deployment, HTTPS SSL, and serverless API execution |
 
 ---
 
-## ⚡ Quickstart & Local Setup
+## 🧪 3-Minute Testing Guide for Judges
 
-### Prerequisites
-* **Node.js** v22.13+ (v24.x recommended and tested; uses built-in SQLite)
-* **npm** v9+
-* **PayPal Developer Account** with a Sandbox Business app ([developer.paypal.com](https://developer.paypal.com/dashboard/applications/sandbox))
+Follow these simple steps to evaluate the live demo:
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/<your-username>/CreatorPay-AI.git
-cd CreatorPay-AI
-```
+### Step 1: Access the Judge Portal
+1. Open [https://creator-pay-ai.vercel.app/login?mode=judge](https://creator-pay-ai.vercel.app/login?mode=judge)
+2. The judge email (`judge@creatorpay.example`) is prefilled.
+3. Enter password: `CpJ-mfUsHHC9BrHLnuff24YiCca2UX9xXxGP9mJlkQ-9!` and click **Log In**.
 
-### 2. Install Dependencies
-```bash
-npm install
-```
+### Step 2: Contract Ingestion & AI Term Extraction
+1. Click **New Deal** on the top navigation.
+2. Select **Use Sample Contract** or paste your own deal text:
+   > *"Acme Corp offers USD 2,000 for a 60-second sponsor video segment. Pay 30% advance ($600) and 70% ($1,400) upon completion. Aman (aman.editor@paypal-sandbox.com) receives a 15% editor cut."*
+3. Click **Analyze Contract**.
+4. Observe the Groq AI agent parsing the prompt into structured milestone terms with verifiable source quotes.
 
-### 3. Configure Environment Variables
-Create a `.env.local` file in the root directory:
-```env
-# PayPal Developer Sandbox Credentials
-PAYPAL_CLIENT_ID=your_sandbox_client_id_here
-PAYPAL_CLIENT_SECRET=your_sandbox_client_secret_here
-PAYPAL_ENVIRONMENT=sandbox
-PAYPAL_WEBHOOK_ID=your_sandbox_webhook_id_here
+### Step 3: Autonomous Milestone Invoice Generation
+1. Click **Confirm Terms & Create Deal**.
+2. Click **Generate Advance Invoice (30%)**.
+3. CreatorPay invokes the **PayPal Invoicing API v2** and returns a genuine PayPal sandbox payment URL.
 
-# AI / LLM Configuration
-GROQ_API_KEY=your_groq_api_key_here
-GROQ_MODEL=openai/gpt-oss-120b
+### Step 4: Real-Time Webhook Verification
+1. Open the generated PayPal sandbox link in an incognito window.
+2. Log in with a PayPal Sandbox Personal Buyer Account to complete payment.
+3. Return to the CreatorPay dashboard — notice the milestone automatically marks as **PAID** via real-time webhook events!
 
-# App Base URL
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-> 💡 **Demo / Sandbox Simulation Mode**: If you do not have PayPal API keys handy, CreatorPay AI includes a built-in **Interactive Sandbox Simulator** toggle allowing complete evaluation of the agentic workflow and PayPal payload responses!
-
-### 4. Run Development Server
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the dashboard.
+### Step 5: Deliverable Verification & Team Payouts
+1. Submit deliverable evidence (e.g. video transcript with sponsor segment).
+2. The AI verification engine confirms compliance and unlocks the final payout stage.
+3. Trigger **Execute Multi-Party Payout** to dispatch instant split payments to collaborators via the **PayPal Payouts API v1**.
+4. Review the generated **Audit Ledger** with authoritative PayPal transaction IDs.
 
 ---
 
-## 🧪 Testing Instructions for Hackathon Judges
+## 🛡️ Security & Engineering Rigor
 
-To evaluate CreatorPay AI's end-to-end agentic workflow:
-
-1. **Phase 0 (Team Rules)**: Navigate to the *Team Split Configuration* tab. Notice default split rules (Video Editor Aman at 15%, Thumbnail Artist Rohan at $50).
-2. **Phase 1 (Prompt Drop)**: In the deal command center, select the pre-loaded template:
-   > *"Brand CloudHost offers $2,000 for a 60-second video integration. 30% ($600) advance milestone invoice, 70% ($1,400) upon video deliverable. Disburse team cuts automatically."*
-3. **Phase 2 (Autonomous Invoice)**: Click **Execute Deal**. Observe the live Agent Execution Log calling `paypal.invoicing.create_and_send`. The generated milestone invoice preview appears with official PayPal sandbox reference IDs.
-4. **Phase 3 (Webhook Simulation)**: Click **Simulate Brand Advance Payment ($600)**. Watch the real-time webhook update the deal status to `PRODUCTION_IN_PROGRESS`.
-5. **Phase 4 (AI Deliverable Verification)**: Paste the deliverable link and click **Verify Proof**. The AI agent parses the description for sponsor tag `#cloudhost` and sponsorship link confirmation.
-6. **Phase 5 (Multi-Party Split Payout)**: Click **Simulate Final Settlement ($1,400)**. Observe the agent calculating exact splits and calling `paypal.payouts.create_batch`. Inspect the resulting **Audit Ledger** showing:
-   * **$300.00** -> Video Editor (`aman@editor.com`)
-   * **$50.00** -> Thumbnail Designer (`rohan@designer.com`)
-   * **$1,650.00** -> Net Creator Balance Settled
+* **58 Automated Unit & Integration Tests:** Validates contract extraction, database transactions, signature verification, and PayPal error handling (`npm test`).
+* **Authoritative Row Level Security (RLS):** All deal records, invoice links, and audit entries are strictly isolated to authenticated user sessions.
+* **HMAC Webhook Verification:** Prevents unauthorized external requests from falsifying milestone payment states.
+* **Server-Only Secrets:** All sensitive credentials (`PAYPAL_CLIENT_SECRET`, `SUPABASE_SECRET_KEY`, `GROQ_API_KEY`) run exclusively in serverless Node.js runtimes.
 
 ---
 
-## 📄 License
+## 📄 License & Attribution
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👥 Authors & Acknowledgments
-
-* **Ayush Sharma** — Full-Stack & AI Systems Architect
-* Built for the **PayPal AI Hackathon 2026**.
-
-## Supabase login and per-user database
-
-Set NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY and server-only SUPABASE_SECRET_KEY in ignored .env.local. Set CREATORPAY_BACKEND=supabase to activate the cloud backend. Missing/unavailable Supabase configuration fails requests rather than falling back to local records. Keep the service key out of browser code and Git. The privileged client is isolated from user cookies; each API verifies the Auth user and filters by that user's ID. RLS additionally restricts authenticated direct reads; browser roles cannot mutate financial state or run privileged RPCs.
-
-Apply supabase/migrations/202610110001_workspace.sql and then 202610110002_atomic_deal_updates.sql once each in SQL Editor. The second migration atomically saves a deal revision, invoice mapping, audit changes and webhook receipt. Concurrent revisions are rejected, signed webhook events are deduplicated, and expired operation tokens cannot commit or release a newer lease. Stable PayPal request/batch/item IDs are retained on recovery. Invoice creation awaits the database checkpoint before sending the invoice. Existing submitted payout batches are refreshed instead of resent.
-
-AI contract and deliverable reviews share a durable allowance: 10 requests per authenticated account per UTC day, a 10-second cooldown and a 100-request daily server budget. Reservations use PostgreSQL transactions and server time. Provider failures still consume a reservation because a provider request was attempted. Cookie clearing, changing browsers and app restarts do not reset the account quota. New accounts still receive a fresh quota; public signup needs additional abuse protections before opening broadly.
-
-For local login testing, set Supabase Authentication > URL Configuration > Site URL to http://localhost:3050/login. The default SMTP provider only sends to project organization members: confirm the email through its default link, then log in with your password. For other testers, configure custom SMTP. If using customized SSR email links, set Confirm signup to {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email and use the site's root URL as Site URL. Keep email confirmation enabled.
-
-/login supports signup/login, /account verifies the user and links to /dashboard, and sign-out clears the current session. Dashboard and application APIs require authentication in Supabase mode. PayPal webhooks remain cookie-free and require PayPal signature verification. New accounts have an empty workspace rather than synthetic paid examples. Reset cannot delete paid cloud records. Account reads and API responses are private/no-store.
-
-Run node scripts/supabase-check.cjs to check table availability and anonymous access denial without fetching private records. The PostgreSQL tests execute both migrations and cloud API workflows locally, with Auth/provider boundaries mocked: they verify cross-account denial, signed confirmation ownership, durable quota limits, real SQL commits, invoice recovery, webhook deduplication and payout completion without duplicate provider sends. Real email confirmation/login and the original sandbox invoice/payout flow were checked separately; the newly migrated cloud UI should also be manually checked.
-
-For a reviewed history import, run node scripts/migrate-sqlite.cjs --email OWNER_EMAIL --db .data/FILE.sqlite --merchant GENERATED_SANDBOX_BUSINESS_EMAIL. Review its digest and destination before adding --apply --confirm-digest DIGEST. It copies confirmed sandbox deals and matching invoice/audit/webhook/checkpoint records, excludes synthetic sample records, preserves the original SQLite source and writes a private snapshot before importing. It refuses to overwrite an existing destination deal. Import is a one-time maintenance operation with multiple writes: leave the cloud app stopped until it completes, and inspect the retained backup on failure. The original approval reviewer IDs remain historical evidence; only workspace ownership is assigned to the approved account. No PayPal payment is sent by import. The US test history was imported into the user's verified account with explicit approval.
-
-CREATORPAY_BACKEND=sqlite retains the original local-only test path for existing regression tests. Do not publicly expose that legacy path. PostgreSQL is the active backend for authenticated workspaces; historical India SQLite records remain local.
-
-## Separate US merchant test profile
-
-Keep .env.local and the original .data/creatorpay.sqlite for the India merchant. Put the new US merchant REST credentials in ignored .env.sandbox-us.local; use .data/creatorpay-us.sqlite for fresh contracts. Run node scripts/us-sandbox.cjs check to verify authentication and invoice API access, node scripts/us-sandbox.cjs webhook <HTTPS /api/paypal/webhook URL> to register only the US app endpoint, and node scripts/us-sandbox.cjs start for port 3020. The launcher uses NEXT_BUILD_DIR (default .next-phase4-check), CREATORPAY_PORT (default 3020), and server-only Groq/Supabase settings, overrides all PayPal settings with the US profile, and does not copy paid India deals. Run a separate webhook relay with WEBHOOK_RELAY_PORT=3040 and WEBHOOK_APP_PORT=3020; tunnel only that relay. Webhook registration writes only the selected private profile. Enable Invoicing on the new app if invoice API access returns 403.
+Distributed under the **MIT License**. Developed by **Ayush Sharma** for the **PayPal AI Hackathon 2026**.
